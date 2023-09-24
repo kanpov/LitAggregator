@@ -2,6 +2,9 @@ package io.github.kanpov.litaggregator.engine.provider
 
 import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.*
+import io.github.kanpov.litaggregator.engine.feed.entry.Rating
+import io.github.kanpov.litaggregator.engine.feed.entry.RatingFeedEntry
+import io.github.kanpov.litaggregator.engine.feed.entry.RatingTrend
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
@@ -11,13 +14,9 @@ import io.github.kanpov.litaggregator.engine.util.jObj
 import io.github.kanpov.litaggregator.engine.util.jString
 import kotlinx.serialization.json.JsonObject
 
-class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider<RatingFeedEntry>(authorizer) {
-    override suspend fun dnevnikProvide(
-        profile: Profile,
-        studentInfo: DnevnikStudentInfo
-    ): Set<RatingFeedEntry> {
-        val newEntries = mutableSetOf<RatingFeedEntry>()
-
+class DnevnikRatingProvider(authorizer: MosAuthorizer)
+    : AbstractDnevnikProvider<RatingFeedEntry>(authorizer, exitOnHit = true) {
+    override suspend fun dnevnikProvide(inserter: FeedEntryInserter, profile: Profile, studentInfo: DnevnikStudentInfo) {
         // Find profiles of all classmates
         val classProfiles = authorizer.getJsonArray<JsonObject>("https://dnevnik.mos.ru/core/api/profiles?class_unit_id=${studentInfo.classUnitId}") {
         }!!
@@ -37,7 +36,7 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
         }
 
         // Add rating entry for each relevant day
-        getRelevantDays(profile).forEach { (time, day) ->
+        for ((time, day) in getRelevantDays(profile)) {
             var personRating: Rating? = null
             val classmateRatings: MutableMap<String, Rating> = mutableMapOf()
             val subjectRatings: MutableMap<String, Rating> = mutableMapOf()
@@ -62,16 +61,17 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
             }
 
             if (personRating != null) {
-                newEntries += RatingFeedEntry(
-                    metadata = FeedEntryMetadata(creationTime = time),
+                if (inserter.insert(RatingFeedEntry(
+                    sourceFingerprint = "SF_Rating_$day",
+                    metadata = FeedEntryMetadata(),
                     overallRating = personRating!!,
                     perSubjectRatings = subjectRatings,
                     classmateRatings = classmateRatings.ifEmpty { null }
-                )
+                ))) return
+            } else {
+                return // invalid ratings begin (sometimes happens at the beginning of the school year0
             }
         }
-
-        return newEntries
     }
 
     private fun parseRating(obj: JsonObject) = Rating(

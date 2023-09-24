@@ -15,7 +15,7 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
 import java.io.File
 
-object DesktopEngineRuntime : EnginePlatform {
+object DesktopEnginePlatform : EnginePlatform {
     override val name: String
         get() = "Desktop, OS: ${SystemUtils.OS_NAME} ${SystemUtils.OS_VERSION}, architecture: ${SystemUtils.OS_ARCH}"
     override val googleClientId: String = "627773039515-rd5jl5lfgk0it63j9a09aqpd2og2vi2o.apps.googleusercontent.com"

@@ -1,5 +1,6 @@
 package io.github.kanpov.litaggregator.engine.feed
 
+import io.github.kanpov.litaggregator.engine.feed.entry.*
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,16 +14,19 @@ data class Feed(
     val events: MutableSet<EventFeedEntry> = mutableSetOf(),
     val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf()
 ) {
-    fun <E : FeedEntry> insert(entry: E) {
-        when (entry) {
-            is HomeworkFeedEntry -> homework += entry
-            is MarkFeedEntry -> marks += entry
-            is RatingFeedEntry -> ratings += entry
-            is VisitFeedEntry -> visits += entry
-            is BannerFeedEntry -> banners += entry
-            is AnnouncementFeedEntry -> announcements += entry
-            is EventFeedEntry -> events += entry
-            is DiagnosticFeedEntry -> diagnostics += entry
-        }
+    inline fun <reified E : FeedEntry> withPool(action: (MutableSet<E>) -> Unit) {
+        val subPool = when (E::class) {
+            HomeworkFeedEntry::class -> homework
+            MarkFeedEntry::class -> marks
+            RatingFeedEntry::class -> ratings
+            VisitFeedEntry::class -> visits
+            BannerFeedEntry::class -> banners
+            AnnouncementFeedEntry::class -> announcements
+            EventFeedEntry::class -> events
+            DiagnosticFeedEntry::class -> diagnostics
+            else -> throw IllegalArgumentException()
+        } as MutableSet<E>
+
+        action(subPool)
     }
 }

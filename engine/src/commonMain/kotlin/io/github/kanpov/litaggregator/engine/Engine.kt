@@ -48,7 +48,13 @@ class Engine(platform: EnginePlatform, profileName: String) {
 
     fun saveProfile() {
         wrappedProfile.rewrap(profile)
-        writeFile(profileFile, jsonInstance.encodeToString(WrappedProfile.serializer(), wrappedProfile))
+        val j = jsonInstance.encodeToString(WrappedProfile.serializer(), wrappedProfile)
+        println(jsonInstance.encodeToString(Profile.serializer(), profile))
+        writeFile(profileFile, j)
+    }
+
+    fun acc(block: (Profile) -> Unit) {
+        block(profile)
     }
 
     suspend fun setupAuthorizer(authorizer: Authorizer): Boolean {
@@ -63,29 +69,21 @@ class Engine(platform: EnginePlatform, profileName: String) {
         return true
     }
 
-    suspend fun fetchFeed(): Pair<Feed, Set<String>> {
+    suspend fun refreshFeed(): Pair<Feed, Set<String> /* providers that failed */> {
         val errors = mutableSetOf<String>()
 
         SimpleProviderDefinition.all.forEach { definition ->
             if (definition.isEnabled(profile.providers)) {
-                val newEntries = definition.factory().run(profile)
-
-                if (newEntries == null) {
+                if (!definition.factory().run(profile)) {
                     errors += definition.name
-                } else {
-                    newEntries.forEach { profile.feed.insert(it) }
                 }
             }
         }
 
         AuthorizedProviderDefinition.all.forEach { definition ->
             if (definition.isEnabled(profile.providers) && definition.isAuthorized(profile.authorization)) {
-                val newEntries = definition.factory(profile.authorization).run(profile)
-
-                if (newEntries == null) {
+                if (!definition.factory(profile.authorization).run(profile)) {
                     errors += definition.name
-                } else {
-                    newEntries.forEach { profile.feed.insert(it) }
                 }
             }
         }

@@ -18,7 +18,7 @@ private const val MOS_LOGIN_URL = "https://school.mos.ru/v3/auth/sudir/login"
 private const val MOS_VALIDATION_URL = "https://dnevnik.mos.ru/core/api/student_profiles"
 
 @Serializable
-data class MosAuthorizer(private val credentials: StandardClientCredentials,
+data class MosAuthorizer(private val credentials: StandardAuthorizerCredentials,
                          private var authToken: String = "")
     : Authorizer() {
 
@@ -35,7 +35,7 @@ data class MosAuthorizer(private val credentials: StandardClientCredentials,
             header("x-mes-subsystem", "familyweb")
             bearerAuth(authToken)
         }.also {
-            delay(Random.nextInt(700..2000).toLong())
+            delay(Random.nextInt(400..700).toLong())
         }
     }
 

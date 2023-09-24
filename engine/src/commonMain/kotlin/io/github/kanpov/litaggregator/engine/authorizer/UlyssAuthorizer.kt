@@ -26,7 +26,7 @@ private const val ULYSS_VALIDATION_URL = "https://in.lit.msu.ru/Ulysses/2023-202
 private const val TOKEN_CSS_QUERY = "input[name=csrfmiddlewaretoken]"
 
 @Serializable
-class UlyssAuthorizer(private val credentials: StandardClientCredentials,
+class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
                       private val session: UlyssClientSession = UlyssClientSession()
 )
     : Authorizer() {

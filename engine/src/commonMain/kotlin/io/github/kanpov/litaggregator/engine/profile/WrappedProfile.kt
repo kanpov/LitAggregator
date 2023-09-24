@@ -15,7 +15,7 @@ import kotlin.random.asKotlinRandom
 
 private const val ENCRYPTION_ALGORITHM = "AES/CBC/PKCS5Padding"
 private const val KEY_GEN_ALGORITHM = "PBKDF2WithHmacSHA256"
-private val bufferCharset = Charsets.UTF_32 // string and byte[] conversions need a unified charset
+val bufferCharset = Charsets.UTF_32 // string and byte[] conversions need a unified charset
 
 @Serializable
 data class WrappedProfile internal constructor(
@@ -78,7 +78,6 @@ data class WrappedProfile internal constructor(
 
 @Serializable
 data class EncryptionOptions(
-    val defaultHasher: SupportedHasher = SupportedHasher.SHA512,
     val iv: String = createRandomString(16),
     val salt: String = createRandomString(16),
     val keyHasher: SupportedHasher = SupportedHasher.SHA256,

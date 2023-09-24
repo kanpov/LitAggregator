@@ -1,11 +1,8 @@
 package io.github.kanpov.litaggregator.desktop
 
 import androidx.compose.ui.window.singleWindowApplication
-import io.github.kanpov.litaggregator.desktop.runtime.DesktopEngineRuntime
+import io.github.kanpov.litaggregator.desktop.runtime.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.engine.Engine
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.StandardClientCredentials
-import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.settings.*
 import io.github.kanpov.litaggregator.engine.profile.EncryptionOptions
@@ -15,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun main() = singleWindowApplication {
-    val engine = Engine(DesktopEngineRuntime, "TestProfile")
+    val engine = Engine(DesktopEnginePlatform, "profile")
     if (!engine.loadProfile("test_pass")) {
         engine.createProfile(
             EncryptionOptions(),
@@ -25,12 +22,12 @@ fun main() = singleWindowApplication {
     }
 
     CoroutineScope(Dispatchers.Default).launch {
-        val (feed, errors) = engine.fetchFeed()
+        val (feed, errors) = engine.refreshFeed()
 
         println("Feed: $feed")
         println("Errors in: $errors")
 
-//        val r = engine.setupAuthorizer(UlyssAuthorizer(StandardClientCredentials("Karpov.Anton", "894052")))
+        engine.saveProfile()
     }
 }
 

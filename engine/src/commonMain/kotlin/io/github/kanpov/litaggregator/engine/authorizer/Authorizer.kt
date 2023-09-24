@@ -3,7 +3,6 @@ package io.github.kanpov.litaggregator.engine.authorizer
 import io.github.kanpov.litaggregator.engine.util.*
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.accept
-import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -92,7 +91,7 @@ abstract class Authorizer {
 }
 
 @Serializable
-data class StandardClientCredentials(
+data class StandardAuthorizerCredentials(
     val username: String,
     val password: String
 )
