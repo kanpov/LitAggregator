@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.engine.data
+package io.github.kanpov.litaggregator.engine.settings
 
 import kotlinx.serialization.Serializable
 

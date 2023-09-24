@@ -1,9 +1,6 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
-import io.github.kanpov.litaggregator.engine.util.decodeJsonRootList
-import io.github.kanpov.litaggregator.engine.util.error
-import io.github.kanpov.litaggregator.engine.util.jsonInstance
-import io.github.kanpov.litaggregator.engine.util.strictlySuccessful
+import io.github.kanpov.litaggregator.engine.util.*
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.accept
 import io.ktor.client.request.url
@@ -53,7 +50,7 @@ abstract class Authorizer {
         return makeRequest {
             block()
             method = HttpMethod.Get
-            url(endpoint)
+            setUrl(endpoint)
             accept(ContentType.Application.Json)
         }
     }
@@ -62,7 +59,7 @@ abstract class Authorizer {
         return makeRequest {
             block()
             method = HttpMethod.Post
-            url(endpoint)
+            setUrl(endpoint)
             contentType(ContentType.Application.Json)
         } != null
     }
@@ -82,7 +79,7 @@ abstract class Authorizer {
 
     private suspend fun validateAuthorization(): Boolean {
         return makeUnvalidatedRequest {
-            url(validationUrl)
+            setUrl(validationUrl!!)
         }.strictlySuccessful()
     }
 

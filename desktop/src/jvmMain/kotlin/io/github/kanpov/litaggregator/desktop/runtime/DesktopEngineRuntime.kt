@@ -2,7 +2,7 @@ package io.github.kanpov.litaggregator.desktop.runtime
 
 import io.github.bonigarcia.wdm.WebDriverManager
 import io.github.kanpov.litaggregator.engine.util.BasicCookie
-import io.github.kanpov.litaggregator.engine.EngineRuntime
+import io.github.kanpov.litaggregator.engine.EnginePlatform
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.SystemUtils
 import org.openqa.selenium.By
@@ -15,7 +15,7 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
 import java.io.File
 
-object DesktopEngineRuntime : EngineRuntime {
+object DesktopEngineRuntime : EnginePlatform {
     override val name: String
         get() = "Desktop, OS: ${SystemUtils.OS_NAME} ${SystemUtils.OS_VERSION}, architecture: ${SystemUtils.OS_ARCH}"
     override val googleClientId: String = "627773039515-rd5jl5lfgk0it63j9a09aqpd2og2vi2o.apps.googleusercontent.com"

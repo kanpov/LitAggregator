@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.engine.data
+package io.github.kanpov.litaggregator.engine.settings
 
 import io.github.kanpov.litaggregator.engine.util.ComparisonFilter
 import io.github.kanpov.litaggregator.engine.util.ListFilter
@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProviderSettings(
-    val timetable: TimetableProviderSettings? = TimetableProviderSettings(),
     val announcements: AnnouncementProviderSettings? = AnnouncementProviderSettings(),
     val ulyss: UlyssProviderSettings? = UlyssProviderSettings(),
     val dnevnikHomework: DnevnikHomeworkProviderSettings? = DnevnikHomeworkProviderSettings(),
@@ -22,19 +21,6 @@ data class ProviderSettings(
 )
 
 @Serializable
-data class TimetableProviderSettings(
-    val includeRooms: Boolean = false,
-    val replacements: List<ScheduleReplacement> = emptyList(),
-    val caseSensitiveReplacements: Boolean = false
-)
-
-@Serializable
-data class ScheduleReplacement(
-    val from: List<String>,
-    val to: String
-)
-
-@Serializable
 data class AnnouncementProviderSettings(
     val categoryFilter: ListFilter = ListFilter(),
     val contentFilter: ListFilter = ListFilter()
@@ -43,7 +29,7 @@ data class AnnouncementProviderSettings(
 @Serializable
 data class UlyssProviderSettings(
     val include: UlyssInclusions = UlyssInclusions(),
-    val exclude: UlyssExclusions = UlyssExclusions()
+    val exclude: UlyssExclusions = UlyssExclusions(),
 )
 
 @Serializable

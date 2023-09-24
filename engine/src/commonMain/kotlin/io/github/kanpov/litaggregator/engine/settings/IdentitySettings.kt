@@ -1,9 +1,9 @@
-package io.github.kanpov.litaggregator.engine.data
+package io.github.kanpov.litaggregator.engine.settings
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Identity(
+data class IdentitySettings(
     val profileName: String,
     val parallel: Int,
     val group: Int

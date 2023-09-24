@@ -20,6 +20,7 @@ kotlin {
                 // Ktor Client for sending HTTP requests (headless)
                 implementation("io.ktor:ktor-client-core:$ktorClientVersion")
                 implementation("io.ktor:ktor-client-okhttp:$ktorClientVersion")
+                implementation("io.ktor:ktor-client-logging:$ktorClientVersion")
                 // Napier for multiplatform logging
                 implementation("io.github.aakira:napier:$napierVersion")
                 // JSoup for parsing HTML

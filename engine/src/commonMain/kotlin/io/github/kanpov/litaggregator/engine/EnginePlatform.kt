@@ -4,7 +4,7 @@ import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession
 import io.github.kanpov.litaggregator.engine.util.BasicCookie
 
-interface EngineRuntime {
+interface EnginePlatform {
     val name: String
     val googleClientId: String
     val googleClientSecret: String?
@@ -26,6 +26,6 @@ interface EngineRuntime {
     ): Set<BasicCookie>
 
     companion object {
-        lateinit var current: EngineRuntime
+        lateinit var current: EnginePlatform
     }
 }

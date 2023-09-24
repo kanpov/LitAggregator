@@ -52,3 +52,17 @@ object UuidSerializer : KSerializer<UUID> {
 
     override fun serialize(encoder: Encoder, value: UUID) = encoder.encodeString(value.toString())
 }
+
+typealias FlagBoolean = @Serializable(with = FlagBooleanSerializer::class) Boolean
+
+object FlagBooleanSerializer : KSerializer<Boolean> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("FlagBoolean", PrimitiveKind.INT)
+
+    override fun deserialize(decoder: Decoder): Boolean {
+        return decoder.decodeInt() == 1
+    }
+
+    override fun serialize(encoder: Encoder, value: Boolean) {
+        encoder.encodeInt(if (value) 1 else 0)
+    }
+}

@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
-import io.github.kanpov.litaggregator.engine.EngineRuntime
+import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.ktorClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
@@ -32,7 +32,7 @@ data class MosAuthorizer(private val credentials: StandardClientCredentials,
     }
 
     private suspend fun authorizeThroughBrowserEmulator() {
-        val cookies = EngineRuntime.current.useBrowserEmulator(
+        val cookies = EnginePlatform.current.useBrowserEmulator(
             loginUrl = MOS_LOGIN_URL,
             usernameInputXpath = """.//input[@id="login"]""",
             usernameValue = credentials.username,

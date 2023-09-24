@@ -1,7 +1,7 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
 import io.github.aakira.napier.Napier
-import io.github.kanpov.litaggregator.engine.EngineRuntime
+import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.error
 import io.github.kanpov.litaggregator.engine.util.ktorClient
 import io.ktor.client.request.HttpRequestBuilder
@@ -21,7 +21,7 @@ import java.security.SecureRandom
 import java.time.Instant
 import java.util.Base64
 
-abstract class GoogleAuthorizer(private val session: GoogleClientSession = GoogleClientSession())
+abstract class GoogleAuthorizer(internal val session: GoogleClientSession = GoogleClientSession())
     : Authorizer(){
     private var bufferedCodeVerifier: String? = null
 
@@ -33,7 +33,7 @@ abstract class GoogleAuthorizer(private val session: GoogleClientSession = Googl
         val codeVerifier = generateCodeVerifier()
         val codeChallenge = generateCodeChallenge(codeVerifier)
         val oauthUrl = OAUTH_CODE_ENDPOINT +
-                "?client_id=${EngineRuntime.current.googleClientId}" +
+                "?client_id=${EnginePlatform.current.googleClientId}" +
                 "&redirect_uri=$redirectUri" +
                 "&scope=${delimitScopes()}" +
                 "&code_challenge=$codeChallenge" +
@@ -57,7 +57,7 @@ abstract class GoogleAuthorizer(private val session: GoogleClientSession = Googl
 
     private suspend fun refreshAccessToken() {
         val request = ktorClient.post(OAUTH_TOKEN_MANAGE_ENDPOINT) {
-            parameter("client_id", EngineRuntime.current.googleClientId)
+            parameter("client_id", EnginePlatform.current.googleClientId)
             parameter("refresh_token", session.refreshToken)
             parameter("grant_type", "refresh_token")
         }
@@ -78,14 +78,14 @@ abstract class GoogleAuthorizer(private val session: GoogleClientSession = Googl
 
     protected suspend fun obtainTokens(code: String) {
         val response = ktorClient.post(OAUTH_TOKEN_MANAGE_ENDPOINT) {
-            parameter("client_id", EngineRuntime.current.googleClientId)
+            parameter("client_id", EnginePlatform.current.googleClientId)
             parameter("code", code)
             parameter("code_verifier", bufferedCodeVerifier!!)
             parameter("grant_type", "authorization_code")
             parameter("redirect_uri", redirectUri)
 
-            if (EngineRuntime.current.googleClientSecret != null) { // client secret is required on this platform
-                parameter("client_secret", EngineRuntime.current.googleClientSecret)
+            if (EnginePlatform.current.googleClientSecret != null) { // client secret is required on this platform
+                parameter("client_secret", EnginePlatform.current.googleClientSecret)
             }
         }
 

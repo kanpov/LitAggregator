@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
-import io.github.kanpov.litaggregator.engine.EngineRuntime
+import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.error
 import io.github.kanpov.litaggregator.engine.util.findCookie
 import io.github.kanpov.litaggregator.engine.util.ktorClient
@@ -73,7 +73,7 @@ class UlyssAuthorizer(private val credentials: StandardClientCredentials,
     }
 
     private suspend fun authorizeThroughBrowserEmulator() {
-        val cookies = EngineRuntime.current.useBrowserEmulator(
+        val cookies = EnginePlatform.current.useBrowserEmulator(
             loginUrl = ULYSS_LOGIN_URL,
             usernameInputXpath = """.//input[@name="username"]""",
             usernameValue = credentials.username,

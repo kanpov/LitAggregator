@@ -1,6 +1,6 @@
-package io.github.kanpov.litaggregator.engine.data
+package io.github.kanpov.litaggregator.engine.settings
 
-import io.github.kanpov.litaggregator.engine.EngineRuntime
+import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession
 import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
@@ -11,11 +11,15 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class Authorization(
-    val ulyss: UlyssAuthorizer? = null,
-    val mos: MosAuthorizer? = null,
-    @SerialName("google") val googleSession: GoogleClientSession? = null
+    var ulyss: UlyssAuthorizer? = null,
+    var mos: MosAuthorizer? = null,
+    @SerialName("google") var googleSession: GoogleClientSession? = null
 ) {
     @Transient private var backer: GoogleAuthorizer? = null
-    val google: GoogleAuthorizer
-        get() = backer ?: EngineRuntime.current.googleAuthorizerFactory(googleSession!!).also { backer = it }
+    var google: GoogleAuthorizer
+        get() = backer ?: EnginePlatform.current.googleAuthorizerFactory(googleSession!!).also { backer = it }
+        set(value) {
+            backer = value
+            googleSession = value.session
+        }
 }
