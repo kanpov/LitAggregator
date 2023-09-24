@@ -41,7 +41,8 @@ abstract class Authorizer {
     suspend fun <T> getJsonArray(endpoint: String, block: HttpRequestBuilder.() -> Unit = {}): List<T>? {
         return try {
             decodeJsonRootList(getJsonInternal(endpoint, block)?.bodyAsText() ?: return null)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            println(e)
             null
         }
     }

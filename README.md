@@ -25,7 +25,7 @@
   - [x] Visits
   - [ ] Teacher replacements
 - [x] Provider API
-- [x] Providers
+- [ ] Providers
   - [ ] Lit.msu.ru announcements
   - [ ] Ulyss homeworks
   - [ ] Dnevnik homeworks
@@ -41,7 +41,9 @@
 
 ### Apps
 
-❌ => 🚧 => ✅
+- ❌ - not implemented
+- 🚧 - work-in-progress
+- ✅ - implemented
 
 | Feature        | Desktop | Android |
 |----------------|---------|---------|

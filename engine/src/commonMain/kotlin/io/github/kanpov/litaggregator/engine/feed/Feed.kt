@@ -4,12 +4,25 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Feed(
-    val homework: MutableList<HomeworkFeedEntry> = mutableListOf(),
-    val marks: MutableList<MarkFeedEntry> = mutableListOf(),
-    val ratings: MutableList<RatingFeedEntry> = mutableListOf(),
-    val visits: MutableList<VisitFeedEntry> = mutableListOf(),
-    val banners: MutableList<BannerFeedEntry> = mutableListOf(),
-    val announcements: MutableList<AnnouncementFeedEntry> = mutableListOf(),
-    val events: MutableList<EventFeedEntry> = mutableListOf(),
-    val diagnostics: MutableList<DiagnosticFeedEntry> = mutableListOf()
-)
+    val homework: MutableSet<HomeworkFeedEntry> = mutableSetOf(),
+    val marks: MutableSet<MarkFeedEntry> = mutableSetOf(),
+    val ratings: MutableSet<RatingFeedEntry> = mutableSetOf(),
+    val visits: MutableSet<VisitFeedEntry> = mutableSetOf(),
+    val banners: MutableSet<BannerFeedEntry> = mutableSetOf(),
+    val announcements: MutableSet<AnnouncementFeedEntry> = mutableSetOf(),
+    val events: MutableSet<EventFeedEntry> = mutableSetOf(),
+    val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf()
+) {
+    fun <E : FeedEntry> insert(entry: E) {
+        when (entry) {
+            is HomeworkFeedEntry -> homework += entry
+            is MarkFeedEntry -> marks += entry
+            is RatingFeedEntry -> ratings += entry
+            is VisitFeedEntry -> visits += entry
+            is BannerFeedEntry -> banners += entry
+            is AnnouncementFeedEntry -> announcements += entry
+            is EventFeedEntry -> events += entry
+            is DiagnosticFeedEntry -> diagnostics += entry
+        }
+    }
+}

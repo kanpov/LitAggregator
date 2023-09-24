@@ -42,6 +42,7 @@ class Engine(platform: EnginePlatform, profileName: String) {
         if (!profileFile.exists()) return false
         wrappedProfile = WrappedProfile.existing(readFile(profileFile), password) ?: return false
         profile = wrappedProfile.unwrap() ?: return false
+        profile.feedSettings.maxEntryDayAge = 5
         return true
     }
 
@@ -67,16 +68,24 @@ class Engine(platform: EnginePlatform, profileName: String) {
 
         SimpleProviderDefinition.all.forEach { definition ->
             if (definition.isEnabled(profile.providers)) {
-                if (!definition.factory().run(profile, definition.entries(profile.feed))) {
+                val newEntries = definition.factory().run(profile)
+
+                if (newEntries == null) {
                     errors += definition.name
+                } else {
+                    newEntries.forEach { profile.feed.insert(it) }
                 }
             }
         }
 
         AuthorizedProviderDefinition.all.forEach { definition ->
             if (definition.isEnabled(profile.providers) && definition.isAuthorized(profile.authorization)) {
-                if (!definition.factory(profile.authorization).run(profile, definition.entries(profile.feed))) {
+                val newEntries = definition.factory(profile.authorization).run(profile)
+
+                if (newEntries == null) {
                     errors += definition.name
+                } else {
+                    newEntries.forEach { profile.feed.insert(it) }
                 }
             }
         }

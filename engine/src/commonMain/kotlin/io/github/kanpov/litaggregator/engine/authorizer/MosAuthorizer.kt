@@ -7,9 +7,12 @@ import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.cookie
 import io.ktor.client.request.header
 import io.ktor.client.request.request
-import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.*
+import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 private const val MOS_LOGIN_URL = "https://school.mos.ru/v3/auth/sudir/login"
 private const val MOS_VALIDATION_URL = "https://dnevnik.mos.ru/core/api/student_profiles"
@@ -26,8 +29,13 @@ data class MosAuthorizer(private val credentials: StandardClientCredentials,
         return ktorClient.request {
             block()
             cookie("auth_token", authToken)
+            cookie("aupd_current_role", "student")
             header("Auth-Token", authToken)
+            header("x-mes-role", "student")
+            header("x-mes-subsystem", "familyweb")
             bearerAuth(authToken)
+        }.also {
+            delay(Random.nextInt(700..2000).toLong())
         }
     }
 

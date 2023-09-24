@@ -21,5 +21,14 @@ data class Rating(
 enum class RatingTrend {
     Stable,
     Increasing,
-    Decreasing
+    Decreasing;
+
+    companion object {
+        fun parse(value: String) = when (value) {
+            "up" -> Increasing
+            "down" -> Decreasing
+            "stable" -> Stable
+            else -> throw IllegalArgumentException()
+        }
+    }
 }

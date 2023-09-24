@@ -7,8 +7,10 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.*
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -19,13 +21,9 @@ val jsonInstance = Json {
 
 private const val ROOT_LIST_PATTERN = """{"values": ~}"""
 
-private data class RootList<T>(
-    val values: List<T>
-)
-
-fun <T> decodeJsonRootList(rootJson: String): List<T> {
+fun <T : JsonElement> decodeJsonRootList(rootJson: String): List<T> {
     val finalJson = ROOT_LIST_PATTERN.replace("~", rootJson)
-    return jsonInstance.decodeFromString<RootList<T>>(finalJson).values
+    return jsonInstance.decodeFromString(JsonObject.serializer(), finalJson).jArray("values")
 }
 
 typealias JsonInstant = @Serializable(with = InstantSerializer::class) Instant
@@ -53,6 +51,9 @@ object UuidSerializer : KSerializer<UUID> {
     override fun serialize(encoder: Encoder, value: UUID) = encoder.encodeString(value.toString())
 }
 
+val LocalDateTime.asInstant
+    get() = toInstant(ZoneOffset.ofHours(0))
+
 typealias FlagBoolean = @Serializable(with = FlagBooleanSerializer::class) Boolean
 
 object FlagBooleanSerializer : KSerializer<Boolean> {
@@ -65,4 +66,25 @@ object FlagBooleanSerializer : KSerializer<Boolean> {
     override fun serialize(encoder: Encoder, value: Boolean) {
         encoder.encodeInt(if (value) 1 else 0)
     }
+}
+
+// Quick (and not null-safe) access to non-modeled JSON data
+fun <T : JsonElement> JsonObject.jArray(name: String): List<T> {
+    return this[name]!!.jsonArray.map { it as T }
+}
+
+fun JsonObject.jObj(name: String): JsonObject {
+    return this[name]!!.jsonObject
+}
+
+fun JsonObject.jString(name: String): String {
+    return this[name]!!.jsonPrimitive.content
+}
+
+fun JsonObject.jInt(name: String): Int {
+    return this[name]!!.jsonPrimitive.int
+}
+
+fun JsonObject.jFloat(name: String): Float {
+    return this[name]!!.jsonPrimitive.float
 }
