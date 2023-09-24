@@ -32,7 +32,7 @@ class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAutho
     object Definition : AuthorizedProviderDefinition<HomeworkFeedEntry, UlyssAuthorizer> {
         override val name: String = "УЛИСС (ДЗ)"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.ulyss != null }
-        override val isAuthorized: (Authorization) -> Boolean = { it.ulyss != null }
+        override val isAuthorized: (Authorization) -> Boolean = { it.ulyss != null && it.mos != null }
         override val entries: (Feed) -> MutableList<HomeworkFeedEntry> = Feed::homework
         override val factory: (Authorization) -> AuthorizedProvider<UlyssAuthorizer> = { UlyssProvider(it.ulyss!!) }
     }

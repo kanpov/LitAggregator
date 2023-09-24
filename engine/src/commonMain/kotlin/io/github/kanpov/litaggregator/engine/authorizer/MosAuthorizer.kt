@@ -40,7 +40,7 @@ data class MosAuthorizer(private val credentials: StandardClientCredentials,
             passwordValue = credentials.password,
             buttonXpath = """.//button[@id="bind"]""",
             delayAfterPageLoad = 6000L,
-            delayAfterClick = 15000L
+            delayAfterClick = 20000L
         )
 
         authToken = cookies.first { it.name == "auth_token" }.value

@@ -14,7 +14,7 @@ abstract class SimpleProvider {
         return try {
             provide(profile, entries)
             true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             false
         }
     }

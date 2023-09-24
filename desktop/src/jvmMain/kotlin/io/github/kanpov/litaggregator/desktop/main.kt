@@ -3,6 +3,7 @@ package io.github.kanpov.litaggregator.desktop
 import androidx.compose.ui.window.singleWindowApplication
 import io.github.kanpov.litaggregator.desktop.runtime.DesktopEngineRuntime
 import io.github.kanpov.litaggregator.engine.Engine
+import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.StandardClientCredentials
 import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.Feed
@@ -24,8 +25,12 @@ fun main() = singleWindowApplication {
     }
 
     CoroutineScope(Dispatchers.Default).launch {
-        val r = engine.setupAuthorizer(UlyssAuthorizer(StandardClientCredentials("Karpov.Anton", "894052")))
-        println(r)
+        val (feed, errors) = engine.fetchFeed()
+
+        println("Feed: $feed")
+        println("Errors in: $errors")
+
+//        val r = engine.setupAuthorizer(UlyssAuthorizer(StandardClientCredentials("Karpov.Anton", "894052")))
     }
 }
 
