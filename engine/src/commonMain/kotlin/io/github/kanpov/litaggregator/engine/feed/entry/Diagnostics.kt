@@ -16,7 +16,7 @@ data class DiagnosticFeedEntry(
     val comparisonToGroup: DiagnosticResultComparison?,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val signParams: List<*> = listOf(subject, place, maxResult, yourResult, comparisonToRegion, comparisonToSchool, comparisonToGroup)
+    @Transient override val fingerprintParams: List<*> = listOf(subject, place, maxResult, yourResult, comparisonToRegion, comparisonToSchool, comparisonToGroup)
 ) : FeedEntry
 
 @Serializable

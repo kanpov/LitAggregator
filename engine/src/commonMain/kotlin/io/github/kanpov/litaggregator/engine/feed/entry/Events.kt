@@ -16,5 +16,5 @@ data class EventFeedEntry(
     val subject: String?,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val signParams: List<*> = listOf(name, organizer, award, startTime, endTime, subject)
+    @Transient override val fingerprintParams: List<*> = listOf(name, organizer, award, startTime, endTime, subject)
 ) : FeedEntry

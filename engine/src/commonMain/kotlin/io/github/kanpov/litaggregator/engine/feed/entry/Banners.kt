@@ -16,5 +16,5 @@ data class BannerFeedEntry(
     val outgoingUrl: String?,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val signParams: List<*> = listOf(leftImageUrl, rightImageUrl, targetAudience, text, textColor, backgroundColor, outgoingUrl)
+    @Transient override val fingerprintParams: List<*> = listOf(leftImageUrl, rightImageUrl, targetAudience, text, textColor, backgroundColor, outgoingUrl)
 ) : FeedEntry

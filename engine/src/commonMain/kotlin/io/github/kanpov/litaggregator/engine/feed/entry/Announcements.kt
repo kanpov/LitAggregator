@@ -12,5 +12,5 @@ data class AnnouncementFeedEntry(
     val categories: List<String>,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val signParams: List<*> = listOf(title, content, categories),
+    @Transient override val fingerprintParams: List<*> = listOf(title, content, categories),
 ) : FeedEntry

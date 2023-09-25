@@ -36,7 +36,7 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer)
         }
 
         // Add rating entry for each relevant day
-        for ((time, day) in getRelevantDays(profile)) {
+        for ((_, day) in getRelevantDays(profile)) {
             var personRating: Rating? = null
             val classmateRatings: MutableMap<String, Rating> = mutableMapOf()
             val subjectRatings: MutableMap<String, Rating> = mutableMapOf()

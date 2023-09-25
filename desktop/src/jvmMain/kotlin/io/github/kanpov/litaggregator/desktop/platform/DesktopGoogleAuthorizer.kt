@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.desktop.runtime
+package io.github.kanpov.litaggregator.desktop.platform
 
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession

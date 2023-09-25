@@ -2,53 +2,39 @@ package io.github.kanpov.litaggregator.engine.feed
 
 class FeedEntryInserter(val feed: Feed, val exitOnHit: Boolean) {
     inline fun <reified E : FeedEntry> insert(entry: E): Boolean {
-        var comparisonResult: FeedEntryComparisonResult? = null
-        var oldEntry: E? = null
-        var wasHit = true
-
-        // first scan
+        // Check if there are any entries with the same source fingerprint as the given entry.
+        // Because of the way this algorithm works, it is guaranteed that only 0 or 1 matches will ever
+        // be present in the pool
+        var matchingEntry: E? = null
         feed.withPool<E> { pool ->
-            for (otherEntry in pool) {
-                val currentResult = FeedEntry.compare(entry, otherEntry)
-
-                if (currentResult == FeedEntryComparisonResult.Duplicates) continue
-
-                comparisonResult = currentResult
-                oldEntry = otherEntry
-                return@withPool
-            }
+            matchingEntry = pool.firstOrNull { it.sourceFingerprint == entry.sourceFingerprint }
         }
 
-        println(comparisonResult)
-
-        // apply necessary changes
-        feed.withPool<E> { pool ->
-            if (pool.contains(entry)) {
-                return true
+        // If the source fingerprint is unique (new), simply insert the entry into the pool
+        if (matchingEntry == null) {
+            feed.withPool<E> { pool ->
+                pool.add(entry)
             }
-
-            pool += when (comparisonResult) {
-                null -> { // new
-                    wasHit = false
-                    entry
-                }
-                FeedEntryComparisonResult.Different -> {
-                    wasHit = false
-                    entry
-                }
-                FeedEntryComparisonResult.OldIsOutdated -> {
-                    pool.remove(oldEntry)
-                    entry
-                }
-                FeedEntryComparisonResult.NeedMerge -> {
-                    entry.metadata.merge(oldEntry!!.metadata)
-                    pool.remove(oldEntry)
-                    entry
-                }
-                else -> throw IllegalArgumentException() // can never happen
-            }
+            return false
         }
 
-        return if (exitOnHit) wasHit else false
+        // If the metadata fingerprints of the matching and new entry are different, a merge is needed
+        if (matchingEntry!!.metadataFingerprint != entry.metadataFingerprint) {
+            matchingEntry!!.metadata.merge(entry.metadata)
+            return false
+        }
+
+        // If the content fingerprints of the matching and new entry are different, the matching entry needs to be
+        // swapped out for the new entry
+        if (matchingEntry!!.contentFingerprint != entry.contentFingerprint) {
+            feed.withPool<E> { pool ->
+                pool.remove(matchingEntry)
+                pool.add(entry)
+            }
+            return false
+        }
+
+        // If all fingerprints are equal, both entries can only be equal, so the matching entry should be kept
+        return exitOnHit
     }
 }

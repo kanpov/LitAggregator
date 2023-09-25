@@ -1,8 +1,7 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
 import io.github.kanpov.litaggregator.engine.util.*
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.accept
+import io.ktor.client.request.*
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -61,19 +60,27 @@ abstract class Authorizer {
             method = HttpMethod.Post
             setUrl(endpoint)
             contentType(ContentType.Application.Json)
+            setBody(jsonData)
         } != null
     }
 
     private suspend fun makeRequest(retryAmount: Int = 0, block: HttpRequestBuilder.() -> Unit): HttpResponse? {
-        if (retryAmount >= RETRY_LIMIT) return null
-
-        if (validationUrl != null && !validateAuthorization()) {
-            if (!authorize()) {
-                return makeRequest(retryAmount + 1, block)
-            }
-        }
+        if (retryAmount >= RETRY_LIMIT) return null // avoid recursion hell
 
         val response = makeUnvalidatedRequest(block)
+
+        if (response.error()) {
+            // If authorization needs to be renewed
+            if (validationUrl != null && !validateAuthorization()) {
+                if (!authorize()) {
+                    return makeRequest(retryAmount + 1, block)
+                }
+                return makeRequest(retryAmount, block)
+            }
+            // If this is a normal HTTP issue
+            return makeRequest(retryAmount + 1, block)
+        }
+
         return if (response.error()) null else response
     }
 
@@ -86,7 +93,7 @@ abstract class Authorizer {
     protected abstract suspend fun makeUnvalidatedRequest(block: HttpRequestBuilder.() -> Unit): HttpResponse
 
     companion object {
-        private const val RETRY_LIMIT = 3
+        private const val RETRY_LIMIT = 2
     }
 }
 

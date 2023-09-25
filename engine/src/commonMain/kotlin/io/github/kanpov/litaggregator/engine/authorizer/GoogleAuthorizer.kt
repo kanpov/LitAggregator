@@ -26,7 +26,9 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
     private var bufferedCodeVerifier: String? = null
 
     override val validationUrl: String? = null
-    override val authorizers: Set<suspend () -> Unit> = setOf(::authorizeWithBrowser)
+    override val authorizers: Set<suspend () -> Unit> = setOf(
+        ::authorizeWithBrowser
+    )
     protected abstract var redirectUri: String
 
     private suspend fun authorizeWithBrowser() {

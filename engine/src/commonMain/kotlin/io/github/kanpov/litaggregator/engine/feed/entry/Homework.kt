@@ -17,5 +17,5 @@ data class HomeworkFeedEntry(
     val allowsSubmissions: Boolean,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val signParams: List<*> = listOf(plain, html, subject, teacher, assignedTime, attachments, allowsSubmissions),
+    @Transient override val fingerprintParams: List<*> = listOf(plain, html, subject, teacher, assignedTime, attachments, allowsSubmissions),
 ) : FeedEntry

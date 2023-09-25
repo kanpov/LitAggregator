@@ -6,46 +6,23 @@ import java.security.MessageDigest
 
 // Fingerprints: S (source), C (content) and M (metadata)
 interface FeedEntry {
-    val sourceFingerprint: String
     val metadata: FeedEntryMetadata
-    val signParams: List<*>
+    val fingerprintParams: List<*>
 
-    private val contentFingerprint: String // hashCode is inflexible as it cannot exclude the metadata, which is necessary in this case
+    // Identification
+    val sourceFingerprint: String
+
+    val contentFingerprint: String // hashCode is inflexible as it cannot exclude the metadata, which is necessary in this case
         get() {
-            val plainText = signParams.joinToString { it.toString() + ";" }
+            val plainText = fingerprintParams.joinToString { it.toString() + ";" }
             return MessageDigest
                 .getInstance("SHA-256")
                 .digest(plainText.toByteArray(bufferCharset))
                 .toString(bufferCharset)
         }
 
-    private val metadataFingerprint: String
+    val metadataFingerprint: String
         get() = metadata.hashCode().toString()
-
-    companion object {
-        fun compare(first: FeedEntry, second: FeedEntry): FeedEntryComparisonResult {
-            if (first.sourceFingerprint != second.sourceFingerprint) {
-                return FeedEntryComparisonResult.Different
-            }
-
-            if (first.metadataFingerprint != second.metadataFingerprint) {
-                return FeedEntryComparisonResult.NeedMerge
-            }
-
-            return if (first.contentFingerprint == second.contentFingerprint) {
-                FeedEntryComparisonResult.Duplicates
-            } else {
-                FeedEntryComparisonResult.OldIsOutdated
-            }
-        }
-    }
-}
-
-enum class FeedEntryComparisonResult {
-    Duplicates, // C(A) = C(B); S(A) = S(B); M(A) = M(B)
-    OldIsOutdated, // C(A) != C(B); S(A) = S(B); M(A) = M(B)
-    NeedMerge, // S(A) = S(B); M(A) != M(B)
-    Different // S(A) != S(B)
 }
 
 @Serializable

@@ -29,7 +29,7 @@ abstract class SimpleProvider<E : FeedEntry>(private val exitOnHit: Boolean) {
         val currentTime = LocalDateTime.now(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3))) // moscow time
 
         return buildMap {
-            for (offset in 0..profile.feedSettings.maxEntryDayAge) {
+            for (offset in 0..profile.feedSettings.maxAgeOfNewEntries) {
                 val time = currentTime.minusDays(offset.toLong())
 
                 if (!profile.identity.studiesOnSaturdays && time.dayOfWeek == DayOfWeek.SATURDAY) continue // people in heaven
