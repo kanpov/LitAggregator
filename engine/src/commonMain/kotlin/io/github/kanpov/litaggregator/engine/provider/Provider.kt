@@ -62,7 +62,8 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> {
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-            DnevnikRatingProvider.Definition
+            DnevnikRatingProvider.Definition,
+            DnevnikBannerProvider.Definition
         )
     }
 }

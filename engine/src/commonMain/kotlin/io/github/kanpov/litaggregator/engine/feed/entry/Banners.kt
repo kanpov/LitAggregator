@@ -9,12 +9,11 @@ import kotlinx.serialization.Transient
 data class BannerFeedEntry(
     val leftImageUrl: String,
     val rightImageUrl: String,
-    val targetAudience: String,
     val text: String,
     val textColor: String,
     val backgroundColor: String,
     val outgoingUrl: String?,
     override val sourceFingerprint: String,
-    override val metadata: FeedEntryMetadata,
-    @Transient override val fingerprintParams: List<*> = listOf(leftImageUrl, rightImageUrl, targetAudience, text, textColor, backgroundColor, outgoingUrl)
+    override val metadata: FeedEntryMetadata = FeedEntryMetadata(),
+    @Transient override val fingerprintParams: List<*> = listOf(leftImageUrl, rightImageUrl, text, textColor, backgroundColor, outgoingUrl)
 ) : FeedEntry

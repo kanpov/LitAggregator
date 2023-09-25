@@ -88,3 +88,7 @@ fun JsonObject.jInt(name: String): Int {
 fun JsonObject.jFloat(name: String): Float {
     return this[name]!!.jsonPrimitive.float
 }
+
+fun JsonObject.jBoolean(name: String): Boolean {
+    return this[name]!!.jsonPrimitive.boolean
+}

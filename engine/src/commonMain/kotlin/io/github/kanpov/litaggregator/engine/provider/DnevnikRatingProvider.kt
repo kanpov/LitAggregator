@@ -14,8 +14,7 @@ import io.github.kanpov.litaggregator.engine.util.jObj
 import io.github.kanpov.litaggregator.engine.util.jString
 import kotlinx.serialization.json.JsonObject
 
-class DnevnikRatingProvider(authorizer: MosAuthorizer)
-    : AbstractDnevnikProvider<RatingFeedEntry>(authorizer, exitOnHit = true) {
+class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider<RatingFeedEntry>(authorizer, exitOnHit = true) {
     override suspend fun dnevnikProvide(inserter: FeedEntryInserter, profile: Profile, studentInfo: DnevnikStudentInfo) {
         // Find profiles of all classmates
         val classProfiles = authorizer.getJsonArray<JsonObject>("https://dnevnik.mos.ru/core/api/profiles?class_unit_id=${studentInfo.classUnitId}") {
