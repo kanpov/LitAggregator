@@ -14,5 +14,5 @@ data class VisitFeedEntry(
     val irregularPattern: Boolean,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val fingerprintParams: List<*> = listOf(entryTime, exitTime, stayDuration, irregularPattern)
+    @Transient override val contentParams: List<*> = listOf(entryTime, exitTime, stayDuration, irregularPattern)
 ) : FeedEntry

@@ -12,7 +12,7 @@ data class RatingFeedEntry(
     val classmateRatings: Map<String, Rating>?,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata = FeedEntryMetadata(),
-    @Transient override val fingerprintParams: List<*> = listOf(overallRating, perSubjectRatings, classmateRatings)
+    @Transient override val contentParams: List<*> = listOf(overallRating, perSubjectRatings, classmateRatings)
 ) : FeedEntry
 
 @Serializable

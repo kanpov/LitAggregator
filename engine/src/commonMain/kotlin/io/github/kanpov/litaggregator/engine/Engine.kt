@@ -42,6 +42,8 @@ class Engine(platform: EnginePlatform, profileName: String) {
         if (!profileFile.exists()) return false
         wrappedProfile = WrappedProfile.existing(readFile(profileFile), password) ?: return false
         profile = wrappedProfile.unwrap() ?: return false
+        profile.feed.banners.clear()
+        profile.feed.ratings.clear()
         return true
     }
 
@@ -50,10 +52,6 @@ class Engine(platform: EnginePlatform, profileName: String) {
         val j = jsonInstance.encodeToString(WrappedProfile.serializer(), wrappedProfile)
         println(jsonInstance.encodeToString(Profile.serializer(), profile))
         writeFile(profileFile, j)
-    }
-
-    fun acc(block: (Profile) -> Unit) {
-        block(profile)
     }
 
     suspend fun setupAuthorizer(authorizer: Authorizer): Boolean {

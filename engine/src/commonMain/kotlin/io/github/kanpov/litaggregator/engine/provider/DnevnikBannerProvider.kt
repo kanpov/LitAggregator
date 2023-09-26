@@ -1,6 +1,7 @@
 package io.github.kanpov.litaggregator.engine.provider
 
 import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryInserter
 import io.github.kanpov.litaggregator.engine.feed.entry.BannerFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
@@ -27,7 +28,7 @@ class DnevnikBannerProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
             textColor = bannerObj.jString("banner_text_color"),
             backgroundColor = bannerObj.jString("banner_background_color"),
             outgoingUrl = outgoingUrl,
-            sourceFingerprint = "SF_Banner_Id=${bannerId}_AuthorId=${bannerObj.jInt("author_id")}"
+            sourceFingerprint = FeedEntry.fingerprintFrom(bannerId, bannerObj.jString("author_id"))
         ))
     }
 

@@ -61,7 +61,7 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
 
             if (personRating != null) {
                 if (inserter.insert(RatingFeedEntry(
-                    sourceFingerprint = "SF_Rating_$day",
+                    sourceFingerprint = FeedEntry.fingerprintFrom(day),
                     metadata = FeedEntryMetadata(),
                     overallRating = personRating!!,
                     perSubjectRatings = subjectRatings,

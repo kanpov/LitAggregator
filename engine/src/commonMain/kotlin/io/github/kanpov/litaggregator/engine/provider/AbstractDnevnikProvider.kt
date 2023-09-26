@@ -14,8 +14,6 @@ abstract class AbstractDnevnikProvider<E : FeedEntry>(authorizer: MosAuthorizer,
     abstract suspend fun dnevnikProvide(inserter: FeedEntryInserter, profile: Profile, studentInfo: DnevnikStudentInfo)
 
     override suspend fun provide(inserter: FeedEntryInserter, profile: Profile) {
-        println("THIS IS BEING CALLED")
-
         val infoObj = authorizer.getJson("https://school.mos.ru/api/family/web/v1/profile?nocache=false")!!
         val studentObj = infoObj.jArray<JsonObject>("children")
             .first { it.jString("class_name") == "${profile.identity.parallel}-${profile.identity.group}" }

@@ -1,28 +1,24 @@
 package io.github.kanpov.litaggregator.engine.feed
 
-import io.github.kanpov.litaggregator.engine.profile.bufferCharset
 import kotlinx.serialization.Serializable
-import java.security.MessageDigest
 
 // Fingerprints: S (source), C (content) and M (metadata)
 interface FeedEntry {
     val metadata: FeedEntryMetadata
-    val fingerprintParams: List<*>
+    val contentParams: List<*>
 
     // Identification
     val sourceFingerprint: String
-
     val contentFingerprint: String // hashCode is inflexible as it cannot exclude the metadata, which is necessary in this case
-        get() {
-            val plainText = fingerprintParams.joinToString { it.toString() + ";" }
-            return MessageDigest
-                .getInstance("SHA-256")
-                .digest(plainText.toByteArray(bufferCharset))
-                .toString(bufferCharset)
-        }
-
+        get() = fingerprintFrom(contentParams)
     val metadataFingerprint: String
         get() = metadata.hashCode().toString()
+
+    companion object {
+        fun fingerprintFrom(vararg params: Any): String {
+            return params.joinToString(separator = ";") { it.toString() }
+        }
+    }
 }
 
 @Serializable
