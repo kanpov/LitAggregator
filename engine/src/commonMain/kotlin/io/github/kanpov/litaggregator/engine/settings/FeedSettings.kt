@@ -8,5 +8,5 @@ data class FeedSettings(
     val maxPoolEntryAmount: Int = 30,
     val maxAgeOfArchiveEntries: Int = 14,
     val maxAgeOfNewEntries: Int = 7,
-    val globalExclusions: List<String> = emptyList()
+    val lookAheadDays: Int = 2
 )

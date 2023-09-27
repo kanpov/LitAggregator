@@ -1,3 +1,6 @@
+apis/http-client.private.env.json
+
+# General
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

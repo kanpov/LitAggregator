@@ -15,7 +15,7 @@ data class DiagnosticFeedEntry(
     val comparisonToSchool: DiagnosticResultComparison?,
     val comparisonToGroup: DiagnosticResultComparison?,
     override val sourceFingerprint: String,
-    override val metadata: FeedEntryMetadata = FeedEntryMetadata(),
+    override val metadata: FeedEntryMetadata,
     @Transient override val contentParams: List<*> = listOf(subject, place, maxResult, yourResult, comparisonToRegion, comparisonToSchool, comparisonToGroup)
 ) : FeedEntry
 

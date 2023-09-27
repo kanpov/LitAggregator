@@ -1,5 +1,6 @@
 package io.github.kanpov.litaggregator.engine.feed
 
+import io.github.kanpov.litaggregator.engine.util.JsonInstant
 import kotlinx.serialization.Serializable
 
 // Fingerprints: S (source), C (content) and M (metadata)
@@ -23,6 +24,7 @@ interface FeedEntry {
 
 @Serializable
 data class FeedEntryMetadata(
+    val creationTime: JsonInstant,
     var comments: MutableSet<String> = mutableSetOf(),
     var markers: MutableSet<String> = mutableSetOf(),
     var attachments: MutableSet<FeedEntryAttachment> = mutableSetOf(),

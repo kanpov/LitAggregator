@@ -15,6 +15,6 @@ data class EventFeedEntry(
     val endTime: JsonInstant?,
     val subject: String?,
     override val sourceFingerprint: String,
-    override val metadata: FeedEntryMetadata = FeedEntryMetadata(),
+    override val metadata: FeedEntryMetadata,
     @Transient override val contentParams: List<*> = listOf(name, organizer, award, startTime, endTime, subject)
 ) : FeedEntry

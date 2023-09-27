@@ -1,8 +1,8 @@
 package io.github.kanpov.litaggregator.engine.provider
 
 import io.github.kanpov.litaggregator.engine.authorizer.Authorizer
+import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
-import io.github.kanpov.litaggregator.engine.feed.FeedEntryInserter
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
@@ -10,27 +10,72 @@ import io.github.kanpov.litaggregator.engine.util.asInstant
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-abstract class AuthorizedProvider<A : Authorizer, E : FeedEntry>(protected val authorizer: A, exitOnHit: Boolean)
-    : SimpleProvider<E>(exitOnHit)
+abstract class AuthorizedProvider<A : Authorizer, E : FeedEntry>(protected val authorizer: A)
+    : SimpleProvider<E>()
 
-abstract class SimpleProvider<E : FeedEntry>(private val exitOnHit: Boolean) {
+abstract class SimpleProvider<E : FeedEntry>() {
     suspend fun run(profile: Profile): Boolean {
         return try {
-            provide(FeedEntryInserter(profile.feed, exitOnHit), profile)
+            provide(profile)
             true
         } catch (_: Exception) {
             false
         }
     }
 
-    protected abstract suspend fun provide(inserter: FeedEntryInserter, profile: Profile)
+    protected abstract suspend fun provide(profile: Profile)
 
-    protected fun getRelevantDays(profile: Profile): Map<Instant, String> {
+    protected fun getRelevantPastDays(profile: Profile): Map<Instant, String> {
+        return getRelevantDays(profile, 0..profile.feedSettings.maxAgeOfNewEntries, plus = true)
+    }
+
+    protected fun getRelevantFutureDays(profile: Profile): Map<Instant, String> {
+        return getRelevantDays(profile, 0..profile.feedSettings.lookAheadDays, plus = false)
+    }
+
+    protected inline fun <reified E : FeedEntry> insert(feed: Feed, entry: E): Boolean {
+        // Check if there are any entries with the same source fingerprint as the given entry.
+        // Because of the way this algorithm works, it is guaranteed that only 0 or 1 matches will ever
+        // be present in the pool
+        var matchingEntry: E? = null
+        feed.withPool<E> { pool ->
+            matchingEntry = pool.firstOrNull { it.sourceFingerprint == entry.sourceFingerprint }
+        }
+
+        // If the source fingerprint is unique (new), simply insert the entry into the pool
+        if (matchingEntry == null) {
+            feed.withPool<E> { pool ->
+                pool.add(entry)
+            }
+            return false
+        }
+
+        // If the metadata fingerprints of the matching and new entry are different, a merge is needed
+        if (matchingEntry!!.metadataFingerprint != entry.metadataFingerprint) {
+            matchingEntry!!.metadata.merge(entry.metadata)
+            return false
+        }
+
+        // If the content fingerprints of the matching and new entry are different, the matching entry needs to be
+        // swapped out for the new entry
+        if (matchingEntry!!.contentFingerprint != entry.contentFingerprint) {
+            feed.withPool<E> { pool ->
+                pool.remove(matchingEntry)
+                pool.add(entry)
+            }
+            return false
+        }
+
+        // If all fingerprints are equal, both entries can only be equal, so the matching entry should be kept
+        return true
+    }
+
+    private fun getRelevantDays(profile: Profile, range: IntRange, plus: Boolean): Map<Instant, String> {
         val currentTime = LocalDateTime.now(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3))) // moscow time
 
         return buildMap {
-            for (offset in 0..profile.feedSettings.maxAgeOfNewEntries) {
-                val time = currentTime.minusDays(offset.toLong())
+            for (offset in range) {
+                val time = if (plus) currentTime.plusDays(offset.toLong()) else currentTime.minusDays(offset.toLong())
 
                 if (!profile.identity.studiesOnSaturdays && time.dayOfWeek == DayOfWeek.SATURDAY) continue // people in heaven
                 if (time.monthValue in 6..8) continue // summer holidays
@@ -62,8 +107,8 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> {
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-            DnevnikRatingProvider.Definition,
-            DnevnikBannerProvider.Definition
+            MeshRatingProvider.Definition,
+            MeshBannerProvider.Definition
         )
     }
 }

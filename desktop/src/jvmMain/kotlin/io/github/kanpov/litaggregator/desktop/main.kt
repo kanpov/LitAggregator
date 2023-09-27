@@ -24,6 +24,8 @@ fun main() = singleWindowApplication {
     }
 
     CoroutineScope(Dispatchers.Default).launch {
+        engine.setupAuthorizer(MosAuthorizer(StandardAuthorizerCredentials("karpovaa-130", "qyz8PdPNwBxWSnKBeFkK")))
+
         val (feed, errors) = engine.refreshFeed()
 
         println("Feed: $feed")

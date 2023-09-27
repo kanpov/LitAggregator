@@ -12,7 +12,8 @@ data class Feed(
     val banners: MutableSet<BannerFeedEntry> = mutableSetOf(),
     val announcements: MutableSet<AnnouncementFeedEntry> = mutableSetOf(),
     val events: MutableSet<EventFeedEntry> = mutableSetOf(),
-    val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf()
+    val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf(),
+    val replacements: MutableSet<ReplacementFeedEntry> = mutableSetOf()
 ) {
     inline fun <reified E : FeedEntry> withPool(action: (MutableSet<E>) -> Unit) {
         val subPool = when (E::class) {
