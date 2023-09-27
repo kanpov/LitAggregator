@@ -7,30 +7,36 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.asInstant
+import io.github.kanpov.litaggregator.engine.util.parseMeshTime
 import java.time.*
 import java.time.format.DateTimeFormatter
 
 abstract class AuthorizedProvider<A : Authorizer, E : FeedEntry>(protected val authorizer: A)
     : SimpleProvider<E>()
 
-abstract class SimpleProvider<E : FeedEntry>() {
+abstract class SimpleProvider<E : FeedEntry> {
     suspend fun run(profile: Profile): Boolean {
         return try {
             provide(profile)
             true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            println(e.stackTraceToString())
             false
         }
     }
 
     protected abstract suspend fun provide(profile: Profile)
 
+    protected fun parseInstantFromParts(date: String, time: String): Instant {
+        return parseMeshTime("$date $time")
+    }
+
     protected fun getRelevantPastDays(profile: Profile): Map<Instant, String> {
-        return getRelevantDays(profile, 0..profile.feedSettings.maxAgeOfNewEntries, plus = true)
+        return getRelevantDays(profile, 0..profile.feedSettings.maxAgeOfNewEntries, plus = false)
     }
 
     protected fun getRelevantFutureDays(profile: Profile): Map<Instant, String> {
-        return getRelevantDays(profile, 0..profile.feedSettings.lookAheadDays, plus = false)
+        return getRelevantDays(profile, 0..profile.feedSettings.lookAheadDays, plus = true)
     }
 
     protected inline fun <reified E : FeedEntry> insert(feed: Feed, entry: E): Boolean {
@@ -108,7 +114,8 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> {
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
             MeshRatingProvider.Definition,
-            MeshBannerProvider.Definition
+            MeshBannerProvider.Definition,
+            MeshVisitProvider.Definition
         )
     }
 }

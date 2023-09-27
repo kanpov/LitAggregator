@@ -18,7 +18,7 @@ class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEnt
         val bannerId = bannerMetaObj.jInt("banner_id")
         val bannerObj = authorizer.getJson("https://school.mos.ru/api/news/v2/banners/$bannerId")!!
         val outgoingUrl = if (bannerObj.jBoolean("action_button")) bannerObj.jString("button_link") else null
-        val creationTime = meshTimeFormatter.parseInstant(bannerObj.jString("created_at"))
+        val creationTime = parseMeshTime(bannerObj.jString("created_at"))
 
         insert(profile.feed, BannerFeedEntry(
             leftImageUrl = bannerObj.jString("image_left"),
@@ -26,7 +26,7 @@ class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEnt
             text = bannerObj.jString("text"),
             textColor = bannerObj.jString("banner_text_color"),
             backgroundColor = bannerObj.jString("banner_background_color"),
-            outgoingUrl = outgoingUrl,
+            outgoingUrl = if (profile.providers.meshBanners!!.addLinks) outgoingUrl else null,
             sourceFingerprint = FeedEntry.fingerprintFrom(bannerId, bannerObj.jString("author_id")),
             metadata = FeedEntryMetadata(creationTime = creationTime)
         ))

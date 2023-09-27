@@ -22,8 +22,7 @@ abstract class MeshProvider<E : FeedEntry>(authorizer: MosAuthorizer) : Authoriz
             classUnitId = studentObj.jInt("class_unit_id").toString(),
             contractId = studentObj.jInt("contract_id").toString(),
             parallelCurriculumId = studentObj.jInt("parallel_curriculum_id").toString()
-        )
-        )
+        ))
     }
 }
 

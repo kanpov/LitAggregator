@@ -10,9 +10,9 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
 import java.util.UUID
 
 val jsonInstance = Json {
@@ -34,12 +34,17 @@ object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Instant {
-        return DateTimeFormatter.ISO_DATE_TIME.parseInstant(decoder.decodeString())
+        return transitFormatter.parseInstant(decoder.toString())
     }
 
     override fun serialize(encoder: Encoder, value: Instant) {
-        encoder.encodeString(DateTimeFormatter.ISO_DATE_TIME.format(value))
+        encoder.encodeString(transitFormatter.format(value))
     }
+
+    // Helps avoid runtime errors when using DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    private val transitFormatter = DateTimeFormatter
+        .ofPattern("uuuuMMddHHmmss")
+        .withZone(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3)))
 }
 
 typealias JsonUuid = @Serializable(with = UuidSerializer::class) UUID
@@ -98,11 +103,18 @@ val JsonObject.asJoinedName: String
     get() = "${jString("last_name")} ${jString("first_name")} ${jString("middle_name")}"
 
 // Example: "2023-09-20 11:59:41"
-val meshTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder().apply {
-    parseCaseInsensitive()
-    append(DateTimeFormatter.ISO_LOCAL_DATE)
-    appendLiteral(' ')
-    append(DateTimeFormatter.ISO_LOCAL_TIME)
-}.toFormatter()
+fun parseMeshTime(literal: String): Instant {
+    return (if (literal.length > 16) mtf2 else mtf1).parseInstant(literal)
+}
+
+private val mtf1: DateTimeFormatter = DateTimeFormatter
+    .ofPattern("yyyy-MM-dd HH:mm")
+    .withZone(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3)))
+
+private val mtf2: DateTimeFormatter = DateTimeFormatter
+    .ofPattern("yyyy-MM-dd HH:mm:ss")
+    .withZone(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3)))
 
 fun DateTimeFormatter.parseInstant(literal: String): Instant = parse(literal, Instant::from)
+
+fun Instant.differenceFrom(other: Instant): Instant = Instant.ofEpochMilli(other.toEpochMilli() - this.toEpochMilli())

@@ -14,7 +14,7 @@
   - [x] Feed settings
   - [x] Identity settings
   - [x] Provider settings
-- [ ] Feed data model
+- [x] Feed data model
   - [x] Announcements
   - [x] Banners
   - [x] Diagnostics
@@ -23,17 +23,15 @@
   - [x] Marks
   - [x] Ratings
   - [x] Visits
-  - [ ] Teacher replacements
 - [x] Provider API
 - [ ] Providers
   - [ ] Lit.msu.ru announcements
   - [ ] Ulyss homeworks
   - [ ] Dnevnik homeworks
   - [ ] Dnevnik marks
-  - [ ] Dnevnik ratings
+  - [x] Dnevnik ratings
   - [ ] Dnevnik visits
-  - [ ] Dnevnik banners
-  - [ ] Dnevnik teacher replacements
+  - [x] Dnevnik banners
   - [ ] Portfolio diagnostics
   - [ ] Portfolio events
   - [ ] Classroom assignments
