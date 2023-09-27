@@ -10,12 +10,12 @@ import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.jFloat
 import io.github.kanpov.litaggregator.engine.util.jInt
-import io.github.kanpov.litaggregator.engine.util.jObj
+import io.github.kanpov.litaggregator.engine.util.jObject
 import io.github.kanpov.litaggregator.engine.util.jString
 import kotlinx.serialization.json.JsonObject
 
-class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider<RatingFeedEntry>(authorizer, exitOnHit = true) {
-    override suspend fun dnevnikProvide(inserter: FeedEntryInserter, profile: Profile, studentInfo: DnevnikStudentInfo) {
+class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEntry>(authorizer) {
+    override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         // Find profiles of all classmates
         val classProfiles = authorizer.getJsonArray<JsonObject>("https://dnevnik.mos.ru/core/api/profiles?class_unit_id=${studentInfo.classUnitId}") {
         }!!
@@ -25,7 +25,7 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
             classProfiles.forEach { obj ->
                 if (obj.jString("type") == "student" && obj["person_id"] != null) {
                     val id = obj.jString("person_id")
-                    val user = obj.jObj("user")
+                    val user = obj.jObject("user")
                     val name =
                         "${user.jString("last_name")} ${user.jString("first_name")} ${user.jString("middle_name")}"
 
@@ -35,7 +35,7 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
         }
 
         // Add rating entry for each relevant day
-        for ((_, day) in getRelevantDays(profile)) {
+        for ((time, day) in getRelevantPastDays(profile)) {
             var personRating: Rating? = null
             val classmateRatings: MutableMap<String, Rating> = mutableMapOf()
             val subjectRatings: MutableMap<String, Rating> = mutableMapOf()
@@ -44,25 +44,25 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
             // Add self and classmates' ratings
             authorizer.getJsonArray<JsonObject>("https://school.mos.ru/api/ej/rating/v1/rank/class$args")!!.forEach { obj ->
                 if (obj.jString("personId") == studentInfo.personId) {
-                    personRating = parseRating(obj.jObj("rank"))
-                } else if (profile.providers.dnevnikRatings!!.includeClassmateRatings) {
+                    personRating = parseRating(obj.jObject("rank"))
+                } else if (profile.providers.meshRatings!!.includeClassmateRatings) {
                     // some classmates may not have fully been registered yet
                     if (personIdToName.containsKey(obj.jString("personId"))) {
                         val classmateName = personIdToName[obj.jString("personId")]!!
-                        classmateRatings[classmateName] = parseRating(obj.jObj("rank"))
+                        classmateRatings[classmateName] = parseRating(obj.jObject("rank"))
                     }
                 }
             }
 
             // Add own per subject ratings
             authorizer.getJsonArray<JsonObject>("https://school.mos.ru/api/ej/rating/v1/rank/subjects$args")!!.forEach { obj ->
-                subjectRatings[obj.jString("subjectName")] = parseRating(obj.jObj("rank"))
+                subjectRatings[obj.jString("subjectName")] = parseRating(obj.jObject("rank"))
             }
 
             if (personRating != null) {
-                if (inserter.insert(RatingFeedEntry(
+                if (insert(profile.feed, RatingFeedEntry(
                     sourceFingerprint = FeedEntry.fingerprintFrom(day),
-                    metadata = FeedEntryMetadata(),
+                    metadata = FeedEntryMetadata(creationTime = time),
                     overallRating = personRating!!,
                     perSubjectRatings = subjectRatings,
                     classmateRatings = classmateRatings.ifEmpty { null }
@@ -80,9 +80,9 @@ class DnevnikRatingProvider(authorizer: MosAuthorizer) : AbstractDnevnikProvider
     )
 
     object Definition : AuthorizedProviderDefinition<MosAuthorizer, RatingFeedEntry> {
-        override val name: String = "Рейтинги МЭШ"
-        override val isEnabled: (ProviderSettings) -> Boolean = { it.dnevnikRatings != null }
+        override val name: String = "Рейтинги из МЭШ"
+        override val isEnabled: (ProviderSettings) -> Boolean = { it.meshRatings != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Authorization) -> AuthorizedProvider<MosAuthorizer, RatingFeedEntry> = { DnevnikRatingProvider(it.mos!!) }
+        override val factory: (Authorization) -> AuthorizedProvider<MosAuthorizer, RatingFeedEntry> = { MeshRatingProvider(it.mos!!) }
     }
 }

@@ -9,11 +9,12 @@ import kotlinx.serialization.Serializable
 data class ProviderSettings(
     val announcements: AnnouncementProviderSettings? = AnnouncementProviderSettings(),
     val ulyss: UlyssProviderSettings? = UlyssProviderSettings(),
-    val dnevnikHomework: DnevnikHomeworkProviderSettings? = DnevnikHomeworkProviderSettings(),
-    val dnevnikMarks: DnevnikMarkProviderSettings? = DnevnikMarkProviderSettings(),
-    val dnevnikRatings: DnevnikRatingProviderSettings? = DnevnikRatingProviderSettings(),
-    val dnevnikVisits: DnevnikVisitProviderSettings? = DnevnikVisitProviderSettings(),
-    val dnevnikBanners: DnevnikBannerProviderSettings? = DnevnikBannerProviderSettings(),
+    val meshHomework: MeshHomeworkProviderSettings? = MeshHomeworkProviderSettings(),
+    val meshMarks: MeshMarkProviderSettings? = MeshMarkProviderSettings(),
+    val meshRatings: MeshRatingProviderSettings? = MeshRatingProviderSettings(),
+    val meshVisits: MeshVisitProviderSettings? = MeshVisitProviderSettings(),
+    val meshBanners: MeshBannerProviderSettings? = MeshBannerProviderSettings(),
+    val meshReplacements: MeshReplacementProviderSettings? = MeshReplacementProviderSettings(),
     val portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = PortfolioDiagnosticProviderSettings(),
     val portfolioEvents: PortfolioEventProviderSettings? = PortfolioEventProviderSettings(),
     val classroom: ClassroomProviderSettings? = ClassroomProviderSettings(),
@@ -47,30 +48,35 @@ data class UlyssExclusions(
 )
 
 @Serializable
-data class DnevnikHomeworkProviderSettings(
+data class MeshHomeworkProviderSettings(
     val includeInteractiveExercises: Boolean = true
 )
 
 @Serializable
-data class DnevnikMarkProviderSettings(
+data class MeshMarkProviderSettings(
     val onlyIncludeExams: Boolean = false,
     val weightFilter: ComparisonFilter = ComparisonFilter(),
     val prunePreviousPeriods: Boolean = false
 )
 
 @Serializable
-data class DnevnikRatingProviderSettings(
+data class MeshRatingProviderSettings(
     val includeClassmateRatings: Boolean = true
 )
 
 @Serializable
-data class DnevnikVisitProviderSettings(
+data class MeshVisitProviderSettings(
     val includeIrregularPatterns: Boolean = true
 )
 
 @Serializable
-data class DnevnikBannerProviderSettings(
+data class MeshBannerProviderSettings(
     val addLinks: Boolean = true
+)
+
+@Serializable
+data class MeshReplacementProviderSettings(
+    val ignoredSubjects: ListFilter = ListFilter()
 )
 
 @Serializable

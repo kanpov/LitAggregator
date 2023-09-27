@@ -12,6 +12,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.UUID
 
 val jsonInstance = Json {
@@ -33,7 +34,7 @@ object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Instant {
-        return DateTimeFormatter.ISO_DATE_TIME.parse(decoder.decodeString(), Instant::from)
+        return DateTimeFormatter.ISO_DATE_TIME.parseInstant(decoder.decodeString())
     }
 
     override fun serialize(encoder: Encoder, value: Instant) {
@@ -51,7 +52,7 @@ object UuidSerializer : KSerializer<UUID> {
     override fun serialize(encoder: Encoder, value: UUID) = encoder.encodeString(value.toString())
 }
 
-val LocalDateTime.asInstant
+val LocalDateTime.asInstant: Instant
     get() = toInstant(ZoneOffset.ofHours(0))
 
 typealias FlagBoolean = @Serializable(with = FlagBooleanSerializer::class) Boolean
@@ -73,7 +74,7 @@ fun <T : JsonElement> JsonObject.jArray(name: String): List<T> {
     return this[name]!!.jsonArray.map { it as T }
 }
 
-fun JsonObject.jObj(name: String): JsonObject {
+fun JsonObject.jObject(name: String): JsonObject {
     return this[name]!!.jsonObject
 }
 
@@ -92,3 +93,16 @@ fun JsonObject.jFloat(name: String): Float {
 fun JsonObject.jBoolean(name: String): Boolean {
     return this[name]!!.jsonPrimitive.boolean
 }
+
+val JsonObject.asJoinedName: String
+    get() = "${jString("last_name")} ${jString("first_name")} ${jString("middle_name")}"
+
+// Example: "2023-09-20 11:59:41"
+val meshTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder().apply {
+    parseCaseInsensitive()
+    append(DateTimeFormatter.ISO_LOCAL_DATE)
+    appendLiteral(' ')
+    append(DateTimeFormatter.ISO_LOCAL_TIME)
+}.toFormatter()
+
+fun DateTimeFormatter.parseInstant(literal: String): Instant = parse(literal, Instant::from)

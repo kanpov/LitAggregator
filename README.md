@@ -14,7 +14,7 @@
   - [x] Feed settings
   - [x] Identity settings
   - [x] Provider settings
-- [x] Feed data model
+- [ ] Feed data model
   - [x] Announcements
   - [x] Banners
   - [x] Diagnostics
