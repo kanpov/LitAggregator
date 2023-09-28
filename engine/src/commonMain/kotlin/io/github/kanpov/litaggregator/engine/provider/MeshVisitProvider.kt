@@ -7,6 +7,7 @@ import io.github.kanpov.litaggregator.engine.feed.entry.VisitFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
+import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.jArray
 import io.github.kanpov.litaggregator.engine.util.jBoolean
 import io.github.kanpov.litaggregator.engine.util.jString
@@ -24,8 +25,8 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
 
             for (visitObj in dayObj.jArray<JsonObject>("visits")) {
                 val irregularPattern = visitObj.jBoolean("is_warning")
-                val entryTime = parseInstantFromParts(day, visitObj.jString("in"))
-                val exitTime = parseInstantFromParts(day, visitObj.jString("out"))
+                val entryTime = TimeFormatters.parseMeshDateTime(day, visitObj.jString("in"))
+                val exitTime = TimeFormatters.parseMeshDateTime(day, visitObj.jString("out"))
 
                 if (!profile.providers.meshVisits!!.includeIrregularPatterns && irregularPattern) continue
 

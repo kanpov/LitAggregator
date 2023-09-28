@@ -13,9 +13,9 @@ data class MarkFeedEntry(
     val isExam: Boolean,
     val comment: String,
     val topic: String,
-    val task: String,
+    val workForm: String,
     val period: String,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val contentParams: List<*> = listOf(subject, value, weight, isExam, comment, topic, task, period)
+    @Transient override val contentParams: List<*> = listOf(subject, value, weight, isExam, comment, topic, workForm, period)
 ) : FeedEntry

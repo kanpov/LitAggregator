@@ -57,6 +57,17 @@ data class FeedEntryMetadata(
             }
         }
     }
+
+    override fun hashCode(): Int {
+        // don't include creation time
+        var result = comments.hashCode()
+        result = 31 * result + markers.hashCode()
+        result = 31 * result + attachments.hashCode()
+        result = 31 * result + taskLists.hashCode()
+        result = 31 * result + starred.hashCode()
+        result = 31 * result + pinned.hashCode()
+        return result
+    }
 }
 
 @Serializable

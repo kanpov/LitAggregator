@@ -18,7 +18,7 @@ class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEnt
         val bannerId = bannerMetaObj.jInt("banner_id")
         val bannerObj = authorizer.getJson("https://school.mos.ru/api/news/v2/banners/$bannerId")!!
         val outgoingUrl = if (bannerObj.jBoolean("action_button")) bannerObj.jString("button_link") else null
-        val creationTime = parseMeshTime(bannerObj.jString("created_at"))
+        val creationTime = TimeFormatters.longMeshDateTime.parseInstant(bannerObj.jString("created_at"))
 
         insert(profile.feed, BannerFeedEntry(
             leftImageUrl = bannerObj.jString("image_left"),

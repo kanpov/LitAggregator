@@ -7,7 +7,6 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.asInstant
-import io.github.kanpov.litaggregator.engine.util.parseMeshTime
 import java.time.*
 import java.time.format.DateTimeFormatter
 
@@ -26,10 +25,6 @@ abstract class SimpleProvider<E : FeedEntry> {
     }
 
     protected abstract suspend fun provide(profile: Profile)
-
-    protected fun parseInstantFromParts(date: String, time: String): Instant {
-        return parseMeshTime("$date $time")
-    }
 
     protected fun getRelevantPastDays(profile: Profile): Map<Instant, String> {
         return getRelevantDays(profile, 0..profile.feedSettings.maxAgeOfNewEntries, plus = false)
@@ -73,6 +68,7 @@ abstract class SimpleProvider<E : FeedEntry> {
         }
 
         // If all fingerprints are equal, both entries can only be equal, so the matching entry should be kept
+        println("dupe ${entry.contentFingerprint}")
         return true
     }
 
@@ -115,7 +111,8 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
             MeshRatingProvider.Definition,
             MeshBannerProvider.Definition,
-            MeshVisitProvider.Definition
+            MeshVisitProvider.Definition,
+            MeshMarkProvider.Definition
         )
     }
 }

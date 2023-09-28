@@ -53,14 +53,15 @@ data class WrappedProfile internal constructor(
             cipher.init(Cipher.DECRYPT_MODE, key, iv)
             val jsonData = cipher.doFinal(Base64.getDecoder().decode(data)).toString(bufferCharset)
             jsonInstance.decodeFromString(jsonData)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            println(e.stackTraceToString())
             null
         }
     }
 
     companion object {
-        fun new(encryption: EncryptionOptions, profile: Profile, password: String): WrappedProfile {
-            return WrappedProfile(encryption, data = "", password = password).apply { rewrap(profile) }
+        fun new(encryptionOptions: EncryptionOptions, profile: Profile, password: String): WrappedProfile {
+            return WrappedProfile(encryptionOptions, data = "", password = password).apply { rewrap(profile) }
         }
 
         fun existing(json: String, password: String): WrappedProfile? {

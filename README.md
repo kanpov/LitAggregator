@@ -30,7 +30,7 @@
   - [ ] Dnevnik homeworks
   - [ ] Dnevnik marks
   - [x] Dnevnik ratings
-  - [ ] Dnevnik visits
+  - [x] Dnevnik visits
   - [x] Dnevnik banners
   - [ ] Portfolio diagnostics
   - [ ] Portfolio events

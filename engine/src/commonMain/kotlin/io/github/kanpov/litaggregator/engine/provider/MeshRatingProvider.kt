@@ -60,6 +60,7 @@ class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEnt
             }
 
             if (personRating != null) {
+                println()
                 if (insert(profile.feed, RatingFeedEntry(
                     sourceFingerprint = FeedEntry.fingerprintFrom(day),
                     metadata = FeedEntryMetadata(creationTime = time),
