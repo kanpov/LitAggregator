@@ -19,7 +19,8 @@ object TimeFormatters {
     val longMeshDateTime = newFormatter("uuuu-MM-dd HH:mm:ss")
 
     fun parseMeshDateTime(date: String, time: String): Instant {
-        return DateTimeFormatter.ISO_LOCAL_DATE_TIME.parseInstant("${date}T$time")
+        val finalDate = if (date.endsWith("T-")) date.substringBefore("T") else date
+        return DateTimeFormatter.ISO_LOCAL_DATE_TIME.parseInstant("${finalDate}T$time")
     }
 
     private fun newFormatter(pattern: String): DateTimeFormatter = DateTimeFormatter

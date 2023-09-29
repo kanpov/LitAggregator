@@ -109,10 +109,11 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> {
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-            MeshRatingProvider.Definition,
-            MeshBannerProvider.Definition,
-            MeshVisitProvider.Definition,
-            MeshMarkProvider.Definition
+//            MeshRatingProvider.Definition,
+//            MeshBannerProvider.Definition,
+//            MeshVisitProvider.Definition,
+//            MeshMarkProvider.Definition
+            MeshHomeworkProvider.Definition
         )
     }
 }

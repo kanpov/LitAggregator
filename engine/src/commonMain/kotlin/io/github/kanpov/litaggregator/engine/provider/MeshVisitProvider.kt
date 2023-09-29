@@ -26,7 +26,9 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
             for (visitObj in dayObj.jArray<JsonObject>("visits")) {
                 val irregularPattern = visitObj.jBoolean("is_warning")
                 val entryTime = TimeFormatters.parseMeshDateTime(day, visitObj.jString("in"))
-                val exitTime = TimeFormatters.parseMeshDateTime(day, visitObj.jString("out"))
+                val isOut = visitObj.jString("out")
+                val exitTime = if (isOut == "-") null else TimeFormatters.parseMeshDateTime(day, visitObj.jString("out"))
+                val fingerprintTime = exitTime ?: entryTime
 
                 if (!profile.providers.meshVisits!!.includeIrregularPatterns && irregularPattern) continue
 
@@ -36,8 +38,8 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
                     irregularPattern = irregularPattern,
                     fullAddress = visitObj.jString("address"),
                     shortAddress = visitObj.jString("short_name"),
-                    metadata = FeedEntryMetadata(creationTime = exitTime),
-                    sourceFingerprint = FeedEntry.fingerprintFrom(exitTime)
+                    metadata = FeedEntryMetadata(creationTime = fingerprintTime),
+                    sourceFingerprint = FeedEntry.fingerprintFrom(fingerprintTime)
                 ))
             }
         }

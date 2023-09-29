@@ -10,12 +10,11 @@ import kotlinx.serialization.Transient
 @Serializable
 data class VisitFeedEntry(
     val entryTime: JsonInstant,
-    val exitTime: JsonInstant,
-    val stayDuration: JsonInstant = entryTime.differenceFrom(exitTime),
+    val exitTime: JsonInstant?,
     val irregularPattern: Boolean,
     val fullAddress: String,
     val shortAddress: String,
     override val sourceFingerprint: String,
     override val metadata: FeedEntryMetadata,
-    @Transient override val contentParams: List<*> = listOf(entryTime, exitTime, stayDuration, irregularPattern, fullAddress, shortAddress)
+    @Transient override val contentParams: List<*> = listOf(entryTime, exitTime, irregularPattern, fullAddress, shortAddress)
 ) : FeedEntry
