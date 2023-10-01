@@ -27,13 +27,13 @@ abstract class BrowserEmulator {
 
     abstract fun loadUrl(url: String)
 
-    suspend fun awaitElement(xpath: String, timeoutSeconds: Long = 6L, checkIntensityMillis: Long = 250L): BrowserElement {
+    suspend fun awaitElement(xpath: String, timeoutSeconds: Long = 5L, checkIntensityMillis: Long = 250L): BrowserElement {
         awaitInternal("element at XPath $xpath still not present",
-            timeoutSeconds, checkIntensityMillis) { hasElement(xpath) && findElementOrThrow(xpath).visibleToUser }
+            timeoutSeconds, checkIntensityMillis) { hasElement(xpath) && findElementOrThrow(xpath).isUsable }
         return findElementOrThrow(xpath)
     }
 
-    suspend fun awaitUrl(timeoutSeconds: Long = 6L, checkIntensityMillis: Long = 250L, matcher: (String) -> Boolean): String {
+    suspend fun awaitUrl(timeoutSeconds: Long = 5L, checkIntensityMillis: Long = 250L, matcher: (String) -> Boolean): String {
         awaitInternal("browser is still not at the URL matching given expression",
             timeoutSeconds, checkIntensityMillis) { matcher(loadedUrl) }
         return loadedUrl
@@ -68,7 +68,7 @@ abstract class BrowserEmulator {
 }
 
 interface BrowserElement {
-    val visibleToUser: Boolean
+    val isUsable: Boolean
     fun click()
     fun inputText(value: String)
 }

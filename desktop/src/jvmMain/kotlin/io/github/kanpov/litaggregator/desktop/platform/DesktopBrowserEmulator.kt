@@ -77,7 +77,7 @@ object DesktopBrowserEmulator : BrowserEmulator() {
 }
 
 class DesktopBrowserElement(private val element: WebElement) : BrowserElement {
-    override val visibleToUser: Boolean
+    override val isUsable: Boolean
         get() = element.isDisplayed && element.isEnabled
 
     override fun click() {
