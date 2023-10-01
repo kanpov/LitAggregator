@@ -2,8 +2,7 @@ package io.github.kanpov.litaggregator.engine.feed.entry
 
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
-import io.github.kanpov.litaggregator.engine.util.JsonInstant
-import io.github.kanpov.litaggregator.engine.util.differenceFrom
+import io.github.kanpov.litaggregator.engine.util.io.JsonInstant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

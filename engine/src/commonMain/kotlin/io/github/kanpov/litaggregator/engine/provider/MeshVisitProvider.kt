@@ -8,9 +8,9 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
-import io.github.kanpov.litaggregator.engine.util.jArray
-import io.github.kanpov.litaggregator.engine.util.jBoolean
-import io.github.kanpov.litaggregator.engine.util.jString
+import io.github.kanpov.litaggregator.engine.util.io.jArray
+import io.github.kanpov.litaggregator.engine.util.io.jBoolean
+import io.github.kanpov.litaggregator.engine.util.io.jString
 
 class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {

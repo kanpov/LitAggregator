@@ -8,6 +8,9 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
+import io.github.kanpov.litaggregator.engine.util.io.jBoolean
+import io.github.kanpov.litaggregator.engine.util.io.jInt
+import io.github.kanpov.litaggregator.engine.util.io.jString
 
 class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {

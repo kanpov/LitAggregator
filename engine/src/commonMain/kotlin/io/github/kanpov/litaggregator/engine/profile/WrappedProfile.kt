@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.profile
 
-import io.github.kanpov.litaggregator.engine.util.jsonInstance
+import io.github.kanpov.litaggregator.engine.util.io.jsonInstance
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import java.security.SecureRandom

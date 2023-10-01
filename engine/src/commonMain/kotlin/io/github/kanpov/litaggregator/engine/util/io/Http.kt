@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.engine.util
+package io.github.kanpov.litaggregator.engine.util.io
 
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient

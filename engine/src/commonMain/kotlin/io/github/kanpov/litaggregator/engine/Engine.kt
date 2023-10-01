@@ -12,10 +12,10 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.profile.WrappedProfile
 import io.github.kanpov.litaggregator.engine.provider.AuthorizedProviderDefinition
 import io.github.kanpov.litaggregator.engine.provider.SimpleProviderDefinition
-import io.github.kanpov.litaggregator.engine.util.asFile
-import io.github.kanpov.litaggregator.engine.util.jsonInstance
-import io.github.kanpov.litaggregator.engine.util.readFile
-import io.github.kanpov.litaggregator.engine.util.writeFile
+import io.github.kanpov.litaggregator.engine.util.io.asFile
+import io.github.kanpov.litaggregator.engine.util.io.jsonInstance
+import io.github.kanpov.litaggregator.engine.util.io.readFile
+import io.github.kanpov.litaggregator.engine.util.io.writeFile
 import java.io.File
 import java.time.Instant
 
