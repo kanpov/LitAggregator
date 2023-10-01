@@ -28,8 +28,7 @@ private const val TOKEN_CSS_QUERY = "input[name=csrfmiddlewaretoken]"
 @Serializable
 class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
                       private val session: UlyssClientSession = UlyssClientSession()
-)
-    : Authorizer() {
+) : Authorizer() {
 
     @Transient override val authorizers: Set<suspend () -> Unit> = setOf(
         ::authorizeThroughHttp,
@@ -73,24 +72,21 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
     }
 
     private suspend fun authorizeThroughBrowserEmulator() {
-        val cookies = EnginePlatform.current.useBrowserEmulator(
-            loginUrl = ULYSS_LOGIN_URL,
-            usernameInputXpath = """.//input[@name="username"]""",
-            usernameValue = credentials.username,
-            passwordInputXpath = """.//input[@name="password"]""",
-            passwordValue = credentials.password,
-            buttonXpath = """.//button[@type="submit"]""",
-            delayAfterPageLoad = 1000L,
-            delayAfterClick = 1000L
-        )
+        EnginePlatform.current.browserEmulator.use(headless = false) {
+            loadUrl(ULYSS_LOGIN_URL)
+            awaitElement(xpath = """.//input[@name="username"]""").inputText(credentials.username)
+            awaitElement(xpath = """.//input[@name="password"]""").inputText(credentials.password)
+            awaitElement(xpath = """.//button[@type="submit"]""").click()
+            awaitUrl { !it.contains("/login/") }
 
-        cookies.first { it.name == "csrftoken" }.let {
-            session.csrfToken = it.value
-        }
+            cookies.first { it.name == "csrftoken" }.let {
+                session.csrfToken = it.value
+            }
 
-        cookies.first { it.name == "sessionid" }.let {
-            session.id = it.value
-            session.expiry = it.expiry!!.toString()
+            cookies.first { it.name == "sessionid" }.let {
+                session.id = it.value
+                session.expiry = it.expiry!!.toString()
+            }
         }
     }
 }

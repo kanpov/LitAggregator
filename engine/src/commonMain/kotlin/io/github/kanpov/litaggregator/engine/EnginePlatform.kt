@@ -14,19 +14,6 @@ interface EnginePlatform {
 
     fun getCachePath(relativePath: String): String
     fun getPersistentPath(relativePath: String): String
-    // generic browser emulator impl limited to 1 url and 1 form with 2 inputs and a button
-    // fills in the form and submits, returning all cookies currently stored in the emulator
-    @Deprecated("Being replaced with a more flexible BrowserEmulator API")
-    suspend fun useBrowserEmulator(
-        loginUrl: String,
-        usernameInputXpath: String,
-        usernameValue: String,
-        passwordInputXpath: String,
-        passwordValue: String,
-        buttonXpath: String,
-        delayAfterPageLoad: Long,
-        delayAfterClick: Long
-    ): Set<BasicCookie>
 
     companion object {
         lateinit var current: EnginePlatform

@@ -49,9 +49,12 @@ object DesktopBrowserEmulator : BrowserEmulator() {
         driver.get(url)
     }
 
-    override fun findElement(xpath: String): BrowserElement? {
-        val matches = driver.findElements(By.xpath(xpath))
-        return if (matches.isEmpty()) DesktopBrowserElement(matches.first()) else null
+    override fun findElementOrNull(xpath: String): BrowserElement? {
+        return try {
+            DesktopBrowserElement(driver.findElement(By.xpath(xpath)))
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun setupDriver(): WebDriver {
@@ -74,6 +77,9 @@ object DesktopBrowserEmulator : BrowserEmulator() {
 }
 
 class DesktopBrowserElement(private val element: WebElement) : BrowserElement {
+    override val visibleToUser: Boolean
+        get() = element.isDisplayed && element.isEnabled
+
     override fun click() {
         element.click()
     }

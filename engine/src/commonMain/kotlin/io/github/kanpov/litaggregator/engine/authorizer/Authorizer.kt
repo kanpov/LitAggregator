@@ -92,9 +92,13 @@ abstract class Authorizer {
     }
 
     private suspend fun validateAuthorization(): Boolean {
-        return makeUnvalidatedRequest {
-            setUrl(validationUrl!!)
-        }.strictlySuccessful()
+        return try {
+            makeUnvalidatedRequest {
+                setUrl(validationUrl!!)
+            }.strictlySuccessful()
+        } catch (_: Exception) {
+            false
+        }
     }
 
     protected abstract suspend fun makeUnvalidatedRequest(block: HttpRequestBuilder.() -> Unit): HttpResponse
