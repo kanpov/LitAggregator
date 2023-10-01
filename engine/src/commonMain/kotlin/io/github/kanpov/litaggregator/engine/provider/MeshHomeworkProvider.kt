@@ -8,8 +8,6 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonNull
 
 class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
@@ -72,6 +70,7 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
         override val name: String = "Домашние задания из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshHomework != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Authorization) -> AuthorizedProvider<MosAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.mos!!) }
+        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.authorization.mos!!) }
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.High
     }
 }

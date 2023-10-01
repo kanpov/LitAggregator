@@ -53,6 +53,7 @@ class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(
         override val name: String = "Оценки из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshMarks != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Authorization) -> AuthorizedProvider<MosAuthorizer, MarkFeedEntry> = { MeshMarkProvider(it.mos!!) }
+        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, MarkFeedEntry> = { MeshMarkProvider(it.authorization.mos!!) }
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Low
     }
 }

@@ -77,7 +77,7 @@ class Engine(platform: EnginePlatform, profileName: String) {
 
         SimpleProviderDefinition.all.forEach { definition ->
             if (definition.isEnabled(profile.providers)) {
-                if (!definition.factory().run(profile)) {
+                if (!definition.factory(profile).run(profile)) {
                     errors += definition.name
                 }
             }
@@ -85,7 +85,7 @@ class Engine(platform: EnginePlatform, profileName: String) {
 
         AuthorizedProviderDefinition.all.forEach { definition ->
             if (definition.isEnabled(profile.providers) && definition.isAuthorized(profile.authorization)) {
-                if (!definition.factory(profile.authorization).run(profile)) {
+                if (!definition.factory(profile).run(profile)) {
                     errors += definition.name
                 }
             }

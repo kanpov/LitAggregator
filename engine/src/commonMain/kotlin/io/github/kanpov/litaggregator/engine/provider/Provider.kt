@@ -94,27 +94,30 @@ abstract class SimpleProvider<E : FeedEntry> {
 interface SimpleProviderDefinition<E : FeedEntry> {
     val name: String
     val isEnabled: (ProviderSettings) -> Boolean
-    val factory: () -> SimpleProvider<E>
+    val factory: (Profile) -> SimpleProvider<E>
+    val networkUsage: ProviderNetworkUsage
 
     companion object {
-        val all = setOf<SimpleProviderDefinition<out FeedEntry>>()
+        val all = setOf<SimpleProviderDefinition<*>>()
     }
 }
 
-interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> {
-    val name: String
-    val isEnabled: (ProviderSettings) -> Boolean
+interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimpleProviderDefinition<E> {
     val isAuthorized: (Authorization) -> Boolean
-    val factory: (Authorization) -> AuthorizedProvider<A, E>
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-//            MeshRatingProvider.Definition,
-//            MeshBannerProvider.Definition,
-//            MeshVisitProvider.Definition,
-//            MeshMarkProvider.Definition
+            MeshRatingProvider.Definition,
+            MeshBannerProvider.Definition,
+            MeshVisitProvider.Definition,
+            MeshMarkProvider.Definition,
             MeshHomeworkProvider.Definition
         )
     }
 }
 
+enum class ProviderNetworkUsage {
+    Low,
+    Medium,
+    High
+}
