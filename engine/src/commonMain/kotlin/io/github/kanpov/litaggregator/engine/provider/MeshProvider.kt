@@ -3,9 +3,9 @@ package io.github.kanpov.litaggregator.engine.provider
 import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.util.jArray
-import io.github.kanpov.litaggregator.engine.util.jInt
-import io.github.kanpov.litaggregator.engine.util.jString
+import io.github.kanpov.litaggregator.engine.util.io.jArray
+import io.github.kanpov.litaggregator.engine.util.io.jInt
+import io.github.kanpov.litaggregator.engine.util.io.jString
 
 abstract class MeshProvider<E : FeedEntry>(authorizer: MosAuthorizer) : AuthorizedProvider<MosAuthorizer, E>(authorizer) {
     abstract suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo)

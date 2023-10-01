@@ -1,7 +1,7 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
 import io.github.kanpov.litaggregator.engine.EnginePlatform
-import io.github.kanpov.litaggregator.engine.util.ktorClient
+import io.github.kanpov.litaggregator.engine.util.io.ktorClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.cookie

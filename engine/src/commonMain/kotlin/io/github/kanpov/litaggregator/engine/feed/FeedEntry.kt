@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.feed
 
-import io.github.kanpov.litaggregator.engine.util.JsonInstant
+import io.github.kanpov.litaggregator.engine.util.io.JsonInstant
 import kotlinx.serialization.Serializable
 
 // Fingerprints: S (source), C (content) and M (metadata)

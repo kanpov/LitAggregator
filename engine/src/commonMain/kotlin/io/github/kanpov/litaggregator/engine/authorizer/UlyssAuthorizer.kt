@@ -1,10 +1,10 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
 import io.github.kanpov.litaggregator.engine.EnginePlatform
-import io.github.kanpov.litaggregator.engine.util.error
-import io.github.kanpov.litaggregator.engine.util.findCookie
-import io.github.kanpov.litaggregator.engine.util.ktorClient
-import io.github.kanpov.litaggregator.engine.util.missingCookie
+import io.github.kanpov.litaggregator.engine.util.io.error
+import io.github.kanpov.litaggregator.engine.util.io.findCookie
+import io.github.kanpov.litaggregator.engine.util.io.ktorClient
+import io.github.kanpov.litaggregator.engine.util.io.missingCookie
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.cookie
 import io.ktor.client.request.forms.FormDataContent

@@ -8,6 +8,7 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
+import io.github.kanpov.litaggregator.engine.util.io.*
 import kotlinx.serialization.json.JsonObject
 
 class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(authorizer) {

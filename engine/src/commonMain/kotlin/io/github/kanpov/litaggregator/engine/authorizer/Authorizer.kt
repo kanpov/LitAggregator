@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
-import io.github.kanpov.litaggregator.engine.util.*
+import io.github.kanpov.litaggregator.engine.util.io.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -8,7 +8,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 abstract class Authorizer {
