@@ -7,10 +7,12 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class DiagnosticFeedEntry(
+    val year: String,
     val subject: String,
     val place: Int,
     val maxResult: Int,
     val yourResult: Int,
+    val yourLevel: String,
     val comparisonToRegion: DiagnosticResultComparison?,
     val comparisonToSchool: DiagnosticResultComparison?,
     val comparisonToGroup: DiagnosticResultComparison?,

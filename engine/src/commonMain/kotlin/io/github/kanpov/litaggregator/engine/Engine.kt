@@ -43,7 +43,6 @@ class Engine(platform: EnginePlatform, profileName: String) {
         if (!profileFile.exists()) return false
         wrappedProfile = WrappedProfile.existing(readFile(profileFile), password) ?: return false
         profile = wrappedProfile.unwrap() ?: return false
-        profile.feed.homework.clear()
         return true
     }
 

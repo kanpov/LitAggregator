@@ -45,9 +45,9 @@ abstract class Authorizer {
         }
     }
 
-    suspend fun getJsonArrayFromPayload(endpoint: String, block: HttpRequestBuilder.() -> Unit = {}): List<JsonObject>? {
+    suspend fun getJsonArrayFromPayload(endpoint: String, payloadName: String = "payload", block: HttpRequestBuilder.() -> Unit = {}): List<JsonObject>? {
         return try {
-            getJson(endpoint, block)?.jArray("payload")
+            getJson(endpoint, block)?.jArray(payloadName)
         } catch (_: Exception) {
             null
         }

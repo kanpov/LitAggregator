@@ -24,7 +24,7 @@ interface FeedEntry {
 
 @Serializable
 data class FeedEntryMetadata(
-    val creationTime: JsonInstant,
+    val creationTime: JsonInstant?,
     var comments: MutableSet<String> = mutableSetOf(),
     var markers: MutableSet<String> = mutableSetOf(),
     var attachments: MutableSet<FeedEntryAttachment> = mutableSetOf(),

@@ -107,11 +107,7 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimplePr
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-            MeshRatingProvider.Definition,
-            MeshBannerProvider.Definition,
-            MeshVisitProvider.Definition,
-            MeshMarkProvider.Definition,
-            MeshHomeworkProvider.Definition
+            PortfolioDiagnosticProvider.Definition
         )
     }
 }

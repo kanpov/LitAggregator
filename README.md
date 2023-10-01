@@ -27,8 +27,8 @@
 - [ ] Providers
   - [ ] Lit.msu.ru announcements
   - [ ] Ulyss homeworks
-  - [ ] Dnevnik homeworks
-  - [ ] Dnevnik marks
+  - [x] Dnevnik homeworks
+  - [x] Dnevnik marks
   - [x] Dnevnik ratings
   - [x] Dnevnik visits
   - [x] Dnevnik banners
