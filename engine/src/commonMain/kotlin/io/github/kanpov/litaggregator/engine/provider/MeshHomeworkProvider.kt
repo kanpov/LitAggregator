@@ -9,46 +9,61 @@ import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonNull
 
 class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
-        // Fetch teacher profiles to determine teacher names for each subject's id
-        val teacherProfiles = authorizer.getJsonArray<JsonObject>("https://dnevnik.mos.ru/core/api/teacher_profiles")!!
-        val subjectIdToTeacherName = buildMap {
-            for (teacherProfileObj in teacherProfiles) {
-                val teacherName = teacherProfileObj.jString("name")
+        val days = getRelevantPastDays(profile).values.joinToString(separator = "%2C") // url encode days
+        val daySchedules = authorizer.getJsonArrayFromPayload(
+            "https://school.mos.ru/api/family/web/v1/schedule/short?student_id=${studentInfo.profileId}&dates=$days"
+        )!!
 
-                for (subjectObj in teacherProfileObj.jArray<JsonObject>("subjects")) {
-                    val subjectId = subjectObj.jInt("id")
+        for (scheduleObj in daySchedules) {
+            for (lessonObj in scheduleObj.jArray("lessons")) {
+                val educationType = lessonObj.jString("lesson_education_type")
 
-                    this[subjectId] = teacherName
-                }
+                if (educationType != "OO" && profile.providers.meshHomework!!.onlyIncludeOO) continue
+
+                val itemId = lessonObj.jInt("schedule_item_id")
+                provideItem(educationType, itemId, profile, studentInfo)
             }
         }
+    }
 
-        println(subjectIdToTeacherName)
+    private suspend fun provideItem(educationType: String, itemId: Int, profile: Profile, studentInfo: MeshStudentInfo) {
+        val itemObj = authorizer.getJson(
+            "https://school.mos.ru/api/family/web/v1/lesson_schedule_items/$itemId?student_id=${studentInfo.profileId}&type=$educationType"
+        )!!
 
-        val (_, beginDate) = getRelevantPastDays(profile).entries.last()
-        val (_, endDate) = getRelevantPastDays(profile).entries.first()
-        val rootObj = authorizer.getJson(
-            "https://school.mos.ru/api/family/web/v1/homeworks?from=$beginDate&to=$endDate&student_id=${studentInfo.profileId}")!!
+        val teacherName = itemObj.jObject("teacher").asFullName
+        val subjectName = itemObj.jString("subject_name")
 
-        for (homeworkObj in rootObj.jArray<JsonObject>("payload")) {
-            val subjectId = homeworkObj.jInt("subject_id")
-            val homeworkId = homeworkObj.jString("homework_entry_student_id")
-            val creationTime = TimeFormatters.slashedMeshDate.parseInstant(homeworkObj.jString("date_assigned_on"))
-            val assignedTime = TimeFormatters.slashedMeshDate.parseInstant(homeworkObj.jString("date"))
+        for (homeworkObj in itemObj.jArray("lesson_homeworks")) {
+            val attachments = mutableListOf<String>()
+
+            for (materialObj in homeworkObj.jArray("materials")) {
+                for (materialItemObj in materialObj.jArray("items")) {
+                    if (materialItemObj["link"] != null && materialItemObj.jString("link") != "null") {
+                        attachments += materialItemObj.jString("link")
+                    }
+                }
+            }
+
+            val creationTime = TimeFormatters.longMeshDateTime.parseInstant(homeworkObj.jString("homework_created_at"))
+            val assignedTime = TimeFormatters.iso.parseInstant(homeworkObj.jString("date_prepared_for"))
+            val objectId = homeworkObj.jInt("homework_id")
+            val entryId = homeworkObj.jInt("homework_entry_id")
 
             insert(profile.feed, HomeworkFeedEntry(
-                plain = homeworkObj.jString("description"),
+                plain = homeworkObj.jString("homework"),
                 html = null,
-                subject = homeworkObj.jString("subject_name"),
-                teacher = subjectIdToTeacherName[subjectId]!!,
+                subject = subjectName,
+                teacher = teacherName,
                 assignedTime = assignedTime,
-                attachments = emptyList(),
+                attachments = attachments,
                 allowsSubmissions = false,
-                metadata = FeedEntryMetadata(creationTime = creationTime),
-                sourceFingerprint = FeedEntry.fingerprintFrom(subjectId, homeworkId)
+                sourceFingerprint = FeedEntry.fingerprintFrom(objectId, entryId),
+                metadata = FeedEntryMetadata(creationTime = creationTime)
             ))
         }
     }

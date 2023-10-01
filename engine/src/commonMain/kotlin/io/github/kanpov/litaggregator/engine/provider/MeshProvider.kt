@@ -6,14 +6,13 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.util.jArray
 import io.github.kanpov.litaggregator.engine.util.jInt
 import io.github.kanpov.litaggregator.engine.util.jString
-import kotlinx.serialization.json.JsonObject
 
 abstract class MeshProvider<E : FeedEntry>(authorizer: MosAuthorizer) : AuthorizedProvider<MosAuthorizer, E>(authorizer) {
     abstract suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo)
 
     override suspend fun provide(profile: Profile) {
         val infoObj = authorizer.getJson("https://school.mos.ru/api/family/web/v1/profile")!!
-        val studentObj = infoObj.jArray<JsonObject>("children")
+        val studentObj = infoObj.jArray("children")
             .first { it.jString("class_name") == "${profile.identity.parallel}-${profile.identity.group}" }
 
         return meshProvide(profile, MeshStudentInfo(

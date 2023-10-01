@@ -12,10 +12,12 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.profile.WrappedProfile
 import io.github.kanpov.litaggregator.engine.provider.AuthorizedProviderDefinition
 import io.github.kanpov.litaggregator.engine.provider.SimpleProviderDefinition
+import io.github.kanpov.litaggregator.engine.util.asFile
 import io.github.kanpov.litaggregator.engine.util.jsonInstance
 import io.github.kanpov.litaggregator.engine.util.readFile
 import io.github.kanpov.litaggregator.engine.util.writeFile
 import java.io.File
+import java.time.Instant
 
 class Engine(platform: EnginePlatform, profileName: String) {
     private val profileFile: File
@@ -28,8 +30,7 @@ class Engine(platform: EnginePlatform, profileName: String) {
 
         EnginePlatform.current = platform
 
-        val profilePath = platform.getPersistentPath("$profileName.json")
-        profileFile = File(profilePath)
+        profileFile = platform.getPersistentPath("$profileName.json").asFile()
     }
 
     fun createProfile(encryptionOptions: EncryptionOptions, profile: Profile, password: String) {
@@ -42,14 +43,21 @@ class Engine(platform: EnginePlatform, profileName: String) {
         if (!profileFile.exists()) return false
         wrappedProfile = WrappedProfile.existing(readFile(profileFile), password) ?: return false
         profile = wrappedProfile.unwrap() ?: return false
+        profile.feed.homework.clear()
         return true
     }
 
     fun saveProfile() {
         wrappedProfile.rewrap(profile)
-        val j = jsonInstance.encodeToString(WrappedProfile.serializer(), wrappedProfile)
-        println(jsonInstance.encodeToString(Profile.serializer(), profile))
-        writeFile(profileFile, j)
+        val wrappedProfileJson = jsonInstance.encodeToString(WrappedProfile.serializer(), wrappedProfile)
+        val snapshotJson = jsonInstance.encodeToString(Profile.serializer(), profile)
+        writeFile(profileFile, wrappedProfileJson)
+
+        // snapshot
+        val snapshotFile = EnginePlatform.current
+            .getPersistentPath("snapshot_${Instant.now().toEpochMilli()}.json")
+            .asFile()
+        writeFile(snapshotFile, snapshotJson)
     }
 
     suspend fun setupAuthorizer(authorizer: Authorizer): Boolean {

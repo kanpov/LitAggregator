@@ -8,6 +8,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 abstract class Authorizer {
@@ -40,7 +41,14 @@ abstract class Authorizer {
         return try {
             decodeJsonRootList(getJsonInternal(endpoint, block)?.bodyAsText() ?: return null)
         } catch (e: Exception) {
-            println(e)
+            null
+        }
+    }
+
+    suspend fun getJsonArrayFromPayload(endpoint: String, block: HttpRequestBuilder.() -> Unit = {}): List<JsonObject>? {
+        return try {
+            getJson(endpoint, block)?.jArray("payload")
+        } catch (_: Exception) {
             null
         }
     }

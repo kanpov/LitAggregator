@@ -8,24 +8,22 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
-import java.sql.Time
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 val jsonInstance = Json {
     prettyPrint = true
     encodeDefaults = true
+    ignoreUnknownKeys = true
 }
 
 private const val ROOT_LIST_PATTERN = """{"values": ~}"""
 
 fun <T : JsonElement> decodeJsonRootList(rootJson: String): List<T> {
     val finalJson = ROOT_LIST_PATTERN.replace("~", rootJson)
-    return jsonInstance.decodeFromString(JsonObject.serializer(), finalJson).jArray("values")
+    return jsonInstance.decodeFromString(JsonObject.serializer(), finalJson).jCustomArray<T>("values")
 }
 
 typealias JsonInstant = @Serializable(with = InstantSerializer::class) Instant
@@ -71,8 +69,12 @@ object FlagBooleanSerializer : KSerializer<Boolean> {
 }
 
 // Quick (and not null-safe) access to non-modeled JSON data
-fun <T : JsonElement> JsonObject.jArray(name: String): List<T> {
+fun <T : JsonElement> JsonObject.jCustomArray(name: String): List<T> {
     return this[name]!!.jsonArray.map { it as T }
+}
+
+fun JsonObject.jArray(name: String): List<JsonObject> {
+    return jCustomArray(name)
 }
 
 fun JsonObject.jObject(name: String): JsonObject {
@@ -94,6 +96,9 @@ fun JsonObject.jFloat(name: String): Float {
 fun JsonObject.jBoolean(name: String): Boolean {
     return this[name]!!.jsonPrimitive.boolean
 }
+
+val JsonObject.asFullName: String
+    get() = "${jString("last_name")} ${jString("first_name")} ${jString("middle_name")}"
 
 //// Example: "2023-09-20 11:59:41"
 //fun parseMeshTime(literal: String): Instant {

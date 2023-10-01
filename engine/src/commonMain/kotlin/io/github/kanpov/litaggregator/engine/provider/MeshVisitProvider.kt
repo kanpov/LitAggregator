@@ -11,7 +11,6 @@ import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.jArray
 import io.github.kanpov.litaggregator.engine.util.jBoolean
 import io.github.kanpov.litaggregator.engine.util.jString
-import kotlinx.serialization.json.JsonObject
 
 class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
@@ -20,10 +19,10 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
         val (_, endDay) = relevantPastDays.entries.first()
         val rootObj = authorizer.getJson("https://school.mos.ru/api/family/web/v1/visits?from=$beginDay&to=$endDay&contract_id=${studentInfo.contractId}")!!
 
-        for (dayObj in rootObj.jArray<JsonObject>("payload")) {
+        for (dayObj in rootObj.jArray("payload")) {
             val day = dayObj.jString("date")
 
-            for (visitObj in dayObj.jArray<JsonObject>("visits")) {
+            for (visitObj in dayObj.jArray("visits")) {
                 val irregularPattern = visitObj.jBoolean("is_warning")
                 val entryTime = TimeFormatters.parseMeshDateTime(day, visitObj.jString("in"))
                 val isOut = visitObj.jString("out")

@@ -8,10 +8,7 @@ import io.github.kanpov.litaggregator.engine.feed.entry.RatingTrend
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
-import io.github.kanpov.litaggregator.engine.util.jFloat
-import io.github.kanpov.litaggregator.engine.util.jInt
-import io.github.kanpov.litaggregator.engine.util.jObject
-import io.github.kanpov.litaggregator.engine.util.jString
+import io.github.kanpov.litaggregator.engine.util.*
 import kotlinx.serialization.json.JsonObject
 
 class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEntry>(authorizer) {
@@ -26,9 +23,7 @@ class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEnt
                 if (obj.jString("type") == "student" && obj["person_id"] != null) {
                     val id = obj.jString("person_id")
                     val user = obj.jObject("user")
-                    val name =
-                        "${user.jString("last_name")} ${user.jString("first_name")} ${user.jString("middle_name")}"
-
+                    val name = user.asFullName
                     if (id != studentInfo.personId) this[id] = name
                 }
             }

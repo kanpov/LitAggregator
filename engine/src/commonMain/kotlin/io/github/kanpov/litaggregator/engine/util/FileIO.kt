@@ -79,3 +79,5 @@ private fun extractFile(inputStream: InputStream, destFilePath: String) {
 }
 
 private const val BUFFER_SIZE = 1024 * 10
+
+fun String.asFile() = File(this)

@@ -49,7 +49,7 @@ data class UlyssExclusions(
 
 @Serializable
 data class MeshHomeworkProviderSettings(
-    val includeInteractiveExercises: Boolean = true
+    val onlyIncludeOO: Boolean = false
 )
 
 @Serializable

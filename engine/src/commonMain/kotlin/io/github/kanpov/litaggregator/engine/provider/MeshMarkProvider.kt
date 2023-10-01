@@ -23,11 +23,11 @@ class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(
             val subjectName = subjectObj.jString("subject_name")
             val subjectId = subjectObj.jInt("subject_id")
 
-            for (periodObj in subjectObj.jArray<JsonObject>("periods")) {
+            for (periodObj in subjectObj.jArray("periods")) {
                 val periodName = periodObj.jString("name")
 
-                for (markObj in periodObj.jArray<JsonObject>("marks")) {
-                    val valueObj = markObj.jArray<JsonObject>("values").first()
+                for (markObj in periodObj.jArray("marks")) {
+                    val valueObj = markObj.jArray("values").first()
                     val creationTime = TimeFormatters.dottedMeshDate.parseInstant(markObj.jString("date"))
 
                     if (creationTime.isBefore(relevancyLimit)) continue

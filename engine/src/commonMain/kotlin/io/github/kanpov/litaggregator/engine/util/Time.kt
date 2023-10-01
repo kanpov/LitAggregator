@@ -15,6 +15,7 @@ object TimeFormatters {
     val shortMeshTime = newFormatter("HH:mm") // 08:30
     val longMeshTime = newFormatter("HH:mm:ss") // 08:30:45
 
+    val dottedShortMeshDateTime = newFormatter("uuuu.MM.dd HH:mm")
     val shortMeshDateTime = newFormatter("uuuu-MM-dd HH:mm")
     val longMeshDateTime = newFormatter("uuuu-MM-dd HH:mm:ss")
 

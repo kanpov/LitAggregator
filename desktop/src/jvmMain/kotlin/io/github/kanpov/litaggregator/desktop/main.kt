@@ -3,8 +3,6 @@ package io.github.kanpov.litaggregator.desktop
 import androidx.compose.ui.window.singleWindowApplication
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.engine.Engine
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.StandardAuthorizerCredentials
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.settings.*
 import io.github.kanpov.litaggregator.engine.profile.EncryptionOptions
