@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.util.io
 
-import io.github.aakira.napier.Napier
+import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
@@ -13,14 +13,22 @@ import io.ktor.http.*
 private const val MAX_RETRY_AMOUNT = 3
 
 val ktorClient = HttpClient(OkHttp) {
-    install(HttpRequestRetry) {
-        retryOnServerErrors(maxRetries = MAX_RETRY_AMOUNT)
-    }
+//    install(HttpRequestRetry) {
+//        retryOnServerErrors(maxRetries = MAX_RETRY_AMOUNT)
+//    }
 
     install(Logging) {
-        logger = object : Logger {
+        logger = object : io.ktor.client.plugins.logging.Logger {
             override fun log(message: String) {
-                Napier.i { message }
+                // Custom string manipulator to make the horrendous default formatting look cleaner
+                val lines = message.lowercase().lines()
+                if (lines.size != 3) return
+                val httpCode = lines[0].trim().removePrefix("response: ")
+                val httpMethod = lines[1].trim()
+                    .removePrefix("method: httpmethod(value=").removeSuffix(")").uppercase()
+                val httpUrl = lines[2].trim().removePrefix("from: ")
+
+                Logger.i { "Received $httpCode by $httpMethod: $httpUrl" }
             }
         }
 
@@ -30,6 +38,7 @@ val ktorClient = HttpClient(OkHttp) {
 
 suspend fun downloadFile(url: String, path: String) {
     writeFile(path, ktorClient.get(url).bodyAsText())
+    Logger.i { "Downloaded file into $path from: $url" }
 }
 
 fun HttpResponse.strictlySuccessful() = status.value == 200

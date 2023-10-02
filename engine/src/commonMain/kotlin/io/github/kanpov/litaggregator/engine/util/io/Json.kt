@@ -11,7 +11,6 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.UUID
 
 val jsonInstance = Json {
@@ -34,11 +33,11 @@ object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Instant {
-        return TimeFormatters.iso.parse(decoder.decodeString(), Instant::from)
+        return TimeFormatters.isoDateTime.parse(decoder.decodeString(), Instant::from)
     }
 
     override fun serialize(encoder: Encoder, value: Instant) {
-        encoder.encodeString(TimeFormatters.iso.format(value))
+        encoder.encodeString(TimeFormatters.isoDateTime.format(value))
     }
 }
 
@@ -53,7 +52,7 @@ object UuidSerializer : KSerializer<UUID> {
 }
 
 val LocalDateTime.asInstant: Instant
-    get() = toInstant(ZoneOffset.ofHours(0))
+    get() = toInstant(TimeFormatters.zof)
 
 typealias FlagBoolean = @Serializable(with = FlagBooleanSerializer::class) Boolean
 
@@ -82,6 +81,10 @@ fun JsonObject.jObject(name: String): JsonObject {
     return this[name]!!.jsonObject
 }
 
+fun JsonObject.jOptionalString(name: String): String? {
+    return if (this.containsKey(name)) jString(name) else null
+}
+
 fun JsonObject.jString(name: String): String {
     return this[name]!!.jsonPrimitive.content
 }
@@ -100,20 +103,3 @@ fun JsonObject.jBoolean(name: String): Boolean {
 
 val JsonObject.asFullName: String
     get() = "${jString("last_name")} ${jString("first_name")} ${jString("middle_name")}"
-
-//// Example: "2023-09-20 11:59:41"
-//fun parseMeshTime(literal: String): Instant {
-//    return (if (literal.length > 16) mtfDateTimeLong else mtfTimeShortFormatter).parseInstant(literal)
-//}
-//
-//private val mtfTimeShortFormatter: DateTimeFormatter = DateTimeFormatter
-//    .ofPattern("yyyy-MM-dd HH:mm")
-//    .withZone(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3)))
-//
-//private val mtfDateTimeLong: DateTimeFormatter = DateTimeFormatter
-//    .ofPattern("yyyy-MM-dd HH:mm:ss")
-//    .withZone(ZoneId.ofOffset("GMT", ZoneOffset.ofHours(3)))
-//
-//fun DateTimeFormatter.parseInstant(literal: String): Instant = parse(literal, Instant::from)
-//
-//fun Instant.differenceFrom(other: Instant): Instant = Instant.ofEpochMilli(other.toEpochMilli() - this.toEpochMilli())

@@ -30,11 +30,11 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
                       private val session: UlyssClientSession = UlyssClientSession()
 ) : Authorizer() {
 
+    override val name: String = "УЛИСС"
     @Transient override val authorizers: Set<suspend () -> Unit> = setOf(
         ::authorizeThroughHttp,
         ::authorizeThroughBrowserEmulator
     )
-
     @Transient override val validationUrl: String = ULYSS_VALIDATION_URL
 
     override suspend fun makeUnvalidatedRequest(block: HttpRequestBuilder.() -> Unit): HttpResponse {

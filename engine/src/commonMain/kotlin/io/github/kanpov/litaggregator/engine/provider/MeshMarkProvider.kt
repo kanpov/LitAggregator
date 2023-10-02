@@ -30,14 +30,18 @@ class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(
                 for (markObj in periodObj.jArray("marks")) {
                     val valueObj = markObj.jArray("values").first()
                     val creationTime = TimeFormatters.dottedMeshDate.parseInstant(markObj.jString("date"))
+                    val isExam = markObj.jBoolean("is_exam")
+                    val weight = markObj.jInt("weight")
 
                     if (creationTime.isBefore(relevancyLimit)) continue
+                    if (!isExam && profile.providers.meshMarks!!.onlyIncludeExams) continue
+                    if (!profile.providers.meshMarks!!.weightFilter.match(weight)) continue
 
                     insert(profile.feed, MarkFeedEntry(
                         subject = subjectName,
                         value = valueObj.jFloat("five").toInt(),
-                        weight = markObj.jInt("weight"),
-                        isExam = markObj.jBoolean("is_exam"),
+                        weight = weight,
+                        isExam = isExam,
                         comment = markObj.jString("comment"),
                         topic = markObj.jString("topic_name"),
                         workForm = markObj.jString("control_form_name"),

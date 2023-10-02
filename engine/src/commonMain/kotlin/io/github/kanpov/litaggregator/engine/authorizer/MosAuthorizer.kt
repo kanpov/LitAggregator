@@ -22,6 +22,7 @@ data class MosAuthorizer(private val credentials: StandardAuthorizerCredentials,
                          private var authToken: String = "")
     : Authorizer() {
 
+    override val name: String = "МЭШ"
     @Transient override val authorizers: Set<suspend () -> Unit> = setOf(::authorizeThroughBrowserEmulator)
     @Transient override val validationUrl: String = MOS_VALIDATION_URL
 

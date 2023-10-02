@@ -20,7 +20,7 @@ class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEnt
         // Map their person IDs (contingent GUIDs) to their full names in order to identify them in the rating list
         val personIdToName = buildMap {
             classProfiles.forEach { obj ->
-                if (obj.jString("type") == "student" && obj["person_id"] != null) {
+                if (obj.jString("type") == "student" && obj.containsKey("person_id")) {
                     val id = obj.jString("person_id")
                     val user = obj.jObject("user")
                     val name = user.asFullName

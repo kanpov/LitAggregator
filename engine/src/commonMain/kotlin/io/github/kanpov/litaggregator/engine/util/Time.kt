@@ -7,7 +7,7 @@ object TimeFormatters {
     val zof: ZoneOffset = ZoneOffset.ofHours(3)
     val zid: ZoneId = ZoneId.ofOffset("GMT", zof)
 
-    val iso = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(zid)
+    val isoDateTime: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(zid)
 
     val dottedMeshDate = newFormatter("dd.MM.uuuu") // 05.09.2023
     val slashedMeshDate = newFormatter("uuuu-MM-dd") // 2023-09-05

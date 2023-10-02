@@ -2,25 +2,18 @@ package io.github.kanpov.litaggregator.engine.util
 
 import io.github.kanpov.litaggregator.engine.util.io.BasicCookie
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import java.time.Instant
 
 abstract class BrowserEmulator {
     abstract val loadedUrl: String
     abstract val cookies: Set<BasicCookie>
 
-    fun use(headless: Boolean = true, block: suspend BrowserEmulator.() -> Unit): Boolean {
-        return try {
-            runBlocking {
-                launch(headless)
-                block.invoke(this@BrowserEmulator)
-                shutdown()
-            }
-            true
-        } catch (_: Exception) {
-            false
-        }
+    suspend fun use(headless: Boolean = true, block: suspend BrowserEmulator.() -> Unit) {
+        launch(headless)
+        block.invoke(this)
+        shutdown()
     }
+
     protected abstract fun launch(headless: Boolean)
 
     protected abstract fun shutdown()
@@ -33,7 +26,7 @@ abstract class BrowserEmulator {
         return findElementOrThrow(xpath)
     }
 
-    suspend fun awaitUrl(timeoutSeconds: Long = 5L, checkIntensityMillis: Long = 250L, matcher: (String) -> Boolean): String {
+    suspend fun awaitUrl(timeoutSeconds: Long = 10L, checkIntensityMillis: Long = 250L, matcher: (String) -> Boolean): String {
         awaitInternal("browser is still not at the URL matching given expression",
             timeoutSeconds, checkIntensityMillis) { matcher(loadedUrl) }
         return loadedUrl

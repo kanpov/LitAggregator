@@ -14,7 +14,6 @@ data class ProviderSettings(
     val meshRatings: MeshRatingProviderSettings? = MeshRatingProviderSettings(),
     val meshVisits: MeshVisitProviderSettings? = MeshVisitProviderSettings(),
     val meshBanners: MeshBannerProviderSettings? = MeshBannerProviderSettings(),
-    val meshReplacements: MeshReplacementProviderSettings? = MeshReplacementProviderSettings(),
     val portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = PortfolioDiagnosticProviderSettings(),
     val portfolioEvents: PortfolioEventProviderSettings? = PortfolioEventProviderSettings(),
     val classroom: ClassroomProviderSettings? = ClassroomProviderSettings(),
@@ -55,8 +54,7 @@ data class MeshHomeworkProviderSettings(
 @Serializable
 data class MeshMarkProviderSettings(
     val onlyIncludeExams: Boolean = false,
-    val weightFilter: ComparisonFilter = ComparisonFilter(),
-    val prunePreviousPeriods: Boolean = false
+    val weightFilter: ComparisonFilter = ComparisonFilter()
 )
 
 @Serializable
@@ -72,11 +70,6 @@ data class MeshVisitProviderSettings(
 @Serializable
 data class MeshBannerProviderSettings(
     val addLinks: Boolean = true
-)
-
-@Serializable
-data class MeshReplacementProviderSettings(
-    val ignoredSubjects: ListFilter = ListFilter()
 )
 
 @Serializable

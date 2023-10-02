@@ -19,7 +19,6 @@ abstract class SimpleProvider<E : FeedEntry> {
             provide(profile)
             true
         } catch (e: Exception) {
-            println(e.stackTraceToString())
             false
         }
     }
@@ -107,7 +106,7 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimplePr
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-            PortfolioDiagnosticProvider.Definition
+            PortfolioEventProvider.Definition
         )
     }
 }

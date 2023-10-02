@@ -42,14 +42,14 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
 
             for (materialObj in homeworkObj.jArray("materials")) {
                 for (materialItemObj in materialObj.jArray("items")) {
-                    if (materialItemObj["link"] != null && materialItemObj.jString("link") != "null") {
+                    if (materialItemObj.containsKey("link") && materialItemObj.jString("link") != "null") {
                         attachments += materialItemObj.jString("link")
                     }
                 }
             }
 
             val creationTime = TimeFormatters.longMeshDateTime.parseInstant(homeworkObj.jString("homework_created_at"))
-            val assignedTime = TimeFormatters.iso.parseInstant(homeworkObj.jString("date_prepared_for"))
+            val assignedTime = TimeFormatters.isoDateTime.parseInstant(homeworkObj.jString("date_prepared_for"))
             val objectId = homeworkObj.jInt("homework_id")
             val entryId = homeworkObj.jInt("homework_entry_id")
 

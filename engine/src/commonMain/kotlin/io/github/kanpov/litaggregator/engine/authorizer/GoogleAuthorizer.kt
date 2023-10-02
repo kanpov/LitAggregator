@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
-import io.github.aakira.napier.Napier
+import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.io.error
 import io.github.kanpov.litaggregator.engine.util.io.ktorClient
@@ -25,6 +25,7 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
     : Authorizer(){
     private var bufferedCodeVerifier: String? = null
 
+    override val name: String = "Google"
     override val validationUrl: String? = null
     override val authorizers: Set<suspend () -> Unit> = setOf(
         ::authorizeWithBrowser
@@ -70,7 +71,7 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
         session.accessExpiry = Instant.now()
             .plusSeconds(json["expires_in"]!!.jsonPrimitive.int.toLong()).toString()
 
-        Napier.i { "Refreshed Google OAuth access token, new one will be valid until ${session.accessExpiry}" }
+        Logger.i { "Refreshed Google OAuth access token, new one will be valid until ${session.accessExpiry}" }
     }
 
     // Platform-specific part of the implementation:

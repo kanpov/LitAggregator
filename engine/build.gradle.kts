@@ -11,7 +11,7 @@ kotlin {
     sourceSets {
         val commonMain by getting  {
             val ktorClientVersion = project.properties["ktor.client.version"]
-            val napierVersion = project.properties["napier.version"]
+            val kermitVersion = project.properties["kermit.version"]
             val jsoupVersion = project.properties["jsoup.version"]
             val apacheCommonsVersion = project.properties["apache.commons.version"]
             val kotlinxSerializationVersion = project.properties["kotlinx.serialization.version"]
@@ -21,8 +21,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorClientVersion")
                 implementation("io.ktor:ktor-client-okhttp:$ktorClientVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorClientVersion")
-                // Napier for multiplatform logging
-                implementation("io.github.aakira:napier:$napierVersion")
+                // Kermit (the log) for multiplatform logging
+                implementation("co.touchlab:kermit:$kermitVersion")
                 // JSoup for parsing HTML
                 implementation("org.jsoup:jsoup:$jsoupVersion")
                 // Apache Commons Lang3 for some utility classes (such as SystemUtils)

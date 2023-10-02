@@ -1,6 +1,6 @@
 package io.github.kanpov.litaggregator.engine.util.io
 
-import io.github.aakira.napier.Napier
+import co.touchlab.kermit.Logger
 import io.ktor.utils.io.core.toByteArray
 import java.io.BufferedOutputStream
 import java.io.File
@@ -16,28 +16,28 @@ fun writeFile(path: String, content: String) {
 fun writeFile(file: File, content: String) {
     if (!file.exists()) {
         file.createNewFile()
-        Napier.i { "Created new file: ${file.absolutePath}" }
+        Logger.i { "Created new file: ${file.absolutePath}" }
     }
 
     FileOutputStream(file).use { stream ->
         stream.write(content.toByteArray())
     }
 
-    Napier.i { "Wrote to file: ${file.absolutePath}" }
+    Logger.i { "Wrote to file: ${file.absolutePath}" }
 }
 
 fun readFile(file: File): String {
     var output = ""
 
     if (!file.exists()) {
-        Napier.e { "Attempted to read from a non-existing file: ${file.absolutePath}" }
+        Logger.e { "Attempted to read from a non-existing file: ${file.absolutePath}" }
         return output
     }
 
     FileInputStream(file).use { stream ->
         output = stream.bufferedReader().readText()
     }
-    Napier.i { "Read from file: ${file.absolutePath}" }
+    Logger.i { "Read from file: ${file.absolutePath}" }
 
     return output
 }
