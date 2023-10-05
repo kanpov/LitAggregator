@@ -106,7 +106,7 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimplePr
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
-            PortfolioEventProvider.Definition
+            UlyssProvider.Definition
         )
     }
 }

@@ -29,7 +29,7 @@ class PortfolioEventProvider(authorizer: MosAuthorizer) : MeshProvider<EventFeed
             val entityId = rewardObj.jString("entityId").toInt()
             val eventObj = events.firstOrNull { it.jInt("id") == entityId } ?: continue
 
-            val creationTime = TimeFormatters.isoDateTime.parse(rewardObj.jString("creationDate"), Instant::from)
+            val creationTime = TimeFormatters.isoLocalDateTime.parse(rewardObj.jString("creationDate"), Instant::from)
             val reward = rewardObj.jObject("rewardType").jString("value")
             val startTime = if (eventObj.containsKey("startDate")) TimeFormatters.slashedMeshDate.parseInstant(eventObj.jString("startDate")) else null
             val endTime = if (eventObj.containsKey("endDate")) TimeFormatters.slashedMeshDate.parseInstant(eventObj.jString("endDate")) else null

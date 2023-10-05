@@ -13,7 +13,7 @@ abstract class MeshProvider<E : FeedEntry>(authorizer: MosAuthorizer) : Authoriz
     override suspend fun provide(profile: Profile) {
         val infoObj = authorizer.getJson("https://school.mos.ru/api/family/web/v1/profile")!!
         val studentObj = infoObj.jArray("children")
-            .first { it.jString("class_name") == "${profile.identity.parallel}-${profile.identity.group}" }
+            .first { obj -> profile.identity.classNames.any { obj.jString("class_name") == it } }
 
         return meshProvide(profile, MeshStudentInfo(
             profileId = studentObj.jInt("id").toString(),

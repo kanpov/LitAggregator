@@ -48,6 +48,7 @@ data class UlyssExclusions(
 
 @Serializable
 data class MeshHomeworkProviderSettings(
+    val titleFormatter: String = "!{subject} на !{assigned_time}",
     val onlyIncludeOO: Boolean = false
 )
 

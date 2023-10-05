@@ -9,6 +9,7 @@ import io.github.kanpov.litaggregator.engine.settings.Authorization
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
 import io.github.kanpov.litaggregator.engine.util.io.*
+import java.time.Instant
 
 class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
@@ -49,11 +50,12 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
             }
 
             val creationTime = TimeFormatters.longMeshDateTime.parseInstant(homeworkObj.jString("homework_created_at"))
-            val assignedTime = TimeFormatters.isoDateTime.parseInstant(homeworkObj.jString("date_prepared_for"))
+            val assignedTime = TimeFormatters.isoLocalDateTime.parseInstant(homeworkObj.jString("date_prepared_for"))
             val objectId = homeworkObj.jInt("homework_id")
             val entryId = homeworkObj.jInt("homework_entry_id")
 
             insert(profile.feed, HomeworkFeedEntry(
+                title = formatHomeworkTitle(subjectName, teacherName, assignedTime, profile),
                 plain = homeworkObj.jString("homework"),
                 html = null,
                 subject = subjectName,
@@ -65,6 +67,14 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
                 metadata = FeedEntryMetadata(creationTime = creationTime)
             ))
         }
+    }
+
+    private fun formatHomeworkTitle(subject: String, teacher: String, assignedTime: Instant, profile: Profile): String {
+        val source = profile.providers.meshHomework!!.titleFormatter
+        return source
+            .replace("!{subject}", subject)
+            .replace("!{teacher}", teacher)
+            .replace("!{assigned_time}", TimeFormatters.dottedMeshDate.format(assignedTime))
     }
 
     object Definition : AuthorizedProviderDefinition<MosAuthorizer, HomeworkFeedEntry> {

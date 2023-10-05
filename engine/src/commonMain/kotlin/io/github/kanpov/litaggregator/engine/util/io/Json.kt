@@ -33,11 +33,11 @@ object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Instant {
-        return TimeFormatters.isoDateTime.parse(decoder.decodeString(), Instant::from)
+        return TimeFormatters.isoLocalDateTime.parse(decoder.decodeString(), Instant::from)
     }
 
     override fun serialize(encoder: Encoder, value: Instant) {
-        encoder.encodeString(TimeFormatters.isoDateTime.format(value))
+        encoder.encodeString(TimeFormatters.isoLocalDateTime.format(value))
     }
 }
 
@@ -99,6 +99,10 @@ fun JsonObject.jFloat(name: String): Float {
 
 fun JsonObject.jBoolean(name: String): Boolean {
     return this[name]!!.jsonPrimitive.boolean
+}
+
+fun JsonObject.jFlagBoolean(name: String): Boolean {
+    return this[name]!!.jsonPrimitive.int == 1
 }
 
 val JsonObject.asFullName: String
