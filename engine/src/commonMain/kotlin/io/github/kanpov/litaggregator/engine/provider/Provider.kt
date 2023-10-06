@@ -19,6 +19,7 @@ abstract class SimpleProvider<E : FeedEntry> {
             provide(profile)
             true
         } catch (e: Exception) {
+            println(e.stackTraceToString())
             false
         }
     }

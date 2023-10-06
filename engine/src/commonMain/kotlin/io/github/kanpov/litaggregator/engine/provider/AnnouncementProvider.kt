@@ -3,16 +3,15 @@ package io.github.kanpov.litaggregator.engine.provider
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.AnnouncementFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.profile.bufferCharset
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.io.ktorClient
+import io.github.kanpov.litaggregator.engine.util.padLeft
 import io.github.kanpov.litaggregator.engine.util.parseInstant
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import org.jsoup.Jsoup
 import java.security.MessageDigest
-import java.time.Instant
 
 class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
     override suspend fun provide(profile: Profile) {
@@ -32,11 +31,11 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
                 val title = postDivs[i].getElementsByTag("h4").first()?.text() ?: continue
                 val content = postDivs[i].getElementsByTag("p").first()?.html() ?: continue
 
-                val day = days[i].text().toInt()
+                val day = days[i].text().padLeft(until = 2, with = '0')
                 val monthInt = listOf("январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август",
                     "сентябрь", "октябрь", "ноябрь", "декабрь").indexOf(monthLiteral.lowercase()) + 1
-                val monthValue = if (monthInt.toString().length == 1) "0$monthInt" else monthInt
-                val creationTime = TimeFormatters.dottedMeshDate.parse("$day.$monthValue.$year", Instant::from)
+                val monthValue = monthInt.toString().padLeft(until = 2, with = '0')
+                val creationTime = TimeFormatters.dottedMeshDate.parseInstant("$day.$monthValue.$year")
 
                 val categories = buildList {
                     postDivs[i].getElementsByClass("category-list").let { matches ->
@@ -53,8 +52,8 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
                     content = content,
                     categories = categories,
                     sourceFingerprint = MessageDigest.getInstance("SHA-256")
-                        .digest(content.toByteArray(bufferCharset))
-                        .toString(bufferCharset),
+                        .digest(content.toByteArray())
+                        .toString(),
                     metadata = FeedEntryMetadata(creationTime = creationTime)
                 ))
             }

@@ -52,6 +52,9 @@ class Engine(platform: EnginePlatform, profileName: String) {
             Logger.i { "Attempt to load profile was unsuccessful due to an incorrect password: ${profileFile.absolutePath}" }
         }
 
+        profile.feed.homework.clear()
+        profile.feed.announcements.clear()
+
         Logger.i { "Loaded profile: ${profileFile.absolutePath}" }
         return ProfileLoadResult.Successful
     }
