@@ -26,14 +26,14 @@
 - [x] Provider API
 - [ ] Providers
   - [ ] Lit.msu.ru announcements
-  - [ ] Ulyss homeworks
+  - [x] Ulyss homeworks
   - [x] Dnevnik homeworks
   - [x] Dnevnik marks
   - [x] Dnevnik ratings
   - [x] Dnevnik visits
   - [x] Dnevnik banners
-  - [ ] Portfolio diagnostics
-  - [ ] Portfolio events
+  - [x] Portfolio diagnostics
+  - [x] Portfolio events
   - [ ] Classroom assignments
   - [ ] Gmail messages
 
