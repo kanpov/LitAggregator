@@ -98,7 +98,7 @@ interface SimpleProviderDefinition<E : FeedEntry> {
     val networkUsage: ProviderNetworkUsage
 
     companion object {
-        val all = setOf<SimpleProviderDefinition<*>>(AnnouncementProvider.Definition)
+        val all = setOf<SimpleProviderDefinition<*>>()
     }
 }
 
@@ -107,12 +107,13 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimplePr
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
+            ClassroomProvider.Definition
         )
     }
 }
 
 enum class ProviderNetworkUsage {
-    Low,
-    Medium,
-    High
+    Fixed,
+    Linear,
+    Quadratic
 }

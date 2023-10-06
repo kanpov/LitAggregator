@@ -49,6 +49,6 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshVisits != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
         override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, VisitFeedEntry> = { MeshVisitProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Low
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

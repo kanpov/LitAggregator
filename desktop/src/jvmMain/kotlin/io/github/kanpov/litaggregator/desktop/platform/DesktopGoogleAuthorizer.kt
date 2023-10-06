@@ -10,7 +10,7 @@ import java.net.ServerSocket
 import java.net.URI
 import java.util.Scanner
 
-class DesktopGoogleAuthorizer(session: GoogleClientSession) : GoogleAuthorizer(session) {
+class DesktopGoogleAuthorizer(session: GoogleClientSession = GoogleClientSession()) : GoogleAuthorizer(session) {
     override var redirectUri: String = "http://127.0.0.1:|port|"
 
     override fun authorizeImpl(oauthUrl: String) {

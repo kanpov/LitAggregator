@@ -55,6 +55,6 @@ class PortfolioEventProvider(authorizer: MosAuthorizer) : MeshProvider<EventFeed
         override val name: String = "Соревнования из Портфолио МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.portfolioEvents != null }
         override val factory: (Profile) -> SimpleProvider<EventFeedEntry> = { PortfolioEventProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Low
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

@@ -54,6 +54,6 @@ class PortfolioDiagnosticProvider(authorizer: MosAuthorizer) : MeshProvider<Diag
         override val name: String = "Диагностики из Портфолио МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.portfolioDiagnostics != null }
         override val factory: (Profile) -> SimpleProvider<DiagnosticFeedEntry> = { PortfolioDiagnosticProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Low
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

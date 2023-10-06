@@ -18,6 +18,7 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
         val doc = Jsoup.parse(ktorClient.get("https://lit.msu.ru/news").bodyAsText())
         val contentDiv = doc.getElementsByClass("view-content").first() ?: return
         val year = doc.getElementById("main")?.getElementsByTag("h1")?.first()?.text() ?: return
+        val (earliestTime, _) = getRelevantPastDays(profile).entries.last()
 
         for (groupingDiv in contentDiv.getElementsByClass("view-grouping")) {
             val monthLiteral = groupingDiv.getElementsByClass("view-grouping-header").first()?.text() ?: continue
@@ -36,6 +37,8 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
                     "сентябрь", "октябрь", "ноябрь", "декабрь").indexOf(monthLiteral.lowercase()) + 1
                 val monthValue = monthInt.toString().padLeft(until = 2, with = '0')
                 val creationTime = TimeFormatters.dottedMeshDate.parseInstant("$day.$monthValue.$year")
+
+                if (creationTime.isBefore(earliestTime)) continue
 
                 val categories = buildList {
                     postDivs[i].getElementsByClass("category-list").let { matches ->
@@ -64,6 +67,6 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
         override val name: String = "Новости из сайта Лицея 1533"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.announcements != null }
         override val factory: (Profile) -> SimpleProvider<AnnouncementFeedEntry> = { AnnouncementProvider() }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Low
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

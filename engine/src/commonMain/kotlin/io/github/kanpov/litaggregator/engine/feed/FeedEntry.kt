@@ -80,6 +80,6 @@ data class FeedEntryTaskList(
 @Serializable
 data class FeedEntryAttachment(
     val downloadUrl: String,
-    val name: String,
+    val title: String?,
     val thumbnailUrl: String?
 )

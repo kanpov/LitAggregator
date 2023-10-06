@@ -2,6 +2,7 @@ package io.github.kanpov.litaggregator.engine.provider
 
 import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
+import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
@@ -39,12 +40,16 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
         val subjectName = itemObj.jString("subject_name")
 
         for (homeworkObj in itemObj.jArray("lesson_homeworks")) {
-            val attachments = mutableListOf<String>()
-
-            for (materialObj in homeworkObj.jArray("materials")) {
-                for (materialItemObj in materialObj.jArray("items")) {
-                    if (materialItemObj.containsKey("link") && materialItemObj.jString("link") != "null") {
-                        attachments += materialItemObj.jString("link")
+            val attachments = buildList {
+                for (materialObj in homeworkObj.jArray("materials")) {
+                    for (materialItemObj in materialObj.jArray("items")) {
+                        if (materialItemObj.containsKey("link") && materialItemObj.jString("link") != "null") {
+                            this += FeedEntryAttachment(
+                                downloadUrl = materialItemObj.jString("link"),
+                                title = materialItemObj.jString("title"),
+                                thumbnailUrl = null
+                            )
+                        }
                     }
                 }
             }
@@ -82,6 +87,6 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshHomework != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
         override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.High
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Quadratic
     }
 }

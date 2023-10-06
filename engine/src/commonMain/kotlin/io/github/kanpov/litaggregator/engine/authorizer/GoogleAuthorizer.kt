@@ -3,6 +3,7 @@ package io.github.kanpov.litaggregator.engine.authorizer
 import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.io.error
+import io.github.kanpov.litaggregator.engine.util.io.jsonInstance
 import io.github.kanpov.litaggregator.engine.util.io.ktorClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
@@ -63,9 +64,10 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
             parameter("client_id", EnginePlatform.current.googleClientId)
             parameter("refresh_token", session.refreshToken)
             parameter("grant_type", "refresh_token")
+            addClientSecret()
         }
 
-        val json = Json.decodeFromString<JsonObject>(request.bodyAsText())
+        val json = jsonInstance.decodeFromString<JsonObject>(request.bodyAsText())
 
         session.accessToken = json["access_token"]!!.jsonPrimitive.content
         session.accessExpiry = Instant.now()
@@ -86,10 +88,7 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
             parameter("code_verifier", bufferedCodeVerifier!!)
             parameter("grant_type", "authorization_code")
             parameter("redirect_uri", redirectUri)
-
-            if (EnginePlatform.current.googleClientSecret != null) { // client secret is required on this platform
-                parameter("client_secret", EnginePlatform.current.googleClientSecret)
-            }
+            addClientSecret()
         }
 
         if (response.error()) return
@@ -115,6 +114,7 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
         private val sha256Digest = MessageDigest.getInstance("SHA-256")
         private val scopes = listOf(
             ".../auth/userinfo.email",
+            ".../auth/classroom.courses.readonly",
             ".../auth/classroom.coursework.me",
             ".../auth/gmail.addons.current.action.compose",
             ".../auth/gmail.addons.current.message.action",
@@ -158,4 +158,10 @@ class GoogleClientSession {
     lateinit var accessToken: String
     lateinit var refreshToken: String
     lateinit var accessExpiry: String
+}
+
+private fun HttpRequestBuilder.addClientSecret() {
+    if (EnginePlatform.current.googleClientSecret != null) { // client secret is required on this platform
+        parameter("client_secret", EnginePlatform.current.googleClientSecret)
+    }
 }

@@ -80,6 +80,6 @@ class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEnt
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshRatings != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
         override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, RatingFeedEntry> = { MeshRatingProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Medium
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Linear
     }
 }

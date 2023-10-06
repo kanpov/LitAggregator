@@ -40,6 +40,6 @@ class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEnt
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshBanners != null }
         override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
         override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, BannerFeedEntry> = { MeshBannerProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Low
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

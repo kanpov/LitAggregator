@@ -1,6 +1,7 @@
 package io.github.kanpov.litaggregator.engine.provider
 
 import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
+import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
@@ -42,10 +43,20 @@ class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAutho
         val cleanContent = homeworkObj.jString("body_clean")
         val htmlContent = homeworkObj.jString("body")
         val creationTime = TimeFormatters.isoGlobalDateTime.parse(homeworkObj.jString("Post date"), Instant::from)
-        val attachments = if (homeworkObj["attachments"] is JsonNull) {
-            emptyList()
-        } else {
-            homeworkObj.jString("attachments").split(";")
+        val attachments = buildList {
+            val attachmentUrls = if (homeworkObj["attachments"] is JsonNull) {
+                emptyList()
+            } else {
+                homeworkObj.jString("attachments").split(";")
+            }
+
+            for (attachmentUrl in attachmentUrls) {
+                this += FeedEntryAttachment(
+                    downloadUrl = attachmentUrl,
+                    title = null,
+                    thumbnailUrl = null
+                )
+            }
         }
 
         if (creationTime.isBefore(earliestTime)) return
@@ -86,6 +97,6 @@ class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAutho
         override val name: String = "Учебные материалы из УЛИСС"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.ulyss != null }
         override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { UlyssProvider(it.authorization.ulyss!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Medium
+        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Linear
     }
 }
