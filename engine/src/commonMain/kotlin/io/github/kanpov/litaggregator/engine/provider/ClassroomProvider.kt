@@ -38,6 +38,7 @@ class ClassroomProvider(authorizer: GoogleAuthorizer) : AuthorizedProvider<Googl
 
                 val courseWorkId = courseWorkObj.jString("id")
                 val attachments = buildList {
+                    if (!courseWorkObj.containsKey("materials")) return@buildList
                     for (materialObj in courseWorkObj.jArray("materials")) {
                         if (!materialObj.containsKey("driveFile")) continue
 
@@ -51,11 +52,14 @@ class ClassroomProvider(authorizer: GoogleAuthorizer) : AuthorizedProvider<Googl
                     }
                 }
 
-                val dueDateObj = courseWorkObj.jObject("dueDate")
-                val dueYear = dueDateObj.jInt("year")
-                val dueMonth = dueDateObj.jInt("month").toString().padLeft(until = 2, with = '0')
-                val dueDay = dueDateObj.jInt("day").toString().padLeft(until = 2, with = '0')
-                val dueTime = TimeFormatters.dottedMeshDate.parseInstant("$dueDay.$dueMonth.$dueYear")
+                var dueTime: Instant? = null
+                if (courseWorkObj.containsKey("dueDate")) {
+                    val dueDateObj = courseWorkObj.jObject("dueDate")
+                    val dueYear = dueDateObj.jInt("year")
+                    val dueMonth = dueDateObj.jInt("month").toString().padLeft(until = 2, with = '0')
+                    val dueDay = dueDateObj.jInt("day").toString().padLeft(until = 2, with = '0')
+                    dueTime = TimeFormatters.dottedMeshDate.parseInstant("$dueDay.$dueMonth.$dueYear")
+                }
 
                 insert(profile.feed, HomeworkFeedEntry(
                     title = courseWorkObj.jString("title"),

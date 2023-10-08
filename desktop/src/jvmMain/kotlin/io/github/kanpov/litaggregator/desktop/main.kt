@@ -2,6 +2,7 @@ package io.github.kanpov.litaggregator.desktop
 
 import androidx.compose.ui.window.singleWindowApplication
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
+import io.github.kanpov.litaggregator.desktop.platform.DesktopGoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.Engine
 import io.github.kanpov.litaggregator.engine.ProfileLoadResult
 import io.github.kanpov.litaggregator.engine.feed.Feed
@@ -21,12 +22,7 @@ fun main() = singleWindowApplication {
     }
 
     CoroutineScope(Dispatchers.Default).launch {
-        val (feed, errors) = engine.refreshFeed()
-
-        println("Feed: $feed")
-        println("Errors in: $errors")
-
-        engine.saveProfile()
+        engine.setupAuthorizer(DesktopGoogleAuthorizer())
     }
 }
 

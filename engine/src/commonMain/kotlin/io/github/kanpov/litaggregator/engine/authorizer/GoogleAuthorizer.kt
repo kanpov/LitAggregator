@@ -2,9 +2,8 @@ package io.github.kanpov.litaggregator.engine.authorizer
 
 import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.engine.EnginePlatform
-import io.github.kanpov.litaggregator.engine.util.io.error
-import io.github.kanpov.litaggregator.engine.util.io.jsonInstance
-import io.github.kanpov.litaggregator.engine.util.io.ktorClient
+import io.github.kanpov.litaggregator.engine.util.buildUrl
+import io.github.kanpov.litaggregator.engine.util.io.*
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.parameter
@@ -13,10 +12,7 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonPrimitive
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.time.Instant
@@ -36,13 +32,16 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
     private suspend fun authorizeWithBrowser() {
         val codeVerifier = generateCodeVerifier()
         val codeChallenge = generateCodeChallenge(codeVerifier)
-        val oauthUrl = OAUTH_CODE_ENDPOINT +
-                "?client_id=${EnginePlatform.current.googleClientId}" +
-                "&redirect_uri=$redirectUri" +
-                "&scope=${delimitScopes()}" +
-                "&code_challenge=$codeChallenge" +
-                "&code_challenge_method=S256" +
-                "&response_type=code"
+        val oauthUrl = buildUrl {
+            set(OAUTH_CODE_ENDPOINT)
+            parameter("client_id", EnginePlatform.current.googleClientId)
+            parameter("redirect_uri", redirectUri)
+            parameter("scope", delimitScopes())
+            parameter("code_challenge", codeChallenge)
+            parameter("code_challenge_method", "S256")
+            parameter("response_type", "code")
+        }
+        println(oauthUrl)
 
         bufferedCodeVerifier = codeVerifier
         authorizeImpl(oauthUrl)
@@ -69,9 +68,10 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
 
         val json = jsonInstance.decodeFromString<JsonObject>(request.bodyAsText())
 
-        session.accessToken = json["access_token"]!!.jsonPrimitive.content
+        session.accessToken = json.jString("access_token")
         session.accessExpiry = Instant.now()
-            .plusSeconds(json["expires_in"]!!.jsonPrimitive.int.toLong()).toString()
+            .plusSeconds(json.jInt("expires_in").toLong()).toString()
+        session.grantedScopes = GoogleScope.parse(json.jString("scope"))
 
         Logger.i { "Refreshed Google OAuth access token, new one will be valid until ${session.accessExpiry}" }
     }
@@ -93,18 +93,11 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
 
         if (response.error()) return
 
-        val json: JsonObject?
+        val json = jsonInstance.decodeFromString<JsonObject>(response.bodyAsText())
 
-        try {
-            json = Json.decodeFromString<JsonObject>(response.bodyAsText())
-        } catch (exception: Exception) {
-            return
-        }
-
-        session.accessToken = json["access_token"]!!.jsonPrimitive.content
-        session.refreshToken = json["refresh_token"]!!.jsonPrimitive.content
-        session.accessExpiry = Instant.now()
-            .plusSeconds(json["expires_in"]!!.jsonPrimitive.int.toLong()).toString()
+        session.accessToken = json.jString("access_token")
+        session.refreshToken = json.jString("refresh_token")
+        session.accessExpiry = Instant.now().plusSeconds(json.jInt("expires_in").toLong()).toString()
 
         println(session.accessToken)
     }
@@ -112,29 +105,18 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
     companion object {
         private val secureRandom = SecureRandom()
         private val sha256Digest = MessageDigest.getInstance("SHA-256")
-        private val scopes = listOf(
-            ".../auth/userinfo.email",
-            ".../auth/classroom.courses.readonly",
-            ".../auth/classroom.coursework.me",
-            ".../auth/gmail.addons.current.action.compose",
-            ".../auth/gmail.addons.current.message.action",
-            ".../auth/drive.appdata"
-        )
-        private const val SCOPE_BASE_URL = "https://www.googleapis.com"
         private const val CODE_VERIFIER_LENGTH = 32
         private const val OAUTH_CODE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
         const val OAUTH_TOKEN_MANAGE_ENDPOINT = "https://oauth2.googleapis.com/token"
         const val SCHEME = "io.github.kanpov.litaggregator"
 
-        private fun delimitScopes(): String {
-            val builder = StringBuilder()
-
-            scopes.forEach { scope ->
-                builder.append(scope.replace("...", SCOPE_BASE_URL))
-                builder.append("%20")
+        private fun delimitScopes() = buildString {
+            for (scope in GoogleScope.entries) {
+                for (scopeUrl in scope.scopeUrls) {
+                    append(scopeUrl)
+                    append("%20")
+                }
             }
-
-            return builder.toString()
         }
 
         private fun generateCodeVerifier(): String {
@@ -153,11 +135,34 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
     }
 }
 
+enum class GoogleScope(val scopeUrls: Set<String>) {
+    Classroom(setOf(
+        "https://www.googleapis.com/auth/classroom.courses.readonly",
+        "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
+    )),
+    Drive(setOf(
+        "https://www.googleapis.com/auth/drive.appdata"
+    ));
+
+    companion object {
+        fun parse(literal: String) = buildSet {
+            val literalParts = literal.split(' ')
+
+            for (scope in GoogleScope.entries) {
+                if (scope.scopeUrls.all { literalParts.contains(it) }) {
+                    this += scope
+                }
+            }
+        }
+    }
+}
+
 @Serializable
 class GoogleClientSession {
     lateinit var accessToken: String
     lateinit var refreshToken: String
     lateinit var accessExpiry: String
+    lateinit var grantedScopes: Set<GoogleScope>
 }
 
 private fun HttpRequestBuilder.addClientSecret() {
