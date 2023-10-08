@@ -6,6 +6,7 @@ import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.Feed
+import io.github.kanpov.litaggregator.engine.feed.sortedByRelevancy
 import io.github.kanpov.litaggregator.engine.profile.EncryptionOptions
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.profile.WrappedProfile
@@ -86,6 +87,11 @@ class Engine(platform: EnginePlatform, profileName: String) {
         return true
     }
 
+    fun withFeed(scope: Feed.() -> Unit) {
+        profile.feed.scope()
+        shrinkFeed()
+    }
+
     suspend fun refreshFeed(): Pair<Feed, Set<String> /* providers that failed */> {
         val errors = mutableSetOf<String>()
         var runProviders = 0
@@ -122,6 +128,21 @@ class Engine(platform: EnginePlatform, profileName: String) {
         }
 
         return profile.feed to errors
+    }
+
+    private fun shrinkFeed() {
+        for ((poolName, pool) in profile.feed.allPools) {
+            val entries = pool.sortedByRelevancy()
+
+            if (entries.size <= profile.feedSettings.maxPoolSize) continue
+
+            val diff = entries.size - profile.feedSettings.maxPoolSize
+            for (i in profile.feedSettings.maxPoolSize..<profile.feedSettings.maxPoolSize + diff) {
+                pool.remove(entries[i])
+            }
+
+            Logger.i { "Shrunk pool of $poolName by $diff entries" }
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package io.github.kanpov.litaggregator.engine.feed
 
 import io.github.kanpov.litaggregator.engine.feed.entry.*
 import kotlinx.serialization.Serializable
+import java.time.Instant
 
 @Serializable
 data class Feed(
@@ -14,6 +15,10 @@ data class Feed(
     val events: MutableSet<EventFeedEntry> = mutableSetOf(),
     val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf()
 ) {
+    val allPools: Map<String, MutableSet<out FeedEntry>>
+        get() = mapOf("homework" to homework, "marks" to marks, "ratings" to ratings, "visits" to visits,
+            "banners" to banners, "announcements" to announcements, "events" to events, "diagnostics" to diagnostics)
+
     inline fun <reified E : FeedEntry> withPool(action: (MutableSet<E>) -> Unit) {
         val subPool = when (E::class) {
             HomeworkFeedEntry::class -> homework
@@ -29,4 +34,8 @@ data class Feed(
 
         action(subPool)
     }
+}
+
+fun <T : FeedEntry> MutableSet<T>.sortedByRelevancy(): List<T> {
+    return sortedBy { it.metadata.creationTime?.toEpochMilli() ?: Instant.MIN.toEpochMilli() }
 }

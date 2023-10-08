@@ -67,8 +67,7 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
 
         session.csrfToken = authResponse.findCookie("csrftoken").value
         session.id = authResponse.findCookie("sessionid").value
-        session.expiry = authResponse.findCookie("sessionid").expires!!
-            .toJvmDate().toInstant().toString()
+        session.expiry = authResponse.findCookie("sessionid").expires!!.toJvmDate().toInstant().toString()
     }
 
     private suspend fun authorizeThroughBrowserEmulator() {

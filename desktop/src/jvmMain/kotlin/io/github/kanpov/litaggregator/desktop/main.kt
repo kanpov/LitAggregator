@@ -21,8 +21,8 @@ fun main() = singleWindowApplication {
         )
     }
 
-    CoroutineScope(Dispatchers.Default).launch {
-        engine.setupAuthorizer(DesktopGoogleAuthorizer())
-    }
+//    CoroutineScope(Dispatchers.Default).launch {
+//        engine.setupAuthorizer(DesktopGoogleAuthorizer())
+//    }
 }
 
