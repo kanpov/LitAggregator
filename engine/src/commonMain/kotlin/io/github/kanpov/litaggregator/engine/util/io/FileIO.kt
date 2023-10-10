@@ -9,41 +9,54 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.zip.ZipFile
 
-fun writeFile(path: String, content: String) {
-    writeFile(File(path), content)
+fun writeFile(path: String, content: String): Boolean {
+    return writeFile(path.asFile(), content)
 }
 
-fun writeFile(file: File, content: String) {
-    if (!file.exists()) {
-        file.createNewFile()
-        Logger.i { "Created new file: ${file.absolutePath}" }
-    }
+fun writeFile(file: File, content: String): Boolean {
+    return try {
+        if (!file.exists()) {
+            file.createNewFile()
+            Logger.i { "Created new file: ${file.absolutePath}" }
+        }
 
-    FileOutputStream(file).use { stream ->
-        stream.write(content.toByteArray())
-    }
+        FileOutputStream(file).use { stream ->
+            stream.write(content.toByteArray())
+        }
 
-    Logger.i { "Wrote to file: ${file.absolutePath}" }
+        Logger.i { "Wrote to file: ${file.absolutePath}" }
+        true
+    } catch (exception: Exception) {
+        Logger.i { "Failed to write to file: ${file.absolutePath}. Cause:" }
+        Logger.i { exception.stackTraceToString() }
+        false
+    }
 }
 
-fun readFile(file: File): String {
-    var output = ""
+fun readFile(file: File): String? {
+    return try {
+        var output = ""
 
-    if (!file.exists()) {
-        Logger.e { "Attempted to read from a non-existing file: ${file.absolutePath}" }
-        return output
+        if (!file.exists()) {
+            Logger.e { "Attempted to read from a non-existing file: ${file.absolutePath}" }
+            return output
+        }
+
+        FileInputStream(file).use { stream ->
+            output = stream.bufferedReader().readText()
+        }
+        Logger.i { "Read from file: ${file.absolutePath}" }
+
+        output
+    } catch (exception: Exception) {
+        Logger.i { "Failed to read from file: ${file.absolutePath}. Cause:" }
+        Logger.i { exception.stackTraceToString() }
+        null
     }
-
-    FileInputStream(file).use { stream ->
-        output = stream.bufferedReader().readText()
-    }
-    Logger.i { "Read from file: ${file.absolutePath}" }
-
-    return output
 }
 
-fun readFile(path: String): String {
-    return readFile(File(path))
+fun readFile(path: String): String? {
+    return readFile(path.asFile())
 }
 
 fun unzip(zipFilePath: File, destDirectory: String) {

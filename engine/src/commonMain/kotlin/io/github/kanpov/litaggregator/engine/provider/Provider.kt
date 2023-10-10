@@ -98,7 +98,7 @@ interface SimpleProviderDefinition<E : FeedEntry> {
     val networkUsage: ProviderNetworkUsage
 
     companion object {
-        val all = setOf<SimpleProviderDefinition<*>>()
+        val all = setOf<SimpleProviderDefinition<*>>(AnnouncementProvider.Definition)
     }
 }
 
