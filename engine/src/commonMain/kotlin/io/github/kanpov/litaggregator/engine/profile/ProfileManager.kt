@@ -43,4 +43,8 @@ class ProfileManager(private val profileName: String, private val password: Stri
 
         return ProfileActionResult.Success
     }
+
+    fun withProfile(scope: Profile.() -> Unit) {
+        currentProfile?.scope()
+    }
 }

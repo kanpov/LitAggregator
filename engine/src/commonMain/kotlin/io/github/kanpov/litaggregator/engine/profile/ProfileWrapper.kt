@@ -56,7 +56,7 @@ data class ProfileWrapper internal constructor(
             cipher.init(Cipher.DECRYPT_MODE, key, iv)
             val jsonData = cipher.doFinal(Base64.getDecoder().decode(data)).toString(bufferCharset)
             jsonInstance.decodeFromString(jsonData)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
