@@ -37,5 +37,5 @@ data class Feed(
 }
 
 fun <T : FeedEntry> MutableSet<T>.sortedByRelevancy(): List<T> {
-    return sortedBy { it.metadata.creationTime?.toEpochMilli() ?: Instant.MIN.toEpochMilli() }
+    return sortedBy { it.metadata.creationTime?.epochSecond?.minus(Instant.MIN.epochSecond) }
 }

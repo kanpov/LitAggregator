@@ -18,7 +18,8 @@ class DesktopGoogleAuthorizer(session: GoogleClientSession = GoogleClientSession
         val port = server.localPort
 
         redirectUri = redirectUri.replace("|port|", port.toString())
-        Desktop.getDesktop().browse(URI.create(oauthUrl.replace("|port|", port.toString())))
+        val oauthUri = URI.create(oauthUrl.replace("|port|", port.toString()))
+        DesktopEnginePlatform.openBrowser(oauthUri)
 
         val client = server.accept()
         val scanner = Scanner(client.getInputStream())
@@ -33,10 +34,8 @@ class DesktopGoogleAuthorizer(session: GoogleClientSession = GoogleClientSession
 
         runBlocking {
             obtainTokens(code)
-
-            withContext(Dispatchers.IO) {
-                server.close()
-            }
         }
+
+        server.close()
     }
 }

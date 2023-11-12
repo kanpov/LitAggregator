@@ -45,7 +45,7 @@ data class ProfileWrapper internal constructor(
             val binaryData = cipher.doFinal(jsonData.toByteArray(bufferCharset))
             data = Base64.getEncoder().encodeToString(binaryData)
             true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             false
         }
     }

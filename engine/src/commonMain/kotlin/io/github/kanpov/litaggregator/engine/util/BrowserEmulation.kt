@@ -8,13 +8,14 @@ abstract class BrowserEmulator {
     abstract val loadedUrl: String
     abstract val cookies: Set<BasicCookie>
 
-    suspend fun use(headless: Boolean = true, block: suspend BrowserEmulator.() -> Unit) {
-        launch(headless)
+    suspend fun use(block: suspend BrowserEmulator.() -> Unit): Boolean {
+        if (!tryLaunch()) return false
         block.invoke(this)
         shutdown()
+        return true
     }
 
-    protected abstract fun launch(headless: Boolean)
+    protected abstract fun tryLaunch(): Boolean
 
     protected abstract fun shutdown()
 
@@ -26,7 +27,7 @@ abstract class BrowserEmulator {
         return findElementOrThrow(xpath)
     }
 
-    suspend fun awaitUrl(timeoutSeconds: Long = 10L, checkIntensityMillis: Long = 250L, matcher: (String) -> Boolean): String {
+    suspend fun awaitUrl(timeoutSeconds: Long = 15L, checkIntensityMillis: Long = 250L, matcher: (String) -> Boolean): String {
         awaitInternal("browser is still not at the URL matching given expression",
             timeoutSeconds, checkIntensityMillis) { matcher(loadedUrl) }
         return loadedUrl

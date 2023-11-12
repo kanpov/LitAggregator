@@ -23,6 +23,8 @@ kotlin {
                 implementation(libs.selenium)
                 implementation(libs.web.driver.manager)
                 implementation(libs.kotlinx.serialization)
+                implementation(libs.kermit)
+                implementation(libs.apache.commons.lang)
             }
         }
     }

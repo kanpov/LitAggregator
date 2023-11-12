@@ -36,7 +36,7 @@ data class MosAuthorizer(private val credentials: StandardAuthorizerCredentials,
             header("x-mes-subsystem", "familyweb")
             bearerAuth(authToken)
         }.also {
-            delay(Random.nextInt(400..700).toLong()) // avoid api rate limit
+            delay(Random.nextInt(100..200).toLong()) // avoid api rate limit
         }
     }
 

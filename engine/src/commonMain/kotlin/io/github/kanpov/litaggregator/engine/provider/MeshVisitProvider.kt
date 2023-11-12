@@ -24,6 +24,9 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
 
             for (visitObj in dayObj.jArray("visits")) {
                 val irregularPattern = visitObj.jBoolean("is_warning")
+
+                if (visitObj.jString("in").contains("-")) continue // malformed entry because ???
+
                 val entryTime = TimeFormatters.parseMeshDateTime(day, visitObj.jString("in"))
                 val isOut = visitObj.jString("out")
                 val exitTime = if (isOut == "-") null else TimeFormatters.parseMeshDateTime(day, visitObj.jString("out"))

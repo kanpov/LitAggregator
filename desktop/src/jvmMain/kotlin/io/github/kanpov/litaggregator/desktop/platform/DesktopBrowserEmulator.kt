@@ -9,10 +9,13 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.chromium.ChromiumDriver
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.safari.SafariOptions
 import java.time.Instant
 
 object DesktopBrowserEmulator : BrowserEmulator() {
@@ -37,8 +40,9 @@ object DesktopBrowserEmulator : BrowserEmulator() {
             }
         }
 
-    override fun launch(headless: Boolean) {
-        driver = setupDriver()
+    override fun tryLaunch(): Boolean {
+        driver = tryLoadDriver() ?: return false
+        return true
     }
 
     override fun shutdown() {
@@ -57,12 +61,13 @@ object DesktopBrowserEmulator : BrowserEmulator() {
         }
     }
 
-    private fun setupDriver(): WebDriver {
+    fun tryLoadDriver(): WebDriver? {
         // Only Chrome, Firefox and MS Edge are currently supported when added to PATH (e.g. most Linux and Windows installs)
         val browsers = mapOf<WebDriverManager, () -> WebDriver>(
             WebDriverManager.chromedriver() to { ChromeDriver(ChromeOptions()) },
+            WebDriverManager.firefoxdriver() to { FirefoxDriver(FirefoxOptions()) },
             WebDriverManager.edgedriver() to { EdgeDriver(EdgeOptions()) },
-            WebDriverManager.firefoxdriver() to { FirefoxDriver(FirefoxOptions()) }
+            WebDriverManager.safaridriver() to { SafariDriver(SafariOptions()) }
         )
 
         for ((manager, driverFactory) in browsers) {
@@ -72,7 +77,7 @@ object DesktopBrowserEmulator : BrowserEmulator() {
             return driverFactory.invoke()
         }
 
-        throw IllegalArgumentException("No browser driver is available")
+        return null
     }
 }
 

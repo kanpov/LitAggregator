@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 val jsonInstance = Json {
-    prettyPrint = true
+    prettyPrint = false
     encodeDefaults = true
     ignoreUnknownKeys = true
 }

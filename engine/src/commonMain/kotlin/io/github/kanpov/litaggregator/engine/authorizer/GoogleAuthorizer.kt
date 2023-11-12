@@ -71,7 +71,6 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
         session.accessToken = json.jString("access_token")
         session.accessExpiry = Instant.now()
             .plusSeconds(json.jInt("expires_in").toLong()).toString()
-        session.grantedScopes = GoogleScope.parse(json.jString("scope"))
 
         Logger.i { "Refreshed Google OAuth access token, new one will be valid until ${session.accessExpiry}" }
     }
@@ -98,8 +97,6 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
         session.accessToken = json.jString("access_token")
         session.refreshToken = json.jString("refresh_token")
         session.accessExpiry = Instant.now().plusSeconds(json.jInt("expires_in").toLong()).toString()
-
-        println(session.accessToken)
     }
 
     companion object {
@@ -162,7 +159,6 @@ class GoogleClientSession {
     lateinit var accessToken: String
     lateinit var refreshToken: String
     lateinit var accessExpiry: String
-    lateinit var grantedScopes: Set<GoogleScope>
 }
 
 private fun HttpRequestBuilder.addClientSecret() {

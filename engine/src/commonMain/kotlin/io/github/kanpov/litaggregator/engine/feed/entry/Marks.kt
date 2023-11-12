@@ -12,7 +12,7 @@ data class MarkFeedEntry(
     val weight: Int,
     val isExam: Boolean,
     val comment: String,
-    val topic: String,
+    val topic: String?,
     val workForm: String,
     val period: String,
     override val sourceFingerprint: String,

@@ -43,7 +43,7 @@ class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(
                         weight = weight,
                         isExam = isExam,
                         comment = markObj.jString("comment"),
-                        topic = markObj.jString("topic_name"),
+                        topic = markObj.jOptionalString("topic_name"),
                         workForm = markObj.jString("control_form_name"),
                         period = periodName,
                         metadata = FeedEntryMetadata(creationTime = creationTime),

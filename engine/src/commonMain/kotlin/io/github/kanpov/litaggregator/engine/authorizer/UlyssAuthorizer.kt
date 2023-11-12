@@ -71,7 +71,7 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
     }
 
     private suspend fun authorizeThroughBrowserEmulator() {
-        EnginePlatform.current.browserEmulator.use(headless = false) {
+        EnginePlatform.current.browserEmulator.use {
             loadUrl(ULYSS_LOGIN_URL)
             awaitElement(xpath = """.//input[@name="username"]""").inputText(credentials.username)
             awaitElement(xpath = """.//input[@name="password"]""").inputText(credentials.password)

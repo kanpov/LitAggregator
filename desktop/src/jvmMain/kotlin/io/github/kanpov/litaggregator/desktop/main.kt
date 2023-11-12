@@ -24,10 +24,10 @@ fun main() {
                 feed = Feed()),
             options = ProfileEncryptionOptions(),
             profileName = "a",
-            password = "test"
+            password = "asdf"
         )
     } else {
-        ProfileManager.fromCachedProfile(cachedProfileFile, "test")
+        ProfileManager.fromCachedProfile(cachedProfileFile, "asdf")
     }
 
     runBlocking {

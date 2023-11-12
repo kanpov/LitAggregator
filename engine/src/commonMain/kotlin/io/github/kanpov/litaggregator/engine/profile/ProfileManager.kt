@@ -6,6 +6,7 @@ import io.github.kanpov.litaggregator.engine.util.io.jsonInstance
 import io.github.kanpov.litaggregator.engine.util.io.readFile
 import io.github.kanpov.litaggregator.engine.util.io.writeFile
 import java.io.File
+import java.time.Instant
 
 private const val PROFILE_CACHE_RELATIVE_PATH = "profile_cache.txt"
 
@@ -24,6 +25,10 @@ class ProfileManager private constructor(private val profileFile: File, private 
 
         if (wrapperJson == null) return result
         if (!writeFile(profileFile, wrapperJson)) return ProfileManagerResult.FileError
+
+        // TODO: remove in prod
+        val snapshotFile = EnginePlatform.current.getCachePath("snapshot_${Instant.now().epochSecond}.json")
+        writeFile(snapshotFile, jsonInstance.encodeToString(Profile.serializer(), currentProfile!!))
 
         return ProfileManagerResult.Success
     }
@@ -74,9 +79,14 @@ class ProfileManager private constructor(private val profileFile: File, private 
         }
 
         fun fromCachedProfile(cachedProfileFile: File, password: String) = ProfileManager(cachedProfileFile, password)
+            .apply { readFromDisk() }
 
         fun fromNewProfile(profile: Profile, options: ProfileEncryptionOptions, profileName: String, password: String): ProfileManager {
-            val profileFile = EnginePlatform.current.getPersistentPath("$profileName.agr").asFile()
+            val profileRelativePath = "$profileName.agr"
+            val cacheFile = EnginePlatform.current.getPersistentPath(PROFILE_CACHE_RELATIVE_PATH).asFile()
+            writeFile(cacheFile, profileRelativePath)
+
+            val profileFile = EnginePlatform.current.getPersistentPath(profileRelativePath).asFile()
             profileFile.createNewFile()
 
             return ProfileManager(profileFile, password).apply {
