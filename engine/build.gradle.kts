@@ -10,25 +10,19 @@ kotlin {
 
     sourceSets {
         val commonMain by getting  {
-            val ktorClientVersion = project.properties["ktor.client.version"]
-            val kermitVersion = project.properties["kermit.version"]
-            val jsoupVersion = project.properties["jsoup.version"]
-            val apacheCommonsVersion = project.properties["apache.commons.version"]
-            val kotlinxSerializationVersion = project.properties["kotlinx.serialization.version"]
-
             dependencies {
                 // Ktor Client for sending HTTP requests (headless)
-                implementation("io.ktor:ktor-client-core:$ktorClientVersion")
-                implementation("io.ktor:ktor-client-okhttp:$ktorClientVersion")
-                implementation("io.ktor:ktor-client-logging:$ktorClientVersion")
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.ktor.client.logging)
                 // Kermit (the log) for multiplatform logging
-                implementation("co.touchlab:kermit:$kermitVersion")
+                implementation(libs.kermit)
                 // JSoup for parsing HTML
-                implementation("org.jsoup:jsoup:$jsoupVersion")
+                implementation(libs.jsoup)
                 // Apache Commons Lang3 for some utility classes (such as SystemUtils)
-                implementation("org.apache.commons:commons-lang3:$apacheCommonsVersion")
+                implementation(libs.apache.commons.lang)
                 // kotlinx.serialization for JSON management
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
+                implementation(libs.kotlinx.serialization)
             }
         }
     }
