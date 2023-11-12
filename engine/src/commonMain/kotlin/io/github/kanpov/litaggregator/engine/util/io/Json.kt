@@ -85,12 +85,20 @@ fun JsonObject.jOptionalString(name: String): String? {
     return if (this.containsKey(name)) jString(name) else null
 }
 
+fun JsonObject.jOptionalInt(name: String): Int? {
+    return if (this.containsKey(name)) jInt(name) else null
+}
+
 fun JsonObject.jString(name: String): String {
     return this[name]!!.jsonPrimitive.content
 }
 
 fun JsonObject.jInt(name: String): Int {
     return this[name]!!.jsonPrimitive.int
+}
+
+fun JsonObject.jLong(name: String): Long { // cuz mesh devs decided to expand id size (why)
+    return this[name]!!.jsonPrimitive.long
 }
 
 fun JsonObject.jFloat(name: String): Float {

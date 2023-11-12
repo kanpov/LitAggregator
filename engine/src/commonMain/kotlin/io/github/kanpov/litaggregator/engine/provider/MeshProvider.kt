@@ -5,6 +5,7 @@ import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.util.io.jArray
 import io.github.kanpov.litaggregator.engine.util.io.jInt
+import io.github.kanpov.litaggregator.engine.util.io.jLong
 import io.github.kanpov.litaggregator.engine.util.io.jString
 
 abstract class MeshProvider<E : FeedEntry>(authorizer: MosAuthorizer) : AuthorizedProvider<MosAuthorizer, E>(authorizer) {
@@ -16,7 +17,7 @@ abstract class MeshProvider<E : FeedEntry>(authorizer: MosAuthorizer) : Authoriz
             .first { obj -> profile.identity.classNames.any { obj.jString("class_name") == it } }
 
         return meshProvide(profile, MeshStudentInfo(
-            profileId = studentObj.jInt("id").toString(),
+            profileId = studentObj.jLong("id").toString(),
             personId = studentObj.jString("contingent_guid"),
             classUnitId = studentObj.jInt("class_unit_id").toString(),
             contractId = studentObj.jInt("contract_id").toString(),

@@ -14,7 +14,7 @@ import kotlinx.serialization.json.JsonObject
 class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val academicYearObj = authorizer.getJsonArray<JsonObject>("https://school.mos.ru/api/ej/core/family/v1/academic_years")!!
-        val academicYearId = academicYearObj.first { it.jBoolean("current_year") }.jInt("id")
+        val academicYearId = academicYearObj.first { it.jBoolean("current_year") }.jLong("id")
 
         val progressObj = authorizer.getJsonArray<JsonObject>(
             "https://school.mos.ru/api/ej/report/family/v1/progress/json?academic_year_id=$academicYearId&student_profile_id=${studentInfo.profileId}")!!
@@ -47,7 +47,7 @@ class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(
                         workForm = markObj.jString("control_form_name"),
                         period = periodName,
                         metadata = FeedEntryMetadata(creationTime = creationTime),
-                        sourceFingerprint = FeedEntry.fingerprintFrom(subjectId, markObj.jInt("id"))
+                        sourceFingerprint = FeedEntry.fingerprintFrom(subjectId, markObj.jLong("id"))
                     ))
                 }
             }

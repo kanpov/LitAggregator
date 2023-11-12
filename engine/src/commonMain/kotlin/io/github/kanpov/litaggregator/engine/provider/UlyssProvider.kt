@@ -62,14 +62,14 @@ class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAutho
         if (creationTime.isBefore(earliestTime)) return
 
         profile.providers.ulyss!!.apply {
-            if (!include.studyMaterials && homeworkObj.jFlagBoolean("прикреплено")) println(101).also { return }
-            if (!include.hidden && !homeworkObj.jFlagBoolean("опубликовано")) println(102).also { return }
+            if (!include.studyMaterials && homeworkObj.jFlagBoolean("прикреплено")) return
+            if (!include.hidden && !homeworkObj.jFlagBoolean("опубликовано")) return
             val solelyForOtherGroups = profile.identity.classNames.none { title.contains(it) }
                     && profile.identity.otherClassNames.any { title.contains(it)  }
-            if (!include.solelyForOtherGroups && solelyForOtherGroups) println(103).also { return }
+            if (!include.solelyForOtherGroups && solelyForOtherGroups) return
 
             if (!exclude.titleFilter.match(title) || !exclude.cleanContentFilter.match(cleanContent)
-                || !exclude.htmlContentFilter.match(htmlContent)) println(104).also { return }
+                || !exclude.htmlContentFilter.match(htmlContent)) return
         }
 
         insert(profile.feed, HomeworkFeedEntry(

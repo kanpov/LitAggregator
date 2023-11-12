@@ -24,7 +24,8 @@ abstract class Authorizer {
         for (authorizer in authorizers) {
             try {
                 authorizer.invoke()
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                println(e.stackTraceToString())
                 continue
             }
 

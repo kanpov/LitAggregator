@@ -10,6 +10,7 @@ import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
 import io.github.kanpov.litaggregator.engine.util.io.jBoolean
 import io.github.kanpov.litaggregator.engine.util.io.jInt
+import io.github.kanpov.litaggregator.engine.util.io.jOptionalInt
 import io.github.kanpov.litaggregator.engine.util.io.jString
 
 class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEntry>(authorizer) {
@@ -18,7 +19,7 @@ class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEnt
             .getJson("https://school.mos.ru/api/news/v2/banners/instance?location=HEADER&service_id=2")
             ?: return // banner is not always present, this is regular behavior
 
-        val bannerId = bannerMetaObj.jInt("banner_id")
+        val bannerId = bannerMetaObj.jOptionalInt("banner_id") ?: return
         val bannerObj = authorizer.getJson("https://school.mos.ru/api/news/v2/banners/$bannerId")!!
         val outgoingUrl = if (bannerObj.jBoolean("action_button")) bannerObj.jString("button_link") else null
         val creationTime = TimeFormatters.longMeshDateTime.parseInstant(bannerObj.jString("created_at"))
