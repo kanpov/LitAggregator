@@ -12,6 +12,7 @@ interface EnginePlatform {
     val googleAuthorizerFactory: (GoogleClientSession) -> GoogleAuthorizer
     val browserEmulator: BrowserEmulator
 
+    fun initialize()
     fun getCachePath(relativePath: String): String
     fun getPersistentPath(relativePath: String): String
 

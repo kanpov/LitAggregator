@@ -8,5 +8,6 @@ data class DesktopSystemConfig(
     val supportsAwtDesktop: Boolean,
     val supportsShellBrowserInvocation: Boolean,
     val shellBrowser: String,
-    val shell: String
+    val shell: String,
+    val localeId: String
 )

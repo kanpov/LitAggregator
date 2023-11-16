@@ -1,6 +1,7 @@
 package io.github.kanpov.litaggregator.desktop.platform
 
 import co.touchlab.kermit.Logger
+import io.github.kanpov.litaggregator.desktop.locale.Locale
 import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.BrowserEmulator
 import io.github.kanpov.litaggregator.engine.util.io.asFile
@@ -13,10 +14,22 @@ import java.io.File
 import java.net.URI
 
 private const val SYSTEM_CONFIG_FILE_PATH = "system_config.json"
-private val standardShellBrowsers = setOf("chrome", "chromium", "firefox", "firefox-esr", "librewolf")
+private const val DEFAULT_SHELL_BROWSER = "chromium"
+private const val DEFAULT_SHELL = "/bin/bash"
 
 object DesktopEnginePlatform : EnginePlatform {
-    lateinit var systemConfig: DesktopSystemConfig
+    var firstBoot = false
+    private var systemConfig: DesktopSystemConfig? = null
+        set(value) {
+            if (value == null) {
+                Logger.e { "Tried to set system config to null. Aborted operation." }
+                return
+            }
+
+            field = value
+            Locale.setById(value.localeId)
+        }
+
     private val systemConfigFile by lazy { getPersistentPath(SYSTEM_CONFIG_FILE_PATH).asFile() }
 
     override val name: String
@@ -26,12 +39,12 @@ object DesktopEnginePlatform : EnginePlatform {
     override val googleAuthorizerFactory = ::DesktopGoogleAuthorizer
     override val browserEmulator: BrowserEmulator = DesktopBrowserEmulator
 
-    init {
+    override fun initialize() {
         // Load or scan new system config
         if (systemConfigFile.exists()) {
             try {
                 systemConfig = jsonInstance.decodeFromString(DesktopSystemConfig.serializer(), readFile(systemConfigFile)!!)
-                Logger.i { "Loaded system config." }
+                Logger.i { "Loaded an existing system config." }
             } catch (_: Exception) {
                 createSystemConfig()
             }
@@ -41,6 +54,8 @@ object DesktopEnginePlatform : EnginePlatform {
     }
 
     private fun createSystemConfig() {
+        firstBoot = true
+
         var browseActionSupported = Desktop.isDesktopSupported()
         if (browseActionSupported) {
             browseActionSupported = Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)
@@ -50,21 +65,22 @@ object DesktopEnginePlatform : EnginePlatform {
             supportsWebDriver = DesktopBrowserEmulator.tryLoadDriver() != null,
             supportsAwtDesktop = browseActionSupported,
             supportsShellBrowserInvocation = SystemUtils.IS_OS_LINUX,
-            shellBrowser = "chromium",
-            shell = "/bin/bash"
+            shellBrowser = DEFAULT_SHELL_BROWSER,
+            shell = DEFAULT_SHELL,
+            localeId = Locale.defaultLocaleId
         )
 
         Logger.i { "Scanned a new system config: $systemConfig" }
-        writeFile(systemConfigFile, jsonInstance.encodeToString(DesktopSystemConfig.serializer(), systemConfig))
+        writeFile(systemConfigFile, jsonInstance.encodeToString(DesktopSystemConfig.serializer(), systemConfig!!))
     }
 
     fun openBrowser(uri: URI) {
-        if (systemConfig.supportsAwtDesktop) {
+        if (systemConfig!!.supportsAwtDesktop) {
             Desktop.getDesktop().browse(uri)
             return
         }
 
-        Runtime.getRuntime().exec(arrayOf(systemConfig.shell, "-c", "${systemConfig.shellBrowser} \"$uri\""))
+        Runtime.getRuntime().exec(arrayOf(systemConfig!!.shell, "-c", "${systemConfig!!.shellBrowser} \"$uri\""))
     }
 
     override fun getCachePath(relativePath: String): String {
