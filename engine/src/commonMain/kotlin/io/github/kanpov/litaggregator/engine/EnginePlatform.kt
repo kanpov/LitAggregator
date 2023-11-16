@@ -1,5 +1,6 @@
 package io.github.kanpov.litaggregator.engine
 
+import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession
 import io.github.kanpov.litaggregator.engine.util.BrowserEmulator
@@ -12,7 +13,9 @@ interface EnginePlatform {
     val googleAuthorizerFactory: (GoogleClientSession) -> GoogleAuthorizer
     val browserEmulator: BrowserEmulator
 
-    fun initialize()
+    fun initialize() {
+        Logger.i { "Launched engine platform on $name" }
+    }
     fun getCachePath(relativePath: String): String
     fun getPersistentPath(relativePath: String): String
 

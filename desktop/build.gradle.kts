@@ -19,8 +19,8 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 implementation(compose.desktop.currentOs)
-                implementation(compose.uiTooling)
-                implementation(compose.ui)
+                implementation(libs.voyager.navigation)
+                implementation(libs.voyager.transitions)
 
                 implementation(libs.selenium)
                 implementation(libs.web.driver.manager)

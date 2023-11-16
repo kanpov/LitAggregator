@@ -3,27 +3,43 @@ package io.github.kanpov.litaggregator.desktop.locale
 import co.touchlab.kermit.Logger
 
 interface Locale {
-    val id: String
+    val localeId: String
+    val localeName: String
     val windowName: String
+    val systemConfig: SystemConfigLocale
+    val button: ButtonLocale
 
     companion object {
         lateinit var current: Locale
-        private val locales = setOf(RussianLocale, EnglishLocale)
+        val locales = setOf(EnglishLocale, RussianLocale)
 
-        val defaultLocaleId: String
-            get() = locales.first().id
+        val defaultLocaleId: String = locales.first().localeId
 
         fun setById(localeId: String) {
             for (locale in locales) {
-                if (locale.id == localeId) {
-                    Logger.i { "Loaded locale \"${locale.id}\"" }
+                if (locale.localeId == localeId) {
+                    Logger.i { "Loaded locale \"${locale.localeId}\"" }
                     current = locale
                     return
                 }
             }
 
             current = locales.first()
-            Logger.w { "Saved locale \"$localeId\" is non-existent, defaulting to \"${current.id}\"" }
+            Logger.w { "Saved locale \"$localeId\" is non-existent, defaulting to \"${current.localeId}\"" }
         }
     }
 }
+
+data class SystemConfigLocale(
+    val uiLanguage: String,
+    val configureYourSystem: String,
+    val supportsWebDriver: String,
+    val supportsAwtDesktop: String,
+    val supportsShellBrowserInvocation: String,
+    val browserBinary: String,
+    val shellBinary: String
+)
+
+data class ButtonLocale(
+    val continueButton: String
+)

@@ -19,7 +19,7 @@ private const val DEFAULT_SHELL = "/bin/bash"
 
 object DesktopEnginePlatform : EnginePlatform {
     var firstBoot = false
-    private var systemConfig: DesktopSystemConfig? = null
+    var systemConfig: DesktopSystemConfig? = null
         set(value) {
             if (value == null) {
                 Logger.e { "Tried to set system config to null. Aborted operation." }
@@ -40,11 +40,12 @@ object DesktopEnginePlatform : EnginePlatform {
     override val browserEmulator: BrowserEmulator = DesktopBrowserEmulator
 
     override fun initialize() {
+        super.initialize()
         // Load or scan new system config
         if (systemConfigFile.exists()) {
             try {
                 systemConfig = jsonInstance.decodeFromString(DesktopSystemConfig.serializer(), readFile(systemConfigFile)!!)
-                Logger.i { "Loaded an existing system config." }
+                Logger.i { "Loaded an existing system config" }
             } catch (_: Exception) {
                 createSystemConfig()
             }
@@ -65,13 +66,25 @@ object DesktopEnginePlatform : EnginePlatform {
             supportsWebDriver = DesktopBrowserEmulator.tryLoadDriver() != null,
             supportsAwtDesktop = browseActionSupported,
             supportsShellBrowserInvocation = SystemUtils.IS_OS_LINUX,
-            shellBrowser = DEFAULT_SHELL_BROWSER,
-            shell = DEFAULT_SHELL,
+            browserBinary = DEFAULT_SHELL_BROWSER,
+            shellBinary = DEFAULT_SHELL,
             localeId = Locale.defaultLocaleId
         )
 
         Logger.i { "Scanned a new system config: $systemConfig" }
         writeFile(systemConfigFile, jsonInstance.encodeToString(DesktopSystemConfig.serializer(), systemConfig!!))
+    }
+
+    fun updateSystemConfig(scope: DesktopSystemConfig.() -> Unit) {
+        if (systemConfig == null) {
+            Logger.e { "Tried to update system config when it was not yet loaded" }
+            return
+        }
+
+        systemConfig!!.scope()
+        Locale.setById(systemConfig!!.localeId)
+        writeFile(systemConfigFile, jsonInstance.encodeToString(DesktopSystemConfig.serializer(), systemConfig!!))
+        Logger.i { "Updated system config" }
     }
 
     fun openBrowser(uri: URI) {
@@ -80,7 +93,7 @@ object DesktopEnginePlatform : EnginePlatform {
             return
         }
 
-        Runtime.getRuntime().exec(arrayOf(systemConfig!!.shell, "-c", "${systemConfig!!.shellBrowser} \"$uri\""))
+        Runtime.getRuntime().exec(arrayOf(systemConfig!!.shellBinary, "-c", "${systemConfig!!.browserBinary} \"$uri\""))
     }
 
     override fun getCachePath(relativePath: String): String {

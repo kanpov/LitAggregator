@@ -7,7 +7,7 @@ data class DesktopSystemConfig(
     val supportsWebDriver: Boolean,
     val supportsAwtDesktop: Boolean,
     val supportsShellBrowserInvocation: Boolean,
-    val shellBrowser: String,
-    val shell: String,
-    val localeId: String
+    var browserBinary: String,
+    var shellBinary: String,
+    var localeId: String
 )
