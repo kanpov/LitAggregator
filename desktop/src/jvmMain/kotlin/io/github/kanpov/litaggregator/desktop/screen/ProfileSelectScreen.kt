@@ -3,20 +3,17 @@ package io.github.kanpov.litaggregator.desktop.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import io.github.kanpov.litaggregator.desktop.locale.Locale
+import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -32,7 +29,7 @@ class ProfileSelectScreen : Screen {
         ) {
             // heading
             Text(
-                text = Locale.current.profileSelect.selectYourProfile,
+                text = Locale["profile_select.select_your_profile"],
                 style = MaterialTheme.typography.h5,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -63,7 +60,7 @@ class ProfileSelectScreen : Screen {
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(
-                    text = Locale.current.profileSelect.loadProfile,
+                    text = Locale["profile_select.load_profile"],
                     style = MaterialTheme.typography.h6
                 )
             }
@@ -79,7 +76,7 @@ class ProfileSelectScreen : Screen {
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 15.dp)
             ) {
                 Text(
-                    text = Locale.current.profileSelect.createProfile,
+                    text = Locale["profile_select.create_profile"],
                     style = MaterialTheme.typography.h6
                 )
             }
@@ -94,7 +91,7 @@ class ProfileSelectScreen : Screen {
             modifier = Modifier.padding(start = 20.dp, top = 20.dp)
         ) {
             Text(
-                text = Locale.current.profileSelect.recentProfiles,
+                text = Locale["profile_select.recent_profiles"],
                 style = MaterialTheme.typography.h6,
                 fontWeight = FontWeight.SemiBold
             )

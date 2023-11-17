@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import io.github.kanpov.litaggregator.desktop.locale.Locale
+import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.platform.DesktopSystemConfig
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -36,7 +36,7 @@ class SystemConfigScreen : Screen {
         ) {
             // heading
             Text(
-                text = Locale.current.systemConfig.configureYourSystem,
+                text = Locale["system_config.configure_your_system"],
                 style = MaterialTheme.typography.h5,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -44,12 +44,12 @@ class SystemConfigScreen : Screen {
 
             // language setting
             DropdownSetting(
-                label = Locale.current.systemConfig.uiLanguage,
-                startOption = Locale.locales.first { it.localeId == DesktopEnginePlatform.systemConfig!!.localeId }.localeName,
-                options = Locale.locales.map { it.localeName },
+                label = Locale["system_config.ui_language"],
+                startOption = Locale.localeNames.first(),
+                options = Locale.localeNames,
                 onSelectOption = { localeName ->
                     DesktopEnginePlatform.updateSystemConfig {
-                        localeId = Locale.locales.first { it.localeName == localeName }.localeId
+                        localeId = Locale.nameToId(localeName)
                     }
                 }
             )
@@ -57,30 +57,30 @@ class SystemConfigScreen : Screen {
             // web driver support setting
             StaticSetting(
                 ok = DesktopEnginePlatform.systemConfig!!.supportsWebDriver,
-                label = Locale.current.systemConfig.supportsWebDriver
+                label = Locale["system_config.supports_web_driver"]
             )
 
             // awt desktop support setting
             StaticSetting(
                 ok = DesktopEnginePlatform.systemConfig!!.supportsAwtDesktop,
-                label = Locale.current.systemConfig.supportsAwtDesktop
+                label = Locale["system_config.supports_awt_desktop"]
             )
 
             // shell browser support setting
             StaticSetting(
                 ok = DesktopEnginePlatform.systemConfig!!.supportsShellBrowserInvocation,
-                label = Locale.current.systemConfig.supportsShellBrowserInvocation,
+                label = Locale["system_config.supports_shell_browser_invocation"],
                 whenOk = {
                     // exact shell setting
                     TypedSetting(
-                        label = Locale.current.systemConfig.shellBinary,
+                        label = Locale["system_config.shell_binary"],
                         defaultValue = DesktopEnginePlatform.systemConfig!!.shellBinary,
                         setValue = { shellBinary = it }
                     )
 
                     // exact browser setting
                     TypedSetting(
-                        label = Locale.current.systemConfig.browserBinary,
+                        label = Locale["system_config.browser_binary"],
                         defaultValue = DesktopEnginePlatform.systemConfig!!.browserBinary,
                         setValue = { browserBinary = it }
                     )
@@ -98,7 +98,7 @@ class SystemConfigScreen : Screen {
                 modifier = Modifier.padding(top = 15.dp).scale(1.1f).align(Alignment.CenterHorizontally)
             ) {
                 Text(
-                    text = Locale.current.button.continueButton,
+                    text = Locale["button.continue"],
                     style = MaterialTheme.typography.h6
                 )
             }
