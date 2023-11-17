@@ -9,7 +9,6 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import org.openqa.selenium.chromium.ChromiumDriver
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -61,7 +60,7 @@ object DesktopBrowserEmulator : BrowserEmulator() {
         }
     }
 
-    fun tryLoadDriver(): WebDriver? {
+    fun tryLoadDriver(probe: Boolean = false): WebDriver? {
         // Only Chrome, Firefox and MS Edge are currently supported when added to PATH (e.g. most Linux and Windows installs)
         val browsers = mapOf<WebDriverManager, () -> WebDriver>(
             WebDriverManager.chromedriver() to { ChromeDriver(ChromeOptions()) },
@@ -74,7 +73,9 @@ object DesktopBrowserEmulator : BrowserEmulator() {
             if (!manager.browserPath.isPresent) continue
 
             manager.setup()
-            return driverFactory.invoke()
+            return driverFactory.invoke().also {
+                if (probe) it.quit()
+            }
         }
 
         return null

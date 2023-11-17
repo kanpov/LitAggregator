@@ -63,7 +63,7 @@ object DesktopEnginePlatform : EnginePlatform {
         }
 
         systemConfig = DesktopSystemConfig(
-            supportsWebDriver = DesktopBrowserEmulator.tryLoadDriver() != null,
+            supportsWebDriver = DesktopBrowserEmulator.tryLoadDriver(probe = true) != null,
             supportsAwtDesktop = browseActionSupported,
             supportsShellBrowserInvocation = SystemUtils.IS_OS_LINUX,
             browserBinary = DEFAULT_SHELL_BROWSER,

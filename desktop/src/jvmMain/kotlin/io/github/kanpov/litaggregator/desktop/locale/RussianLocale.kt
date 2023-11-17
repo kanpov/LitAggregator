@@ -13,6 +13,12 @@ object RussianLocale : Locale {
         shellBinary = "Используемая консоль:",
         browserBinary = "Используемый браузер:"
     )
+    override val profileSelect: ProfileSelectLocale = ProfileSelectLocale(
+        selectYourProfile = "Выберите профиль",
+        loadProfile = "Загрузить профиль",
+        createProfile = "Создать профиль",
+        recentProfiles = "Последние профили:"
+    )
     override val button: ButtonLocale = ButtonLocale(
         continueButton = "Продолжить"
     )

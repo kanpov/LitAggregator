@@ -7,6 +7,7 @@ interface Locale {
     val localeName: String
     val windowName: String
     val systemConfig: SystemConfigLocale
+    val profileSelect: ProfileSelectLocale
     val button: ButtonLocale
 
     companion object {
@@ -38,6 +39,13 @@ data class SystemConfigLocale(
     val supportsShellBrowserInvocation: String,
     val browserBinary: String,
     val shellBinary: String
+)
+
+data class ProfileSelectLocale(
+    val selectYourProfile: String,
+    val loadProfile: String,
+    val createProfile: String,
+    val recentProfiles: String
 )
 
 data class ButtonLocale(

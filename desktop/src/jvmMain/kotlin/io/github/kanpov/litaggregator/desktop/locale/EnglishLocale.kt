@@ -13,6 +13,12 @@ object EnglishLocale : Locale {
         shellBinary = "Shell binary being used:",
         browserBinary = "Browser binary being used:"
     )
+    override val profileSelect: ProfileSelectLocale = ProfileSelectLocale(
+        selectYourProfile = "Select a profile",
+        loadProfile = "Load profile",
+        createProfile = "Create profile",
+        recentProfiles = "Recent profiles:"
+    )
     override val button: ButtonLocale = ButtonLocale(
         continueButton = "Continue"
     )

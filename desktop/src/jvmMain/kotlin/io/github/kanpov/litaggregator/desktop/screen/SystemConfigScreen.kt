@@ -99,8 +99,7 @@ class SystemConfigScreen : Screen {
             ) {
                 Text(
                     text = Locale.current.button.continueButton,
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.h6
                 )
             }
         }

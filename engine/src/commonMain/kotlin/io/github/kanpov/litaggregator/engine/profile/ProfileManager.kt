@@ -64,17 +64,20 @@ class ProfileManager private constructor(private val profileFile: File, private 
     companion object {
         // working with profile cache (e.g. saving the currently selected profile over multiple app launches)
 
-        fun tryLocateCachedProfile(): File? {
+        fun locateCachedProfiles(): List<File> {
             val cacheFile = EnginePlatform.current.getPersistentPath(PROFILE_CACHE_RELATIVE_PATH).asFile()
-            if (!cacheFile.exists()) return null // no cache
+            if (!cacheFile.exists()) return emptyList() // no cache
 
-            val profileRelativePath = readFile(cacheFile) ?: return null // malformed cache file
-            val profileFile = EnginePlatform.current.getPersistentPath(profileRelativePath).asFile()
+            val entries = readFile(cacheFile)?.lines() ?: return emptyList()
+            return buildList {
+                for (entry in entries) {
+                    if (entry.isBlank()) continue
 
-            return if (profileFile.exists()) {
-                profileFile // success
-            } else {
-                null // cache points to non-existent file
+                    val entryFile = EnginePlatform.current.getPersistentPath(entry).asFile()
+                    if (entryFile.exists()) {
+                        this += entryFile
+                    }
+                }
             }
         }
 
