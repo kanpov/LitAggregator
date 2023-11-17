@@ -3,10 +3,12 @@ package io.github.kanpov.litaggregator.desktop.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -18,6 +20,7 @@ import io.github.kanpov.litaggregator.desktop.locale.Locale
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import java.io.File
 
 class ProfileSelectScreen : Screen {
     @Composable
@@ -39,10 +42,6 @@ class ProfileSelectScreen : Screen {
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 30.dp)
             ) {
                 ProfileButtons()
-                Divider(
-                    color = Color.Black,
-                    modifier = Modifier.height(150.dp).width(2.dp).offset(x = 10.dp)
-                )
                 RecentProfiles()
             }
         }
@@ -87,13 +86,12 @@ class ProfileSelectScreen : Screen {
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun RecentProfiles() {
         val cachedProfiles = ProfileManager.locateCachedProfiles()
 
         Column(
-            modifier = Modifier.padding(start = 20.dp, top = 10.dp)
+            modifier = Modifier.padding(start = 20.dp, top = 20.dp)
         ) {
             Text(
                 text = Locale.current.profileSelect.recentProfiles,
@@ -102,35 +100,61 @@ class ProfileSelectScreen : Screen {
             )
 
             for (cachedProfile in cachedProfiles) {
-                Row(
-                    modifier = Modifier.padding(top = 10.dp)
-                ) {
-                    Image(
-                        painter = painterResource("icons/file.png"),
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp).align(Alignment.CenterVertically)
-                    )
-
-                    Text(
-                        text = cachedProfile.absolutePath,
-                        style = MaterialTheme.typography.h6,
-                        modifier = Modifier.align(Alignment.CenterVertically).clickable {
-                            // TODO implement
-                        }
-                    )
-
-                    var alertShown by remember { mutableStateOf(false) }
-                    var alertFilePath: String? by remember { mutableStateOf(null) }
-
-                    Image(
-                        painter = painterResource("icons/file_delete.png"),
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp).align(Alignment.CenterVertically).clickable {
-                            alertShown = true
-                        }
-                    )
-                }
+                RecentProfile(cachedProfile)
             }
+        }
+    }
+
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    private fun RecentProfile(file: File) {
+        Row(
+            modifier = Modifier.padding(top = 10.dp)
+        ) {
+            Image(
+                painter = painterResource("icons/file.png"),
+                contentDescription = null,
+                modifier = Modifier.size(40.dp).align(Alignment.CenterVertically)
+            )
+
+            Text(
+                text = file.absolutePath,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.align(Alignment.CenterVertically).clickable {
+                    // TODO implement
+                }
+            )
+
+            var alertShown by remember { mutableStateOf(false) }
+            var alertFilePath: String? by remember { mutableStateOf(null) }
+
+            Image(
+                painter = painterResource("icons/file_delete.png"),
+                contentDescription = null,
+                modifier = Modifier.size(40.dp).align(Alignment.CenterVertically).clickable {
+                    alertShown = true
+                }
+            )
+
+            if (!alertShown) return@Row
+
+            AlertDialog(
+                title = {
+
+                },
+                text = {
+
+                },
+                onDismissRequest = {
+
+                },
+                confirmButton = {
+
+                },
+                dismissButton = {
+
+                }
+            )
         }
     }
 }
