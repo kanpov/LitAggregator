@@ -45,8 +45,6 @@ object Locale {
         }
     }
 
-    val registerNames: List<String>
-        get() = localeRegisters.map { it.name }
     val localeNames: List<String>
         get() = localeRegisters.map { it.name }
 
