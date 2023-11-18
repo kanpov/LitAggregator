@@ -13,9 +13,10 @@ import java.io.File
 data class CachedProfile(
     val relativePath: String,
     val profileName: String,
-    val pinned: Boolean,
-    val starred: Boolean
-)
+    var starred: Boolean
+) {
+    val file: File by lazy { EnginePlatform.current.getPersistentPath(relativePath).asFile() }
+}
 
 @Serializable
 private data class ProfileCacheWrapper(
@@ -51,6 +52,13 @@ object ProfileCache {
 
         return true
     }
+
+    fun remove(cachedProfile: CachedProfile) {
+        wrapper.profiles.remove(cachedProfile)
+        write()
+    }
+
+    fun exists(): Boolean = cacheFile.exists()
 
     private fun handleIOError(verb: String, reason: String): Boolean {
         Logger.e { "Failed to $verb profile cache because of $reason. Aborting operation and emptying file" }

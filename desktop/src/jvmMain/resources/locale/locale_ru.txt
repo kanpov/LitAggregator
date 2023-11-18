@@ -2,6 +2,8 @@ window_name=ЛИТ Агрегатор
 
 # Buttons
 button.continue=Продолжить
+button.confirm=Подтвердить
+button.cancel=Отменить
 
 # System Config
 system_config.ui_language=Язык интерфейса (требует перезапуск приложения)
@@ -17,3 +19,9 @@ profile_select.select_your_profile=Выберите профиль
 profile_select.load_profile=Загрузить профиль
 profile_select.create_profile=Создать профиль
 profile_select.recent_profiles=Последние профили:
+profile_select.no_saved_profiles=Нет сохраненных профилей
+profile_select.profile_delete_dialog.heading=Подтвердите удаление профиля
+profile_select.profile_delete_dialog.text=Удалить профиль "|1|"?
+profile_select.info_dialog.path_to_file=Путь к файлу профиля:
+profile_select.info_dialog.file_size=Размер файла профиля:
+profile_select.info_dialog.kb=|1| КБ

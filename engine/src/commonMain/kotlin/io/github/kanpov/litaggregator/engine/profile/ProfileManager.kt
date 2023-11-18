@@ -63,8 +63,7 @@ class ProfileManager private constructor(private val profileFile: File, private 
 
     companion object {
         fun fromCache(cachedProfile: CachedProfile, password: String): Pair<ProfileResult, ProfileManager?> {
-            val file = EnginePlatform.current.getPersistentPath(cachedProfile.relativePath).asFile()
-            val manager = ProfileManager(file, password)
+            val manager = ProfileManager(cachedProfile.file, password)
             val readResult = manager.readFromDisk()
 
             return if (readResult.isError) {
@@ -79,40 +78,14 @@ class ProfileManager private constructor(private val profileFile: File, private 
             val relativePath = "$profileName.$PROFILE_EXTENSION"
             val file = EnginePlatform.current.getPersistentPath(relativePath).asFile()
 
-            val manage=
-        }
+            val manager = ProfileManager(file, password)
+            val createResult = manager.create(profile, options)
 
-//        fun locateCachedProfiles(): List<File> {
-//            val cacheFile = EnginePlatform.current.getPersistentPath(PROFILE_CACHE_RELATIVE_PATH).asFile()
-//            if (!cacheFile.exists()) return emptyList() // no cache
-//
-//            val entries = readFile(cacheFile)?.lines() ?: return emptyList()
-//            return buildList {
-//                for (entry in entries) {
-//                    if (entry.isBlank()) continue
-//
-//                    val entryFile = EnginePlatform.current.getPersistentPath(entry).asFile()
-//                    if (entryFile.exists()) {
-//                        this += entryFile
-//                    }
-//                }
-//            }
-//        }
-//
-//        fun fromCachedProfile(cachedProfileFile: File, password: String) = ProfileManager(cachedProfileFile, password)
-//            .apply { readFromDisk() }
-//
-//        fun fromNewProfile(profile: Profile, options: ProfileEncryptionOptions, profileName: String, password: String): ProfileManager {
-//            val profileRelativePath = "$profileName.agr"
-//            val cacheFile = EnginePlatform.current.getPersistentPath(PROFILE_CACHE_RELATIVE_PATH).asFile()
-//            writeFile(cacheFile, profileRelativePath)
-//
-//            val profileFile = EnginePlatform.current.getPersistentPath(profileRelativePath).asFile()
-//            profileFile.createNewFile()
-//
-//            return ProfileManager(profileFile, password).apply {
-//                this.create(profile, options)
-//            }
-//        }
+            return if (createResult.isError) {
+                createResult to null
+            } else {
+                createResult to manager
+            }
+        }
     }
 }
