@@ -46,7 +46,7 @@ class SystemConfigScreen : Screen {
                     DesktopEnginePlatform.updateSystemConfig {
                         localeId = Locale.nameToId(localeName)
                     }
-                    restartSelf(navigator)
+                    restartScreen(navigator)
                 }
             )
 

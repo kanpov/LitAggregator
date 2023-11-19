@@ -19,6 +19,7 @@ import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
+import io.github.kanpov.litaggregator.desktop.screen.onboarding.OnboardingScreen
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -27,6 +28,8 @@ import org.jetbrains.compose.resources.painterResource
 class ProfileSelectScreen : Screen {
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+
         Column(
             modifier = Modifier.fillMaxSize().padding(10.dp)
         ) {
@@ -38,14 +41,14 @@ class ProfileSelectScreen : Screen {
                     .align(Alignment.CenterHorizontally)
                     .fillMaxHeight()
             ) {
-                ProfileButtons()
-                RecentProfiles(LocalNavigator.currentOrThrow)
+                ProfileButtons(navigator)
+                RecentProfiles(navigator)
             }
         }
     }
 
     @Composable
-    private fun RowScope.ProfileButtons() {
+    private fun RowScope.ProfileButtons(navigator: Navigator) {
         Column(
             modifier = Modifier.align(Alignment.CenterVertically)
         ) {
@@ -65,7 +68,7 @@ class ProfileSelectScreen : Screen {
             // create new profile button
             Button(
                 onClick = {
-                    // TODO implement
+                    OnboardingScreen.startOnboarding(navigator)
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Green
@@ -127,7 +130,7 @@ class ProfileSelectScreen : Screen {
                 modifier = Modifier.padding(start = 10.dp).align(Alignment.CenterVertically).clickable {
                     cachedProfile.starred = !cachedProfile.starred
                     ProfileCache.write()
-                    restartSelf(navigator)
+                    restartScreen(navigator)
                 }
             )
 
@@ -178,7 +181,7 @@ class ProfileSelectScreen : Screen {
                     onClick = {
                         onDismissRequest()
                         ProfileCache.remove(cachedProfile)
-                        restartSelf(navigator)
+                        restartScreen(navigator)
                     },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Red

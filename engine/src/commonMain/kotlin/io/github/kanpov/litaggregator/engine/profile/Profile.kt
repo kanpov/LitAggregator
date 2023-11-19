@@ -14,10 +14,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Profile(
-    val identity: IdentitySettings,
-    val providers: ProviderSettings,
-    val authorization: Authorization,
-    val feedSettings: FeedSettings,
+    var identity: IdentitySettings,
+    var providers: ProviderSettings,
+    var authorization: Authorization,
+    var feedSettings: FeedSettings,
     val feed: Feed
 ) {
     suspend fun setupAuthorizer(authorizer: Authorizer): Boolean {

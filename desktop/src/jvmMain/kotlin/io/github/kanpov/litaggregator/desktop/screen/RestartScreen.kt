@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 
 private const val RESTART_DELAY = 1000L
 
-class RestartScreen(private val redirect: Screen) : Screen {
+class RestartScreen(private val newScreen: Screen? = null) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -36,11 +36,15 @@ class RestartScreen(private val redirect: Screen) : Screen {
 
         LaunchedEffect(null) {
             delay(RESTART_DELAY)
-            navigator.push(redirect)
+            if (newScreen == null) {
+                navigator.pop()
+            } else {
+                navigator.push(newScreen)
+            }
         }
     }
 }
 
-fun Screen.restartSelf(navigator: Navigator) {
-    navigator.push(RestartScreen(redirect = this))
+fun restartScreen(navigator: Navigator) {
+    navigator.push(RestartScreen())
 }

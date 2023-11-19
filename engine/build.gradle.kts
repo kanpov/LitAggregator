@@ -4,9 +4,7 @@ plugins {
 }
 
 kotlin {
-    targets {
-        jvm()
-    }
+    jvm()
 
     sourceSets {
         val commonMain by getting  {

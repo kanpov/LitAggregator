@@ -3,6 +3,8 @@ window_name=LIT Aggregator
 button.continue=Continue
 button.confirm=Confirm
 button.cancel=Cancel
+button.next=Next
+button.previous=Previous
 
 system_config.ui_language=Interface language:
 system_config.configure_your_system=Configure your system
@@ -24,3 +26,11 @@ profile_select.info_dialog.file_size=Size of the profile:
 profile_select.info_dialog.kb=|1| KB
 
 restart.please_wait=Please, wait
+
+onboarding.creating_profile=Profile creation
+onboarding.identity.profile_name_hint=My profile
+onboarding.identity.profile_name=The profile's name:
+onboarding.identity.parallel_hint=From 5 up to 11
+onboarding.identity.parallel=Your parallel's number:
+onboarding.identity.group_hint=From 1 to 6
+onboarding.identity.group=Your group's number:

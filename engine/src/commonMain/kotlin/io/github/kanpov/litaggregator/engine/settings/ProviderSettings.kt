@@ -7,17 +7,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProviderSettings(
-    val announcements: AnnouncementProviderSettings? = AnnouncementProviderSettings(),
-    val ulyss: UlyssProviderSettings? = UlyssProviderSettings(),
-    val meshHomework: MeshHomeworkProviderSettings? = MeshHomeworkProviderSettings(),
-    val meshMarks: MeshMarkProviderSettings? = MeshMarkProviderSettings(),
-    val meshRatings: MeshRatingProviderSettings? = MeshRatingProviderSettings(),
-    val meshVisits: MeshVisitProviderSettings? = MeshVisitProviderSettings(),
-    val meshBanners: MeshBannerProviderSettings? = MeshBannerProviderSettings(),
-    val portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = PortfolioDiagnosticProviderSettings(),
-    val portfolioEvents: PortfolioEventProviderSettings? = PortfolioEventProviderSettings(),
-    val classroom: ClassroomProviderSettings? = ClassroomProviderSettings(),
-    val gmail: GmailProviderSettings? = GmailProviderSettings()
+    var announcements: AnnouncementProviderSettings? = AnnouncementProviderSettings(),
+    var ulyss: UlyssProviderSettings? = UlyssProviderSettings(),
+    var meshHomework: MeshHomeworkProviderSettings? = MeshHomeworkProviderSettings(),
+    var meshMarks: MeshMarkProviderSettings? = MeshMarkProviderSettings(),
+    var meshRatings: MeshRatingProviderSettings? = MeshRatingProviderSettings(),
+    var meshVisits: MeshVisitProviderSettings? = MeshVisitProviderSettings(),
+    var meshBanners: MeshBannerProviderSettings? = MeshBannerProviderSettings(),
+    var portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = PortfolioDiagnosticProviderSettings(),
+    var portfolioEvents: PortfolioEventProviderSettings? = PortfolioEventProviderSettings(),
+    var classroom: ClassroomProviderSettings? = ClassroomProviderSettings(),
+    var gmail: GmailProviderSettings? = GmailProviderSettings()
 )
 
 @Serializable
