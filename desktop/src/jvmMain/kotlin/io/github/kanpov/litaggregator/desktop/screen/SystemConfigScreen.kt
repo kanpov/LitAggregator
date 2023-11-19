@@ -1,6 +1,5 @@
 package io.github.kanpov.litaggregator.desktop.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,15 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.components.BasicIcon
+import io.github.kanpov.litaggregator.desktop.components.H5Text
+import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.platform.DesktopSystemConfig
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -35,22 +35,18 @@ class SystemConfigScreen : Screen {
             modifier = Modifier.fillMaxSize().padding(10.dp)
         ) {
             // heading
-            Text(
-                text = Locale["system_config.configure_your_system"],
-                style = MaterialTheme.typography.h5,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            H5Text(Locale["system_config.configure_your_system"], Modifier.align(Alignment.CenterHorizontally))
 
             // language setting
             DropdownSetting(
                 label = Locale["system_config.ui_language"],
-                startOption = Locale.localeNames.first(),
+                startOption = Locale.idToName(DesktopEnginePlatform.systemConfig!!.localeId),
                 options = Locale.localeNames,
                 onSelectOption = { localeName ->
                     DesktopEnginePlatform.updateSystemConfig {
                         localeId = Locale.nameToId(localeName)
                     }
+                    restartSelf(navigator)
                 }
             )
 
@@ -97,10 +93,7 @@ class SystemConfigScreen : Screen {
                 ),
                 modifier = Modifier.padding(top = 15.dp).scale(1.1f).align(Alignment.CenterHorizontally)
             ) {
-                Text(
-                    text = Locale["button.continue"],
-                    style = MaterialTheme.typography.h6
-                )
+                H6Text(Locale["button.continue"])
             }
         }
     }
@@ -111,13 +104,8 @@ class SystemConfigScreen : Screen {
         val iconPainter = if (ok) painterResource("icons/ok.png") else painterResource("icons/cross.png")
 
         Row(modifier = Modifier.padding(top = 10.dp)) {
-            SettingIcon(iconPainter)
-
-            Text(
-                text = label,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 10.dp)
-            )
+            BasicIcon(iconPainter, 50.dp)
+            H6Text(label, modifier = Modifier.align(Alignment.CenterVertically).padding(start = 10.dp))
         }
 
         if (ok) whenOk()
@@ -127,14 +115,8 @@ class SystemConfigScreen : Screen {
     @Composable
     private fun QuestionSetting(label: String, content: @Composable () -> Unit) {
         Row(modifier = Modifier.padding(top = 10.dp)) {
-            SettingIcon(painterResource("icons/question_mark.png"))
-
-            Text(
-                text = label,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 10.dp)
-            )
-
+            BasicIcon(painterResource("icons/question_mark.png"), 50.dp)
+            H6Text(label, modifier = Modifier.align(Alignment.CenterVertically).padding(start = 10.dp))
             content()
         }
     }
@@ -193,23 +175,10 @@ class SystemConfigScreen : Screen {
                         selectedOption = option
                         expanded = false
                     }) {
-                        Text(
-                            text = option,
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        H6Text(option, modifier = Modifier.fillMaxSize())
                     }
                 }
             }
         }
-    }
-
-    @Composable
-    private fun SettingIcon(painter: Painter) {
-        Image(
-            painter = painter,
-            contentDescription = null,
-            modifier = Modifier.size(50.dp)
-        )
     }
 }

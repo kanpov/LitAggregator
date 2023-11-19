@@ -21,6 +21,7 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.voyager.navigation)
                 implementation(libs.voyager.transitions)
+                implementation(libs.mpfilepicker)
 
                 implementation(libs.selenium)
                 implementation(libs.web.driver.manager)

@@ -1,12 +1,10 @@
 window_name=ЛИТ Агрегатор
 
-# Buttons
 button.continue=Продолжить
 button.confirm=Подтвердить
 button.cancel=Отменить
 
-# System Config
-system_config.ui_language=Язык интерфейса (требует перезапуск приложения)
+system_config.ui_language=Язык интерфейса:
 system_config.configure_your_system=Настройте вашу систему
 system_config.supports_web_driver=Поддерживает необходимые браузерные драйвера для авторизации в МЭШ
 system_config.supports_awt_desktop=Поддерживает запуск браузера приложением через консоль
@@ -14,7 +12,6 @@ system_config.supports_shell_browser_invocation=Поддерживает зап�
 system_config.shell_binary=Используемая консоль:
 system_config.browser_binary=Используемый браузер:
 
-# Profile Select
 profile_select.select_your_profile=Выберите профиль
 profile_select.load_profile=Загрузить профиль
 profile_select.create_profile=Создать профиль
@@ -25,3 +22,5 @@ profile_select.profile_delete_dialog.text=Удалить профиль "|1|"?
 profile_select.info_dialog.path_to_file=Путь к файлу профиля:
 profile_select.info_dialog.file_size=Размер файла профиля:
 profile_select.info_dialog.kb=|1| КБ
+
+restart.please_wait=Пожалуйста, подождите

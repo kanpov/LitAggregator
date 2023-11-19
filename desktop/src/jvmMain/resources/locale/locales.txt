@@ -1,1 +1,2 @@
 ru;locale_ru.txt;Русский
+en;locale_en.txt;English

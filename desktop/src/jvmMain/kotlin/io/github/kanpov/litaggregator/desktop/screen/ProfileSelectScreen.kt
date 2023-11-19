@@ -1,6 +1,5 @@
 package io.github.kanpov.litaggregator.desktop.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,12 +9,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.components.BasicIcon
+import io.github.kanpov.litaggregator.desktop.components.H5Text
+import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -28,12 +31,7 @@ class ProfileSelectScreen : Screen {
             modifier = Modifier.fillMaxSize().padding(10.dp)
         ) {
             // heading
-            Text(
-                text = Locale["profile_select.select_your_profile"],
-                style = MaterialTheme.typography.h5,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            H5Text(Locale["profile_select.select_your_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             Row(
                 modifier = Modifier
@@ -41,7 +39,7 @@ class ProfileSelectScreen : Screen {
                     .fillMaxHeight()
             ) {
                 ProfileButtons()
-                RecentProfiles()
+                RecentProfiles(LocalNavigator.currentOrThrow)
             }
         }
     }
@@ -61,10 +59,7 @@ class ProfileSelectScreen : Screen {
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(
-                    text = Locale["profile_select.load_profile"],
-                    style = MaterialTheme.typography.h6
-                )
+                H6Text(Locale["profile_select.load_profile"])
             }
 
             // create new profile button
@@ -77,24 +72,17 @@ class ProfileSelectScreen : Screen {
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 15.dp)
             ) {
-                Text(
-                    text = Locale["profile_select.create_profile"],
-                    style = MaterialTheme.typography.h6
-                )
+                H6Text(Locale["profile_select.create_profile"])
             }
         }
     }
 
     @Composable
-    private fun RowScope.RecentProfiles() {
+    private fun RowScope.RecentProfiles(navigator: Navigator) {
         Column(
             modifier = Modifier.padding(start = 30.dp).align(Alignment.CenterVertically)
         ) {
-            Text(
-                text = Locale["profile_select.recent_profiles"],
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            H6Text(Locale["profile_select.recent_profiles"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             Spacer(
                 modifier = Modifier.height(15.dp)
@@ -103,14 +91,10 @@ class ProfileSelectScreen : Screen {
             val starPrioritizedProfiles = ProfileCache.iterator()
                 .asSequence().sortedByDescending { it.starred }.toList()
             if (starPrioritizedProfiles.isEmpty()) {
-                Text(
-                    text = Locale["profile_select.no_saved_profiles"],
-                    style = MaterialTheme.typography.h6,
-                    fontStyle = FontStyle.Italic
-                )
+                H6Text(Locale["profile_select.no_saved_profiles"], italicize = true)
             } else {
                 for (cachedProfile in starPrioritizedProfiles) {
-                    RecentProfile(cachedProfile)
+                    RecentProfile(cachedProfile, navigator)
                 }
             }
         }
@@ -118,61 +102,42 @@ class ProfileSelectScreen : Screen {
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
-    private fun RecentProfile(cachedProfile: CachedProfile) {
+    private fun RecentProfile(cachedProfile: CachedProfile, navigator: Navigator) {
         Row {
             // profile icon
-            Image(
-                painter = painterResource("icons/profile.png"),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterVertically)
-            )
+            BasicIcon(painterResource("icons/profile.png"), 25.dp, modifier = Modifier.align(Alignment.CenterVertically))
 
             // profile name
-            Text(
-                text = cachedProfile.profileName,
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
+            H6Text(cachedProfile.profileName, highlight = true, modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(start = 5.dp)
                     .clickable {
                     // TODO implement
-                }
-            )
+                })
 
             Spacer(
                 modifier = Modifier.weight(1f)
             )
 
             // starred or not
-            var starred by remember { mutableStateOf(cachedProfile.starred) }
-            Image(
-                painter = if (starred) painterResource("icons/star_filled.png") else painterResource("icons/star.png"),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-                    .padding(start = 10.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                    starred = !starred
-                    cachedProfile.starred = starred
+            BasicIcon(
+                painter = if (cachedProfile.starred) painterResource("icons/star_filled.png")
+                            else painterResource("icons/star.png"),
+                size = 40.dp,
+                modifier = Modifier.padding(start = 10.dp).align(Alignment.CenterVertically).clickable {
+                    cachedProfile.starred = !cachedProfile.starred
                     ProfileCache.write()
+                    restartSelf(navigator)
                 }
             )
 
             // info
             var infoDialogShown by remember { mutableStateOf(false) }
 
-            Image(
+            BasicIcon(
                 painter = painterResource("icons/info.png"),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-                    .align(Alignment.CenterVertically)
-                    .padding(start = 5.dp)
-                    .clickable {
+                size = 40.dp,
+                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp).clickable {
                     infoDialogShown = true
                 }
             )
@@ -180,21 +145,17 @@ class ProfileSelectScreen : Screen {
             // delete
             var confirmDeleteDialogShown by remember { mutableStateOf(false) }
 
-            Image(
+            BasicIcon(
                 painter = painterResource("icons/file_delete.png"),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-                    .align(Alignment.CenterVertically)
-                    .padding(start = 5.dp)
-                    .clickable {
+                size = 40.dp,
+                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp).clickable {
                     confirmDeleteDialogShown = true
                 }
             )
 
             // dialogs
             if (confirmDeleteDialogShown) {
-                ConfirmDeleteDialog(cachedProfile) { confirmDeleteDialogShown = false }
+                ConfirmDeleteDialog(cachedProfile, navigator) { confirmDeleteDialogShown = false }
             }
             if (infoDialogShown) {
                 InfoDialog(cachedProfile) { infoDialogShown = false }
@@ -203,38 +164,28 @@ class ProfileSelectScreen : Screen {
     }
 
     @Composable
-    private fun ConfirmDeleteDialog(cachedProfile: CachedProfile, onDismissRequest: () -> Unit) {
+    private fun ConfirmDeleteDialog(cachedProfile: CachedProfile, navigator: Navigator, onDismissRequest: () -> Unit) {
         AlertDialog(
             title = {
-                Text(
-                    text = Locale["profile_select.profile_delete_dialog.heading"],
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.SemiBold
-                )
+                H6Text(Locale["profile_select.profile_delete_dialog.heading"], highlight = true)
             },
             text = {
-                Text(
-                    text = Locale["profile_select.profile_delete_dialog.text", cachedProfile.profileName],
-                    style = MaterialTheme.typography.h6
-                )
+                H6Text(Locale["profile_select.profile_delete_dialog.text", cachedProfile.profileName])
             },
             onDismissRequest = onDismissRequest,
             confirmButton = {
                 Button(
                     onClick = {
-                        // TODO implement
                         onDismissRequest()
+                        ProfileCache.remove(cachedProfile)
+                        restartSelf(navigator)
                     },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Red
                     ),
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {
-                    Text(
-                        text = Locale["button.confirm"],
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    H6Text(Locale["button.confirm"], highlight = true)
                 }
             },
             dismissButton = {
@@ -245,11 +196,7 @@ class ProfileSelectScreen : Screen {
                     ),
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {
-                    Text(
-                        text = Locale["button.cancel"],
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    H6Text(Locale["button.cancel"], highlight = true)
                 }
             }
         )
@@ -266,32 +213,15 @@ class ProfileSelectScreen : Screen {
                     Column(
                         modifier = Modifier.padding(15.dp)
                     ) {
-                        Text(
-                            text = Locale["profile_select.info_dialog.path_to_file"],
-                            style = MaterialTheme.typography.h6,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        H6Text(Locale["profile_select.info_dialog.path_to_file"], highlight = true)
 
-                        Text(
-                            text = cachedProfile.file.absolutePath,
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
+                        H6Text(cachedProfile.file.absolutePath, modifier = Modifier.padding(top = 10.dp))
+
+                        H6Text(Locale["profile_select.info_dialog.file_size"],
+                            highlight = true, modifier = Modifier.padding(top = 15.dp))
 
                         val kbFileSize = cachedProfile.file.length() / 1024L
-
-                        Text(
-                            text = Locale["profile_select.info_dialog.file_size"],
-                            style = MaterialTheme.typography.h6,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(top = 15.dp)
-                        )
-
-                        Text(
-                            text = Locale["profile_select.info_dialog.kb", kbFileSize],
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
+                        H6Text(Locale["profile_select.info_dialog.kb", kbFileSize], modifier = Modifier.padding(top = 10.dp))
                     }
                 }
             }

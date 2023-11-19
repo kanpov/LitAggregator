@@ -76,9 +76,7 @@ object Locale {
         loadFromRegister(localeRegisters.first { it.id == id })
     }
 
-    fun loadByName(name: String) {
-        loadFromRegister(localeRegisters.first { it.name == name })
-    }
-
     fun nameToId(name: String) = localeRegisters.first { it.name == name }.id
+
+    fun idToName(id: String) = localeRegisters.first { it.id == id }.name
 }
