@@ -39,7 +39,7 @@ class RestartScreen(private val newScreen: Screen? = null) : Screen {
             modifier = Modifier.fillMaxSize()
         ) {
             CircularProgressIndicator(
-                modifier = Modifier.width(70.dp).padding(top = 10.dp).align(Alignment.Center),
+                modifier = Modifier.width(70.dp).align(Alignment.Center),
                 progress = progress
             )
         }

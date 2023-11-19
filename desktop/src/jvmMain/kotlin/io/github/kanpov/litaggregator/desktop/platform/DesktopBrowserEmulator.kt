@@ -63,9 +63,9 @@ object DesktopBrowserEmulator : BrowserEmulator() {
     fun tryLoadDriver(probe: Boolean = false): WebDriver? {
         // Only Chrome, Firefox and MS Edge are currently supported when added to PATH (e.g. most Linux and Windows installs)
         val browsers = mapOf<WebDriverManager, () -> WebDriver>(
-            WebDriverManager.chromedriver() to { ChromeDriver(ChromeOptions()) },
-            WebDriverManager.firefoxdriver() to { FirefoxDriver(FirefoxOptions()) },
-            WebDriverManager.edgedriver() to { EdgeDriver(EdgeOptions()) },
+            WebDriverManager.chromedriver() to { ChromeDriver(ChromeOptions().addArguments("--headless")) },
+            WebDriverManager.firefoxdriver() to { FirefoxDriver(FirefoxOptions().addArguments("--headless")) },
+            WebDriverManager.edgedriver() to { EdgeDriver(EdgeOptions().addArguments("headless", "disable-gpu")) },
             WebDriverManager.safaridriver() to { SafariDriver(SafariOptions()) }
         )
 

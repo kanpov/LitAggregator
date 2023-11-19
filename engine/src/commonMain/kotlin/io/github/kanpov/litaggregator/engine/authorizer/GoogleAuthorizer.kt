@@ -78,7 +78,7 @@ abstract class GoogleAuthorizer(internal val session: GoogleClientSession = Goog
     // Platform-specific part of the implementation:
     // On Android, the code is received from a native Intent and consent happens through a native browser tab
     // On Desktop, the code is received from a loopback server IP and consent happens through an external browser
-    protected abstract fun authorizeImpl(oauthUrl: String)
+    protected abstract suspend fun authorizeImpl(oauthUrl: String)
 
     protected suspend fun obtainTokens(code: String) {
         val response = ktorClient.post(OAUTH_TOKEN_MANAGE_ENDPOINT) {

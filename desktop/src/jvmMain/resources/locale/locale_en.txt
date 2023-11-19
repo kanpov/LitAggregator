@@ -5,10 +5,12 @@ button.confirm=Confirm
 button.cancel=Cancel
 button.next=Next
 button.previous=Previous
+button.bind=Bind
+button.bound=Bound
 
 system_config.ui_language=Interface language:
 system_config.configure_your_system=Configure your system
-system_config.supports_web_driver=Supports required browser drivers to authorize to MESH
+system_config.supports_web_driver=Supports required browser drivers to authorize to Mesh
 system_config.supports_awt_desktop=Supports launching a browser automatically
 system_config.supports_shell_browser_invocation=Support launching a browser via the console
 system_config.shell_binary=Shell being used:
@@ -28,9 +30,18 @@ profile_select.info_dialog.kb=|1| KB
 restart.please_wait=Please, wait
 
 onboarding.creating_profile=Profile creation
+
+onboarding.identity=General settings
 onboarding.identity.profile_name_hint=My profile
 onboarding.identity.profile_name=The profile's name:
 onboarding.identity.parallel_hint=From 5 up to 11
 onboarding.identity.parallel=Your parallel's number:
 onboarding.identity.group_hint=From 1 to 6
 onboarding.identity.group=Your group's number:
+
+onboarding.authorization=Authorization
+onboarding.authorization.mesh=Mesh
+onboarding.authorization.ulysses=Ulysses
+onboarding.authorization.google=Google
+onboarding.authorization.login=Login:
+onboarding.authorization.password=Password:

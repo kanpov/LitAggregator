@@ -8,11 +8,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun H5Text(text: String, modifier: Modifier = Modifier) {
+fun H5Text(text: String, fontWeight: FontWeight = FontWeight.Bold, modifier: Modifier = Modifier) {
     Text(
         text = text,
         style = MaterialTheme.typography.h5,
-        fontWeight = FontWeight.Bold,
+        fontWeight = fontWeight,
         modifier = modifier
     )
 }

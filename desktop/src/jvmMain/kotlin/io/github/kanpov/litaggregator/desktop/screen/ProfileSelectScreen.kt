@@ -16,9 +16,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.SMALL_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
+import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import io.github.kanpov.litaggregator.desktop.screen.onboarding.OnboardingScreen
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
@@ -29,6 +31,7 @@ class ProfileSelectScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        resizeAppWindow(SMALL_WINDOW_SIZE)
 
         Column(
             modifier = Modifier.fillMaxSize().padding(10.dp)
@@ -36,7 +39,7 @@ class ProfileSelectScreen : Screen {
             // heading
             H5Text(Locale["profile_select.select_your_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
-            Row(
+            Column(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .fillMaxHeight()
@@ -48,9 +51,9 @@ class ProfileSelectScreen : Screen {
     }
 
     @Composable
-    private fun RowScope.ProfileButtons(navigator: Navigator) {
+    private fun ColumnScope.ProfileButtons(navigator: Navigator) {
         Column(
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 30.dp)
         ) {
             // load existing profile button
             Button(
@@ -81,9 +84,9 @@ class ProfileSelectScreen : Screen {
     }
 
     @Composable
-    private fun RowScope.RecentProfiles(navigator: Navigator) {
+    private fun ColumnScope.RecentProfiles(navigator: Navigator) {
         Column(
-            modifier = Modifier.padding(start = 30.dp).align(Alignment.CenterVertically)
+            modifier = Modifier.padding(top = 20.dp).align(Alignment.CenterHorizontally)
         ) {
             H6Text(Locale["profile_select.recent_profiles"], modifier = Modifier.align(Alignment.CenterHorizontally))
 

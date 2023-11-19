@@ -18,69 +18,80 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.MEDIUM_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.platform.DesktopSystemConfig
+import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 class SystemConfigScreen : Screen {
     @Composable
     override fun Content() {
+        resizeAppWindow(MEDIUM_WINDOW_SIZE)
         val navigator = LocalNavigator.currentOrThrow
 
         Column(
             modifier = Modifier.fillMaxSize().padding(10.dp)
         ) {
             // heading
-            H5Text(Locale["system_config.configure_your_system"], Modifier.align(Alignment.CenterHorizontally))
+            H5Text(Locale["system_config.configure_your_system"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
-            // language setting
-            DropdownSetting(
-                label = Locale["system_config.ui_language"],
-                startOption = Locale.idToName(DesktopEnginePlatform.systemConfig!!.localeId),
-                options = Locale.localeNames,
-                onSelectOption = { localeName ->
-                    DesktopEnginePlatform.updateSystemConfig {
-                        localeId = Locale.nameToId(localeName)
+            Column(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                // language setting
+                DropdownSetting(
+                    label = Locale["system_config.ui_language"],
+                    startOption = Locale.idToName(DesktopEnginePlatform.systemConfig!!.localeId),
+                    options = Locale.localeNames,
+                    onSelectOption = { localeName ->
+                        DesktopEnginePlatform.updateSystemConfig {
+                            localeId = Locale.nameToId(localeName)
+                        }
+                        restartScreen(navigator)
                     }
-                    restartScreen(navigator)
-                }
-            )
+                )
 
-            // web driver support setting
-            StaticSetting(
-                ok = DesktopEnginePlatform.systemConfig!!.supportsWebDriver,
-                label = Locale["system_config.supports_web_driver"]
-            )
+                // web driver support setting
+                StaticSetting(
+                    ok = DesktopEnginePlatform.systemConfig!!.supportsWebDriver,
+                    label = Locale["system_config.supports_web_driver"]
+                )
 
-            // awt desktop support setting
-            StaticSetting(
-                ok = DesktopEnginePlatform.systemConfig!!.supportsAwtDesktop,
-                label = Locale["system_config.supports_awt_desktop"]
-            )
+                // awt desktop support setting
+                StaticSetting(
+                    ok = DesktopEnginePlatform.systemConfig!!.supportsAwtDesktop,
+                    label = Locale["system_config.supports_awt_desktop"]
+                )
 
-            // shell browser support setting
-            StaticSetting(
-                ok = DesktopEnginePlatform.systemConfig!!.supportsShellBrowserInvocation,
-                label = Locale["system_config.supports_shell_browser_invocation"],
-                whenOk = {
-                    // exact shell setting
-                    TypedSetting(
-                        label = Locale["system_config.shell_binary"],
-                        defaultValue = DesktopEnginePlatform.systemConfig!!.shellBinary,
-                        setValue = { shellBinary = it }
-                    )
+                // shell browser support setting
+                StaticSetting(
+                    ok = DesktopEnginePlatform.systemConfig!!.supportsShellBrowserInvocation,
+                    label = Locale["system_config.supports_shell_browser_invocation"],
+                    whenOk = {
+                        // exact shell setting
+                        TypedSetting(
+                            label = Locale["system_config.shell_binary"],
+                            defaultValue = DesktopEnginePlatform.systemConfig!!.shellBinary,
+                            setValue = { shellBinary = it }
+                        )
 
-                    // exact browser setting
-                    TypedSetting(
-                        label = Locale["system_config.browser_binary"],
-                        defaultValue = DesktopEnginePlatform.systemConfig!!.browserBinary,
-                        setValue = { browserBinary = it }
-                    )
-                }
+                        // exact browser setting
+                        TypedSetting(
+                            label = Locale["system_config.browser_binary"],
+                            defaultValue = DesktopEnginePlatform.systemConfig!!.browserBinary,
+                            setValue = { browserBinary = it }
+                        )
+                    }
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.weight(1f)
             )
 
             // continue button

@@ -5,6 +5,8 @@ button.confirm=Подтвердить
 button.cancel=Отменить
 button.next=Далее
 button.previous=Обратно
+button.bind=Привязать
+button.bound=Привязан
 
 system_config.ui_language=Язык интерфейса:
 system_config.configure_your_system=Настройте вашу систему
@@ -28,9 +30,18 @@ profile_select.info_dialog.kb=|1| КБ
 restart.please_wait=Пожалуйста, подождите
 
 onboarding.creating_profile=Создание профиля
+
+onboarding.identity=Общие настройки
 onboarding.identity.profile_name_hint=Мой профиль
 onboarding.identity.profile_name=Название профиля:
 onboarding.identity.parallel_hint=От 5 до 11
 onboarding.identity.parallel=Номер параллели:
 onboarding.identity.group_hint=От 1 до 6
 onboarding.identity.group=Номер группы:
+
+onboarding.authorization=Авторизация
+onboarding.authorization.mesh=МЭШ
+onboarding.authorization.ulysses=УЛИСС
+onboarding.authorization.google=Google
+onboarding.authorization.login=Логин:
+onboarding.authorization.password=Пароль:

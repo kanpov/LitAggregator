@@ -3,26 +3,26 @@ package io.github.kanpov.litaggregator.desktop.platform
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.awt.Desktop
 import java.net.ServerSocket
 import java.net.URI
-import java.util.Scanner
+import java.util.*
 
 class DesktopGoogleAuthorizer(session: GoogleClientSession = GoogleClientSession()) : GoogleAuthorizer(session) {
     override var redirectUri: String = "http://127.0.0.1:|port|"
 
-    override fun authorizeImpl(oauthUrl: String) {
-        val server = ServerSocket(0)
+    override suspend fun authorizeImpl(oauthUrl: String) {
+        val server = withContext(Dispatchers.IO) {
+            ServerSocket(0)
+        }
         val port = server.localPort
 
         redirectUri = redirectUri.replace("|port|", port.toString())
         val oauthUri = URI.create(oauthUrl.replace("|port|", port.toString()))
         DesktopEnginePlatform.openBrowser(oauthUri)
 
-        val client = server.accept()
-        val scanner = Scanner(client.getInputStream())
+        val client = withContext(Dispatchers.IO) { server.accept() }
+        val scanner = Scanner(withContext(Dispatchers.IO) { client.getInputStream() })
 
         var rawData: String? = null
         while (scanner.hasNextLine()) {
@@ -32,10 +32,10 @@ class DesktopGoogleAuthorizer(session: GoogleClientSession = GoogleClientSession
 
         val code = rawData!!.split(" ")[1].split("=")[1].split("&")[0]
 
-        runBlocking {
-            obtainTokens(code)
-        }
+        obtainTokens(code)
 
-        server.close()
+        withContext(Dispatchers.IO) {
+            server.close()
+        }
     }
 }
