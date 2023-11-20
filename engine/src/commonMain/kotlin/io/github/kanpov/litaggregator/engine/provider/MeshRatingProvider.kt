@@ -1,17 +1,17 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.*
 import io.github.kanpov.litaggregator.engine.feed.entry.Rating
 import io.github.kanpov.litaggregator.engine.feed.entry.RatingFeedEntry
 import io.github.kanpov.litaggregator.engine.feed.entry.RatingTrend
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.io.*
 import kotlinx.serialization.json.JsonObject
 
-class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEntry>(authorizer) {
+class MeshRatingProvider(authorizer: MeshAuthorizer) : MeshProvider<RatingFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         // Find profiles of all classmates
         val classProfiles = authorizer.getJsonArray<JsonObject>("https://dnevnik.mos.ru/core/api/profiles?class_unit_id=${studentInfo.classUnitId}") {
@@ -75,11 +75,10 @@ class MeshRatingProvider(authorizer: MosAuthorizer) : MeshProvider<RatingFeedEnt
         trend = RatingTrend.parse(obj.jString("trend"))
     )
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, RatingFeedEntry> {
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, RatingFeedEntry> {
         override val name: String = "Рейтинги из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshRatings != null }
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, RatingFeedEntry> = { MeshRatingProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Linear
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, RatingFeedEntry> = { MeshRatingProvider(it.authorization.mos!!) }
     }
 }

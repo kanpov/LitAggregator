@@ -1,10 +1,7 @@
 package io.github.kanpov.litaggregator.engine.profile
 
 import co.touchlab.kermit.Logger
-import io.github.kanpov.litaggregator.engine.authorizer.Authorizer
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.*
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.feed.sortedByRelevancy
 import io.github.kanpov.litaggregator.engine.provider.AuthorizedProviderDefinition
@@ -16,7 +13,7 @@ import kotlinx.serialization.Serializable
 data class Profile(
     var identity: IdentitySettings,
     var providers: ProviderSettings,
-    var authorization: Authorization,
+    var authorization: AuthorizationState,
     var feedSettings: FeedSettings,
     val feed: Feed
 ) {
@@ -24,8 +21,8 @@ data class Profile(
         if (!authorizer.authorize()) return false
 
         when (authorizer) {
-            is UlyssAuthorizer -> this.authorization.ulyss = authorizer
-            is MosAuthorizer -> this.authorization.mos = authorizer
+            is UlyssesAuthorizer -> this.authorization.ulyss = authorizer
+            is MeshAuthorizer -> this.authorization.mos = authorizer
             is GoogleAuthorizer -> this.authorization.google = authorizer
         }
 

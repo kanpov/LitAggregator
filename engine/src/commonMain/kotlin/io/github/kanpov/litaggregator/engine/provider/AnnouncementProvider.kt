@@ -50,6 +50,9 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
                     }
                 }
 
+                if (!profile.providers.announcements!!.categoryFilter.matchList(categories)) continue
+                if (!profile.providers.announcements!!.htmlFilter.match(content)) continue
+
                 insert(profile.feed, AnnouncementFeedEntry(
                     title = title,
                     content = content,
@@ -67,6 +70,5 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
         override val name: String = "Новости из сайта Лицея 1533"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.announcements != null }
         override val factory: (Profile) -> SimpleProvider<AnnouncementFeedEntry> = { AnnouncementProvider() }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

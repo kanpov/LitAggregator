@@ -1,14 +1,14 @@
 package io.github.kanpov.litaggregator.desktop.platform
 
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession
+import io.github.kanpov.litaggregator.engine.authorizer.GoogleSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.ServerSocket
 import java.net.URI
 import java.util.*
 
-class DesktopGoogleAuthorizer(session: GoogleClientSession = GoogleClientSession()) : GoogleAuthorizer(session) {
+class DesktopGoogleAuthorizer(session: GoogleSession = GoogleSession()) : GoogleAuthorizer(session) {
     override var redirectUri: String = "http://127.0.0.1:|port|"
 
     override suspend fun authorizeImpl(oauthUrl: String) {

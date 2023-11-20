@@ -8,7 +8,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonObject
@@ -115,7 +114,7 @@ abstract class Authorizer {
 }
 
 @Serializable
-data class StandardAuthorizerCredentials(
+data class CredentialPair(
     val username: String,
     val password: String
 )

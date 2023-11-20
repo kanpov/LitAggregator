@@ -1,17 +1,17 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.MarkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
 import io.github.kanpov.litaggregator.engine.util.io.*
 import kotlinx.serialization.json.JsonObject
 
-class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(authorizer) {
+class MeshMarkProvider(authorizer: MeshAuthorizer) : MeshProvider<MarkFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val academicYearObj = authorizer.getJsonArray<JsonObject>("https://school.mos.ru/api/ej/core/family/v1/academic_years")!!
         val academicYearId = academicYearObj.first { it.jBoolean("current_year") }.jLong("id")
@@ -54,11 +54,10 @@ class MeshMarkProvider(authorizer: MosAuthorizer) : MeshProvider<MarkFeedEntry>(
         }
     }
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, MarkFeedEntry> {
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, MarkFeedEntry> {
         override val name: String = "Оценки из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshMarks != null }
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, MarkFeedEntry> = { MeshMarkProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, MarkFeedEntry> = { MeshMarkProvider(it.authorization.mos!!) }
     }
 }

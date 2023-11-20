@@ -18,7 +18,7 @@ import java.security.SecureRandom
 import java.time.Instant
 import java.util.Base64
 
-abstract class GoogleAuthorizer(internal val session: GoogleClientSession = GoogleClientSession())
+abstract class GoogleAuthorizer(internal val session: GoogleSession = GoogleSession())
     : Authorizer(){
     private var bufferedCodeVerifier: String? = null
 
@@ -155,7 +155,7 @@ enum class GoogleScope(val scopeUrls: Set<String>) {
 }
 
 @Serializable
-class GoogleClientSession {
+class GoogleSession {
     lateinit var accessToken: String
     lateinit var refreshToken: String
     lateinit var accessExpiry: String

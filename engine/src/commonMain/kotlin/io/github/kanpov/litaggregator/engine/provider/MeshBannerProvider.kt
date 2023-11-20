@@ -1,19 +1,18 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.BannerFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
 import io.github.kanpov.litaggregator.engine.util.io.jBoolean
-import io.github.kanpov.litaggregator.engine.util.io.jInt
 import io.github.kanpov.litaggregator.engine.util.io.jOptionalInt
 import io.github.kanpov.litaggregator.engine.util.io.jString
 
-class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEntry>(authorizer) {
+class MeshBannerProvider(authorizer: MeshAuthorizer) : MeshProvider<BannerFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val bannerMetaObj = authorizer
             .getJson("https://school.mos.ru/api/news/v2/banners/instance?location=HEADER&service_id=2")
@@ -36,11 +35,10 @@ class MeshBannerProvider(authorizer: MosAuthorizer) : MeshProvider<BannerFeedEnt
         ))
     }
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, BannerFeedEntry> {
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, BannerFeedEntry> {
         override val name: String = "Баннеры из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshBanners != null }
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, BannerFeedEntry> = { MeshBannerProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, BannerFeedEntry> = { MeshBannerProvider(it.authorization.mos!!) }
     }
 }

@@ -18,8 +18,8 @@ private const val MOS_LOGIN_URL = "https://school.mos.ru/v3/auth/sudir/login"
 private const val MOS_VALIDATION_URL = "https://dnevnik.mos.ru/core/api/student_profiles"
 
 @Serializable
-data class MosAuthorizer(private val credentials: StandardAuthorizerCredentials,
-                         private var authToken: String = "")
+data class MeshAuthorizer(private val credentials: CredentialPair,
+                          private var authToken: String = "")
     : Authorizer() {
 
     override val name: String = "МЭШ"

@@ -1,17 +1,17 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.DiagnosticFeedEntry
 import io.github.kanpov.litaggregator.engine.feed.entry.DiagnosticResultComparison
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.io.*
 import kotlinx.serialization.json.JsonObject
 
-class PortfolioDiagnosticProvider(authorizer: MosAuthorizer) : MeshProvider<DiagnosticFeedEntry>(authorizer) {
+class PortfolioDiagnosticProvider(authorizer: MeshAuthorizer) : MeshProvider<DiagnosticFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val diagnosticYears = authorizer.getJsonArrayFromPayload(
             "https://school.mos.ru/portfolio/app/persons/${studentInfo.personId}/diagnostic/independent-rating",
@@ -49,11 +49,10 @@ class PortfolioDiagnosticProvider(authorizer: MosAuthorizer) : MeshProvider<Diag
         }
     }
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, DiagnosticFeedEntry> {
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, DiagnosticFeedEntry> {
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
         override val name: String = "Диагностики из Портфолио МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.portfolioDiagnostics != null }
         override val factory: (Profile) -> SimpleProvider<DiagnosticFeedEntry> = { PortfolioDiagnosticProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

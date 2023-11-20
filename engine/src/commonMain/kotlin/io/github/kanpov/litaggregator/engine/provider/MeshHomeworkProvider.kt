@@ -1,18 +1,18 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.*
 import io.github.kanpov.litaggregator.engine.util.io.*
 import java.time.Instant
 
-class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFeedEntry>(authorizer) {
+class MeshHomeworkProvider(authorizer: MeshAuthorizer) : MeshProvider<HomeworkFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val days = getRelevantPastDays(profile).values.joinToString(separator = "%2C") // url encode days
         val daySchedules = authorizer.getJsonArrayFromPayload(
@@ -82,11 +82,10 @@ class MeshHomeworkProvider(authorizer: MosAuthorizer) : MeshProvider<HomeworkFee
             .replace("!{assigned_time}", TimeFormatters.dottedMeshDate.format(assignedTime))
     }
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, HomeworkFeedEntry> {
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, HomeworkFeedEntry> {
         override val name: String = "Домашние задания из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshHomework != null }
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Quadratic
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.authorization.mos!!) }
     }
 }

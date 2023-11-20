@@ -5,7 +5,7 @@ import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.io.*
@@ -79,10 +79,9 @@ class ClassroomProvider(authorizer: GoogleAuthorizer) : AuthorizedProvider<Googl
     }
 
     object Definition : AuthorizedProviderDefinition<GoogleAuthorizer, HomeworkFeedEntry> {
-        override val isAuthorized: (Authorization) -> Boolean = { it.googleSession != null }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.googleSession != null }
         override val name: String = "Домашние задания из Google Classroom"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.classroom != null }
         override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { ClassroomProvider(it.authorization.google) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Linear
     }
 }

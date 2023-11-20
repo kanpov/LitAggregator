@@ -20,20 +20,20 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.jsoup.Jsoup
 
-private const val ULYSS_LOGIN_URL = "https://in.lit.msu.ru/Ulysses/login/?next=/Ulysses/2023-2024/"
-private const val ULYSS_VALIDATION_URL = "https://in.lit.msu.ru/Ulysses/2023-2024/"
+private const val ULYSSES_LOGIN_URL = "https://in.lit.msu.ru/Ulysses/login/?next=/Ulysses/2023-2024/"
+private const val ULYSSES_VALIDATION_URL = "https://in.lit.msu.ru/Ulysses/2023-2024/"
 private const val TOKEN_CSS_QUERY = "input[name=csrfmiddlewaretoken]"
 
 @Serializable
-class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
-                      private val session: UlyssClientSession = UlyssClientSession()
+class UlyssesAuthorizer(private val credentials: CredentialPair,
+                        private val session: UlyssesSession = UlyssesSession()
 ) : Authorizer() {
 
     override val name: String = "УЛИСС"
     @Transient override val authorizers: Set<suspend () -> Unit> = setOf(
         ::authorizeThroughHttp
     )
-    @Transient override val validationUrl: String = ULYSS_VALIDATION_URL
+    @Transient override val validationUrl: String = ULYSSES_VALIDATION_URL
 
     override suspend fun makeUnvalidatedRequest(block: HttpRequestBuilder.() -> Unit): HttpResponse {
         return ktorClient.request {
@@ -44,14 +44,14 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
     }
 
     private suspend fun authorizeThroughHttp() {
-        val acquireResponse = ktorClient.get(ULYSS_LOGIN_URL)
+        val acquireResponse = ktorClient.get(ULYSSES_LOGIN_URL)
 
         if (acquireResponse.error()) return
 
         val csrfMiddlewareToken = Jsoup.parse(acquireResponse.bodyAsText()).select(TOKEN_CSS_QUERY).attr("value")
         val csrfLoginCookie = acquireResponse.setCookie().first().value
 
-        val authResponse = ktorClient.post(ULYSS_LOGIN_URL) {
+        val authResponse = ktorClient.post(ULYSSES_LOGIN_URL) {
             cookie("csrftoken", csrfLoginCookie)
             setBody(FormDataContent(parameters {
                 append("username", credentials.username)
@@ -70,7 +70,7 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
 }
 
 @Serializable
-class UlyssClientSession {
+class UlyssesSession {
     lateinit var csrfToken: String
     lateinit var id: String
     lateinit var expiry: String

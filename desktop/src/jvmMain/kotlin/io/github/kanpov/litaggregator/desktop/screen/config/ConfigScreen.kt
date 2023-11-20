@@ -20,7 +20,7 @@ import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import io.github.kanpov.litaggregator.desktop.screen.main.MainScreen
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.FeedSettings
 import io.github.kanpov.litaggregator.engine.settings.IdentitySettings
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
@@ -160,7 +160,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
         )
 
         fun startConfig(navigator: Navigator) {
-            val emptyProfile = Profile(IdentitySettings(), ProviderSettings(), Authorization(), FeedSettings(), Feed())
+            val emptyProfile = Profile(IdentitySettings(), ProviderSettings(), AuthorizationState(), FeedSettings(), Feed())
             navigator.push(screenInvokers.first().invoke(emptyProfile, 0))
         }
 

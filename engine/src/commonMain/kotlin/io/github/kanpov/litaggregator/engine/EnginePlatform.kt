@@ -2,16 +2,15 @@ package io.github.kanpov.litaggregator.engine
 
 import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleClientSession
+import io.github.kanpov.litaggregator.engine.authorizer.GoogleSession
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
 import io.github.kanpov.litaggregator.engine.util.BrowserEmulator
-import io.github.kanpov.litaggregator.engine.util.io.BasicCookie
 
 interface EnginePlatform {
     val name: String
     val googleClientId: String
     val googleClientSecret: String?
-    val googleAuthorizerFactory: (GoogleClientSession) -> GoogleAuthorizer
+    val googleAuthorizerFactory: (GoogleSession) -> GoogleAuthorizer
     val browserEmulator: BrowserEmulator
 
     fun initialize() {

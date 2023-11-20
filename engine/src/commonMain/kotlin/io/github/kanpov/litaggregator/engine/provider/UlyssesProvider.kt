@@ -1,11 +1,11 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.UlyssesAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.io.jFlagBoolean
@@ -16,7 +16,7 @@ import kotlinx.serialization.json.JsonObject
 import java.time.Instant
 import java.time.LocalDateTime
 
-class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAuthorizer, HomeworkFeedEntry>(authorizer) {
+class UlyssesProvider(authorizer: UlyssesAuthorizer) : AuthorizedProvider<UlyssesAuthorizer, HomeworkFeedEntry>(authorizer) {
     override suspend fun provide(profile: Profile) {
         val schoolYear = getCurrentSchoolYear()
         val subjects = authorizer.getJsonArray<JsonObject>("https://in.lit.msu.ru/api/v1/Ulysses/$schoolYear/")!!
@@ -61,15 +61,15 @@ class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAutho
 
         if (creationTime.isBefore(earliestTime)) return
 
-        profile.providers.ulyss!!.apply {
-            if (!include.studyMaterials && homeworkObj.jFlagBoolean("прикреплено")) return
-            if (!include.hidden && !homeworkObj.jFlagBoolean("опубликовано")) return
+        profile.providers.ulysses!!.apply {
+            if (!inclusions.studyMaterials && homeworkObj.jFlagBoolean("прикреплено")) return
+            if (!inclusions.hidden && !homeworkObj.jFlagBoolean("опубликовано")) return
             val solelyForOtherGroups = profile.identity.classNames.none { title.contains(it) }
                     && profile.identity.otherClassNames.any { title.contains(it)  }
-            if (!include.solelyForOtherGroups && solelyForOtherGroups) return
+            if (!inclusions.solelyForOtherGroups && solelyForOtherGroups) return
 
-            if (!exclude.titleFilter.match(title) || !exclude.cleanContentFilter.match(cleanContent)
-                || !exclude.htmlContentFilter.match(htmlContent)) return
+            if (!filters.titleFilter.match(title) || !filters.cleanContentFilter.match(cleanContent)
+                || !filters.htmlContentFilter.match(htmlContent)) return
         }
 
         insert(profile.feed, HomeworkFeedEntry(
@@ -92,11 +92,10 @@ class UlyssProvider(authorizer: UlyssAuthorizer) : AuthorizedProvider<UlyssAutho
         return "${time.year - 1 + offset}-${time.year + offset}"
     }
 
-    object Definition : AuthorizedProviderDefinition<UlyssAuthorizer, HomeworkFeedEntry> {
-        override val isAuthorized: (Authorization) -> Boolean = { it.ulyss != null }
+    object Definition : AuthorizedProviderDefinition<UlyssesAuthorizer, HomeworkFeedEntry> {
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.ulyss != null }
         override val name: String = "Учебные материалы из УЛИСС"
-        override val isEnabled: (ProviderSettings) -> Boolean = { it.ulyss != null }
-        override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { UlyssProvider(it.authorization.ulyss!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Linear
+        override val isEnabled: (ProviderSettings) -> Boolean = { it.ulysses != null }
+        override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { UlyssesProvider(it.authorization.ulyss!!) }
     }
 }

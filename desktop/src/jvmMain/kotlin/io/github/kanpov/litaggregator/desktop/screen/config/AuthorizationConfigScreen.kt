@@ -16,9 +16,9 @@ import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.platform.DesktopGoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.StandardAuthorizerCredentials
-import io.github.kanpov.litaggregator.engine.authorizer.UlyssAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.CredentialPair
+import io.github.kanpov.litaggregator.engine.authorizer.UlyssesAuthorizer
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -62,7 +62,7 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
             title = Locale["config.authorization.mesh"],
             alreadyAuthorized = profile.authorization.mos != null
         ) { login, password ->
-            profile.setupAuthorizer(MosAuthorizer(StandardAuthorizerCredentials(login, password)))
+            profile.setupAuthorizer(MeshAuthorizer(CredentialPair(login, password)))
         }
     }
 
@@ -72,7 +72,7 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
             title = Locale["config.authorization.ulysses"],
             alreadyAuthorized = profile.authorization.ulyss != null
         ) { login, password ->
-            profile.setupAuthorizer(UlyssAuthorizer(StandardAuthorizerCredentials(login, password)))
+            profile.setupAuthorizer(UlyssesAuthorizer(CredentialPair(login, password)))
         }
     }
 

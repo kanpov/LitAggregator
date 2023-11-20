@@ -4,7 +4,7 @@ import io.github.kanpov.litaggregator.engine.authorizer.Authorizer
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.io.asInstant
 import java.time.*
@@ -95,7 +95,6 @@ interface SimpleProviderDefinition<E : FeedEntry> {
     val name: String
     val isEnabled: (ProviderSettings) -> Boolean
     val factory: (Profile) -> SimpleProvider<E>
-    val networkUsage: ProviderNetworkUsage
 
     companion object {
         val all = setOf<SimpleProviderDefinition<*>>(AnnouncementProvider.Definition)
@@ -103,7 +102,7 @@ interface SimpleProviderDefinition<E : FeedEntry> {
 }
 
 interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimpleProviderDefinition<E> {
-    val isAuthorized: (Authorization) -> Boolean
+    val isAuthorized: (AuthorizationState) -> Boolean
 
     companion object {
         val all = setOf<AuthorizedProviderDefinition<*, *>>(
@@ -115,13 +114,7 @@ interface AuthorizedProviderDefinition<A : Authorizer, E : FeedEntry> : SimplePr
             MeshVisitProvider.Definition,
             PortfolioDiagnosticProvider.Definition,
             PortfolioEventProvider.Definition,
-            UlyssProvider.Definition
+            UlyssesProvider.Definition
         )
     }
-}
-
-enum class ProviderNetworkUsage {
-    Fixed,
-    Linear,
-    Quadratic
 }

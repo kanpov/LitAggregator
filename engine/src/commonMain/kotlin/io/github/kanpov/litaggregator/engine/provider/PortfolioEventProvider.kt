@@ -1,18 +1,18 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.EventFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.io.*
 import io.github.kanpov.litaggregator.engine.util.parseInstant
 import java.time.Instant
 
-class PortfolioEventProvider(authorizer: MosAuthorizer) : MeshProvider<EventFeedEntry>(authorizer) {
+class PortfolioEventProvider(authorizer: MeshAuthorizer) : MeshProvider<EventFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val rewards = authorizer.getJsonArrayFromPayload(
             "https://school.mos.ru/portfolio/app/persons/${studentInfo.personId}/rewards/list?size=100",
@@ -35,6 +35,8 @@ class PortfolioEventProvider(authorizer: MosAuthorizer) : MeshProvider<EventFeed
             val endTime = if (eventObj.containsKey("endDate")) TimeFormatters.slashedMeshDate.parseInstant(eventObj.jString("endDate")) else null
             val subject = if (eventObj.containsKey("subject")) eventObj.jArray("subject").first().jString("value") else null
 
+            if (subject == null && profile.providers.portfolioEvents!!.onlyVos) continue
+
             insert(profile.feed, EventFeedEntry(
                 name = eventObj.jString("name"),
                 organizer = eventObj.jString("organizators"),
@@ -50,11 +52,10 @@ class PortfolioEventProvider(authorizer: MosAuthorizer) : MeshProvider<EventFeed
         }
     }
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, EventFeedEntry> {
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, EventFeedEntry> {
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
         override val name: String = "Соревнования из Портфолио МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.portfolioEvents != null }
         override val factory: (Profile) -> SimpleProvider<EventFeedEntry> = { PortfolioEventProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
     }
 }

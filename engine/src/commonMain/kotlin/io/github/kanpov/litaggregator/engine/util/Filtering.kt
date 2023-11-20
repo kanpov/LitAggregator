@@ -3,10 +3,23 @@ package io.github.kanpov.litaggregator.engine.util
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class FilterPolicy {
-    Disabled,
-    ByInclusion,
-    ByExclusion;
+enum class FilterPolicy(val encodedForm: Char) {
+    Disabled('~'),
+    ByInclusion('+'),
+    ByExclusion('-');
+}
+
+@Serializable
+enum class ComparisonFilterPolicy(val encodedForm: Char) {
+    Disabled('x'),
+    Above('>'),
+    Below('<'),
+    EqualsTo('=');
+}
+
+interface BasicSerializer<T> {
+    fun encode(value: T): String
+    fun decode(encoded: String): T?
 }
 
 @Serializable
@@ -19,6 +32,27 @@ data class ListFilter(
         FilterPolicy.ByExclusion -> values.none { it.contains(otherValue) }
         FilterPolicy.ByInclusion -> values.any { it.contains(otherValue) }
     }
+
+    fun matchList(otherValues: List<String>) = otherValues.any { match(it) }
+
+    companion object : BasicSerializer<ListFilter> {
+        override fun encode(value: ListFilter): String {
+            return if (value.policy == FilterPolicy.Disabled || value.values.isEmpty()) {
+                FilterPolicy.Disabled.encodedForm.toString()
+            } else {
+                value.policy.encodedForm + value.values.joinToString(separator = ",")
+            }
+        }
+
+        override fun decode(encoded: String): ListFilter? {
+            if (encoded.isBlank()) return null
+            val policy = FilterPolicy.entries.firstOrNull { it.encodedForm == encoded.trim().first() } ?: return null
+            if (policy == FilterPolicy.Disabled) return ListFilter()
+            val values = encoded.trim().removePrefix(policy.encodedForm.toString())
+                .split(',').filter { it.isNotBlank() }
+            return if (values.isEmpty()) null else ListFilter(policy, values)
+        }
+    }
 }
 
 @Serializable
@@ -30,6 +64,26 @@ data class RegexFilter(
         FilterPolicy.Disabled -> true
         FilterPolicy.ByInclusion -> otherValue.matches(Regex(regex!!))
         FilterPolicy.ByExclusion -> !otherValue.matches(Regex(regex!!))
+    }
+
+    companion object : BasicSerializer<RegexFilter> {
+        override fun encode(value: RegexFilter): String {
+            return if (value.policy == FilterPolicy.Disabled || value.regex == null) {
+                FilterPolicy.Disabled.encodedForm.toString()
+            } else {
+                value.regex
+            }
+        }
+
+        override fun decode(encoded: String): RegexFilter? {
+            if (encoded.isBlank()) return null
+            val policy = FilterPolicy.entries.firstOrNull { it.encodedForm == encoded.trim().first() } ?: return null
+            return if (policy == FilterPolicy.Disabled) {
+                RegexFilter()
+            } else {
+                RegexFilter(policy, encoded.trim().removePrefix(encoded.trim().first().toString()))
+            }
+        }
     }
 }
 
@@ -44,12 +98,19 @@ data class ComparisonFilter(
         ComparisonFilterPolicy.Below -> otherValue < value!!
         ComparisonFilterPolicy.EqualsTo -> otherValue == value!!
     }
-}
 
-@Serializable
-enum class ComparisonFilterPolicy {
-    Disabled,
-    Above,
-    Below,
-    EqualsTo
+    companion object : BasicSerializer<ComparisonFilter> {
+        override fun encode(value: ComparisonFilter): String {
+            if (value.policy == ComparisonFilterPolicy.Disabled) return "-"
+            return "${value.policy.encodedForm}${value.value}"
+        }
+
+        override fun decode(encoded: String): ComparisonFilter? {
+            if (encoded.isBlank()) return null
+            if (encoded.trim().startsWith(ComparisonFilterPolicy.Disabled.toString())) return ComparisonFilter()
+            val policy = ComparisonFilterPolicy.entries.firstOrNull { it.encodedForm == encoded.trim().first() } ?: return null
+            val value = encoded.trim().removePrefix(policy.encodedForm.toString()).toIntOrNull() ?: return null
+            return ComparisonFilter(policy, value)
+        }
+    }
 }

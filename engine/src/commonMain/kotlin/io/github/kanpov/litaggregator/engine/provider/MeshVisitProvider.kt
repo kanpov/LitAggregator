@@ -1,18 +1,18 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.MosAuthorizer
+import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryMetadata
 import io.github.kanpov.litaggregator.engine.feed.entry.VisitFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.settings.Authorization
+import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import io.github.kanpov.litaggregator.engine.util.io.jArray
 import io.github.kanpov.litaggregator.engine.util.io.jBoolean
 import io.github.kanpov.litaggregator.engine.util.io.jString
 
-class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry>(authorizer) {
+class MeshVisitProvider(authorizer: MeshAuthorizer) : MeshProvider<VisitFeedEntry>(authorizer) {
     override suspend fun meshProvide(profile: Profile, studentInfo: MeshStudentInfo) {
         val relevantPastDays = getRelevantPastDays(profile)
         val (_, beginDay) = relevantPastDays.entries.last()
@@ -47,11 +47,10 @@ class MeshVisitProvider(authorizer: MosAuthorizer) : MeshProvider<VisitFeedEntry
         }
     }
 
-    object Definition : AuthorizedProviderDefinition<MosAuthorizer, VisitFeedEntry> {
+    object Definition : AuthorizedProviderDefinition<MeshAuthorizer, VisitFeedEntry> {
         override val name: String = "Посещаемость из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshVisits != null }
-        override val isAuthorized: (Authorization) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MosAuthorizer, VisitFeedEntry> = { MeshVisitProvider(it.authorization.mos!!) }
-        override val networkUsage: ProviderNetworkUsage = ProviderNetworkUsage.Fixed
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, VisitFeedEntry> = { MeshVisitProvider(it.authorization.mos!!) }
     }
 }

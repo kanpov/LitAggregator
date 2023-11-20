@@ -17,6 +17,10 @@ import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.settings.*
+import io.github.kanpov.litaggregator.engine.util.BasicSerializer
+import io.github.kanpov.litaggregator.engine.util.ComparisonFilter
+import io.github.kanpov.litaggregator.engine.util.ListFilter
+import io.github.kanpov.litaggregator.engine.util.RegexFilter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -71,7 +75,16 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.meshMarks = null },
                 detector = profile.providers.meshMarks
             ) {
-                // TODO add settings
+                BooleanInputSetting(
+                    name = Locale["config.provider.mesh.marks.only_include_marks"],
+                    onValueChange = { profile.providers.meshMarks!!.onlyIncludeExams = it },
+                    defaultValue = profile.providers.meshMarks!!.onlyIncludeExams
+                )
+                FilterInputSetting(
+                    name = Locale["config.provider.mesh.marks.weight_filter"],
+                    defaultValue = profile.providers.meshMarks!!.weightFilter,
+                    onValueChange = { profile.providers.meshMarks!!.weightFilter = it }, serializer = ComparisonFilter
+                )
             }
 
             ProviderElement(
@@ -80,7 +93,11 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.meshRatings = null },
                 detector = profile.providers.meshRatings
             ) {
-                // TODO add settings
+                BooleanInputSetting(
+                    name = Locale["config.provider.mesh.ratings.include_classmate_ratings"],
+                    onValueChange = { profile.providers.meshRatings!!.includeClassmateRatings = it },
+                    defaultValue = profile.providers.meshRatings!!.includeClassmateRatings
+                )
             }
 
             ProviderElement(
@@ -89,7 +106,11 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.meshVisits = null },
                 detector = profile.providers.meshVisits
             ) {
-                // TODO add settings
+                BooleanInputSetting(
+                    name = Locale["config.provider.mesh.visits.include_irregular_patterns"],
+                    onValueChange = { profile.providers.meshVisits!!.includeIrregularPatterns = it },
+                    defaultValue = profile.providers.meshVisits!!.includeIrregularPatterns
+                )
             }
 
             ProviderElement(
@@ -98,7 +119,11 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.meshBanners = null },
                 detector = profile.providers.meshBanners
             ) {
-                // TODO add settings
+                BooleanInputSetting(
+                    name = Locale["config.provider.mesh.banners.add_links"],
+                    onValueChange = { profile.providers.meshBanners!!.addLinks = it },
+                    defaultValue = profile.providers.meshBanners!!.addLinks
+                )
             }
         }
     }
@@ -112,11 +137,42 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
         ) {
             ProviderElement(
                 name = Locale["config.provider.lit.homework"],
-                onEnable = { profile.providers.ulyss = UlyssProviderSettings() },
-                onDisable = { profile.providers.ulyss = null },
-                detector = profile.providers.ulyss
+                onEnable = { profile.providers.ulysses = UlyssesProviderSettings() },
+                onDisable = { profile.providers.ulysses = null },
+                detector = profile.providers.ulysses
             ) {
-                // TODO add settings
+                profile.providers.ulysses!!.apply {
+                    BooleanInputSetting(
+                        name = Locale["config.provider.lit.homework.include_study_materials"],
+                        onValueChange = { inclusions.studyMaterials = it },
+                        defaultValue = inclusions.studyMaterials
+                    )
+                    BooleanInputSetting(
+                        name = Locale["config.provider.lit.homework.include_hidden"],
+                        onValueChange = { inclusions.hidden = it },
+                        defaultValue = inclusions.hidden
+                    )
+                    BooleanInputSetting(
+                        name = Locale["config.provider.lit.homework.include_solely_for_other_groups"],
+                        onValueChange = { inclusions.solelyForOtherGroups = it },
+                        defaultValue = inclusions.solelyForOtherGroups
+                    )
+                    FilterInputSetting(
+                        name = Locale["config.provider.lit.homework.title_filter"],
+                        onValueChange = { filters.titleFilter = it },
+                        defaultValue = filters.titleFilter, serializer = RegexFilter
+                    )
+                    FilterInputSetting(
+                        name = Locale["config.provider.lit.homework.clean_content_filter"],
+                        onValueChange = { filters.cleanContentFilter = it },
+                        defaultValue = filters.cleanContentFilter, serializer = RegexFilter
+                    )
+                    FilterInputSetting(
+                        name = Locale["config.provider.lit.homework.html_content_filter"],
+                        onValueChange = { filters.htmlContentFilter = it },
+                        defaultValue = filters.htmlContentFilter, serializer = RegexFilter
+                    )
+                }
             }
 
             ProviderElement(
@@ -125,7 +181,18 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.announcements = null },
                 detector = profile.providers.announcements
             ) {
-                // TODO add settings
+                profile.providers.announcements!!.apply {
+                    FilterInputSetting(
+                        name = Locale["config.provider.lit.announcements.category_filter"],
+                        onValueChange = { categoryFilter = it },
+                        defaultValue = categoryFilter, serializer = ListFilter
+                    )
+                    FilterInputSetting(
+                        name = Locale["config.provider.lit.announcements.html_filter"],
+                        onValueChange = { htmlFilter = it },
+                        defaultValue = htmlFilter, serializer = ListFilter
+                    )
+                }
             }
         }
     }
@@ -143,7 +210,11 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.classroom = null },
                 detector = profile.providers.classroom
             ) {
-                // TODO add settings
+                FilterInputSetting(
+                    name = Locale["config.provider.lit.announcements.html_filter"],
+                    onValueChange = { profile.providers.classroom!!.courseFilter = it },
+                    defaultValue = profile.providers.classroom!!.courseFilter, serializer = ListFilter
+                )
             }
         }
     }
@@ -161,7 +232,11 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.portfolioDiagnostics = null },
                 detector = profile.providers.portfolioDiagnostics
             ) {
-                // TODO add settings
+                BooleanInputSetting(
+                    name = Locale["config.provider.portfolio.diagnostics.include_comparisons"],
+                    onValueChange = { profile.providers.portfolioDiagnostics!!.includeComparisons = it },
+                    defaultValue = profile.providers.portfolioDiagnostics!!.includeComparisons
+                )
             }
 
             ProviderElement(
@@ -170,7 +245,11 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 onDisable = { profile.providers.portfolioEvents = null },
                 detector = profile.providers.portfolioEvents
             ) {
-                // TODO add settings
+                BooleanInputSetting(
+                    name = Locale["config.provider.portfolio.events.only_vos"],
+                    onValueChange = { profile.providers.portfolioEvents!!.onlyVos = it },
+                    defaultValue = profile.providers.portfolioEvents!!.onlyVos
+                )
             }
         }
     }
@@ -209,13 +288,35 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     }
 
     @Composable
-    private fun BaseSetting(name: String, content: @Composable RowScope.() -> Unit) {
-        Row {
+    private fun <T> FilterInputSetting(name: String, defaultValue: T, onValueChange: (T) -> Unit,
+                                       serializer: BasicSerializer<T>) {
+        var encodedForm by remember { mutableStateOf(serializer.encode(defaultValue)) }
+        BaseSetting(name, addPadding = false) {
+            TextField(
+                value = encodedForm,
+                onValueChange = { newForm ->
+                    encodedForm = newForm
+                    if (serializer.decode(newForm) != null) {
+                        onValueChange(serializer.decode(newForm)!!)
+                    }
+                },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.h6,
+                modifier = Modifier.scale(0.8f)
+            )
+        }
+    }
+
+    @Composable
+    private fun BaseSetting(name: String, addPadding: Boolean = true, content: @Composable RowScope.() -> Unit) {
+        val padding = if (addPadding) 10.dp else 0.dp
+        Row(
+            modifier = Modifier.padding(top = padding)
+        ) {
             H6Text(name, modifier = Modifier.align(Alignment.CenterVertically))
             Spacer(modifier = Modifier.weight(1f))
             content()
         }
-        Spacer(modifier = Modifier.height(10.dp))
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -240,6 +341,15 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
 
             Spacer(modifier = Modifier.weight(1f))
 
+            if (enabled) {
+                BasicIcon(
+                    painter = painterResource("icons/settings.png"),
+                    size = 30.dp,
+                    modifier = Modifier.align(Alignment.CenterVertically).padding(end = 10.dp)
+                        .clickable { showingSettings = !showingSettings }
+                )
+            }
+
             BasicIcon(
                 painter = if (enabled) painterResource("icons/tick.png") else painterResource("icons/untick.png"),
                 size = 30.dp,
@@ -250,15 +360,6 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 }
             )
 
-            if (enabled) {
-                BasicIcon(
-                    painter = painterResource("icons/settings.png"),
-                    size = 30.dp,
-                    modifier = Modifier.align(Alignment.CenterVertically).padding(start = 10.dp)
-                        .clickable { showingSettings = !showingSettings }
-                )
-            }
-
             if (!showingSettings) return@Row
 
             AlertDialog(
@@ -267,7 +368,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 },
                 text = {
                     Column {
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(30.dp))
                         alertContent()
                     }
                 },
