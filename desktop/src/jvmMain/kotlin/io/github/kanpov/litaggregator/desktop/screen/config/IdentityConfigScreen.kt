@@ -1,7 +1,6 @@
 package io.github.kanpov.litaggregator.desktop.screen.config
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.engine.profile.Profile
@@ -15,7 +14,7 @@ class IdentityConfigScreen(profile: Profile, index: Int) : ConfigScreen(
     @Composable
     override fun OnboardingContent() {
         Column {
-            TextQuestion(
+            ValidatedQuestion(
                 text = Locale["config.identity.profile_name"],
                 onChangeAnswer = { profile.identity.profileName = it },
                 validator = { it.isNotBlank() },
@@ -23,7 +22,7 @@ class IdentityConfigScreen(profile: Profile, index: Int) : ConfigScreen(
                 knownValue = profile.identity.profileName
             )
 
-            TextQuestion(
+            ValidatedQuestion(
                 text = Locale["config.identity.parallel"],
                 onChangeAnswer = { profile.identity.parallel = it.toInt() },
                 validator = { it.toIntOrNull() != null && it.toInt() >= MIN_VALID_PARALLEL && it.toInt() <= MAX_VALID_PARALLEL },
@@ -31,7 +30,7 @@ class IdentityConfigScreen(profile: Profile, index: Int) : ConfigScreen(
                 knownValue = profile.identity.parallel.toString()
             )
 
-            TextQuestion(
+            ValidatedQuestion(
                 text = Locale["config.identity.group"],
                 onChangeAnswer = { profile.identity.group = it.toInt() },
                 validator = { it.toIntOrNull() != null && it.toInt() >= MIN_VALID_GROUP && it.toInt() <= MAX_VALID_GROUP },

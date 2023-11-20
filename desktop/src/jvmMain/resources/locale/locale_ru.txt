@@ -85,4 +85,11 @@ config.provider.portfolio.diagnostics=Диагностики
 config.provider.portfolio.diagnostics.include_comparisons=Включать сравнения с другими
 config.provider.portfolio.events=Олимпиады
 config.provider.portfolio.events.only_vos=Включать только ВсОШ
-config.provider.totals=Итого:
+
+config.feed=Лимиты ленты
+config.feed.max_pool_size=Максимальная длина группы записей
+config.feed.max_pool_size_hint=От 10 до 100 (записей)
+config.feed.look_behind_days=Лимит возраста старейших записей
+config.feed.look_behind_days_hint=От 1 до 31 (дня)
+config.feed.look_ahead_days=Лимит возраста новейших записей
+config.feed.look_ahead_days_hint=От 1 до 21 (дня)

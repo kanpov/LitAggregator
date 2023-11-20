@@ -1,7 +1,7 @@
 package io.github.kanpov.litaggregator.engine.profile
 
 import co.touchlab.kermit.Logger
-import io.github.kanpov.litaggregator.engine.authorizer.*
+import io.github.kanpov.litaggregator.engine.authorization.*
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.feed.sortedByRelevancy
 import io.github.kanpov.litaggregator.engine.provider.AuthorizedProviderDefinition

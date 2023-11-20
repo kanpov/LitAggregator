@@ -1,10 +1,10 @@
 package io.github.kanpov.litaggregator.engine.provider
 
-import io.github.kanpov.litaggregator.engine.authorizer.Authorizer
+import io.github.kanpov.litaggregator.engine.authorization.Authorizer
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
+import io.github.kanpov.litaggregator.engine.authorization.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import io.github.kanpov.litaggregator.engine.util.io.asInstant
 import java.time.*
@@ -27,7 +27,7 @@ abstract class SimpleProvider<E : FeedEntry> {
     protected abstract suspend fun provide(profile: Profile)
 
     protected fun getRelevantPastDays(profile: Profile): Map<Instant, String> {
-        return getRelevantDays(profile, 0..profile.feedSettings.maxAgeOfNewEntries, plus = false)
+        return getRelevantDays(profile, 0..profile.feedSettings.lookBehindDays, plus = false)
     }
 
     protected fun getRelevantFutureDays(profile: Profile): Map<Instant, String> {

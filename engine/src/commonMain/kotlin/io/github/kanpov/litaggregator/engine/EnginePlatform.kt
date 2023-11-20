@@ -1,8 +1,8 @@
 package io.github.kanpov.litaggregator.engine
 
 import co.touchlab.kermit.Logger
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleSession
+import io.github.kanpov.litaggregator.engine.authorization.GoogleAuthorizer
+import io.github.kanpov.litaggregator.engine.authorization.GoogleSession
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
 import io.github.kanpov.litaggregator.engine.util.BrowserEmulator
 

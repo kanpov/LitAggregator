@@ -20,7 +20,7 @@ import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import io.github.kanpov.litaggregator.desktop.screen.main.MainScreen
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.profile.Profile
-import io.github.kanpov.litaggregator.engine.authorizer.AuthorizationState
+import io.github.kanpov.litaggregator.engine.authorization.AuthorizationState
 import io.github.kanpov.litaggregator.engine.settings.FeedSettings
 import io.github.kanpov.litaggregator.engine.settings.IdentitySettings
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
@@ -93,8 +93,8 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
-    protected fun TextQuestion(text: String, onChangeAnswer: (String) -> Unit, validator: (String) -> Boolean,
-                               placeholder: String = "", knownValue: String? = null) {
+    protected fun ValidatedQuestion(text: String, onChangeAnswer: (String) -> Unit, validator: (String) -> Boolean,
+                                    placeholder: String = "", knownValue: String? = null) {
         Row(
             modifier = Modifier.padding(top = 10.dp)
         ) {
@@ -108,9 +108,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
             // set up question's answer based off known value if needed
             var answer by remember { mutableStateOf("") }
             if (knownValue != null && validator(knownValue) && answer == "") {
-                answer = knownValue
-                onChangeAnswer(answer)
-                setValidity(text, true)
+                onChangeAnswer(knownValue)
             }
 
             // input field
@@ -156,7 +154,8 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
         private val screenInvokers: List<(Profile, Int) -> ConfigScreen> = listOf(
             ::IdentityConfigScreen,
             ::AuthorizationConfigScreen,
-            ::ProviderConfigScreen
+            ::ProviderConfigScreen,
+            ::FeedConfigScreen
         )
 
         fun startConfig(navigator: Navigator) {

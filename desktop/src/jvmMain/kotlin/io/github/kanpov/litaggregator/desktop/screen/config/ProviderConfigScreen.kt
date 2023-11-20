@@ -7,9 +7,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import io.github.kanpov.litaggregator.desktop.Locale
@@ -319,12 +322,13 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
+    @OptIn(ExperimentalResourceApi::class, ExperimentalComposeUiApi::class)
     @Composable
     private fun ProviderElement(name: String, onEnable: () -> Unit, onDisable: () -> Unit, detector: Any?,
                                 alertContent: @Composable ColumnScope.() -> Unit) {
-        var enabled by remember { mutableStateOf(detector != null) }
+        var providerEnabled by remember { mutableStateOf(detector != null) }
         var showingSettings by remember { mutableStateOf(false) }
+        var hovering by remember { mutableStateOf(false) }
 
         Row {
             BasicIcon(
@@ -335,28 +339,30 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
 
             H6Text(
                 text = name,
-                modifier = Modifier.align(Alignment.CenterVertically),
-                highlight = enabled
+                highlight = providerEnabled,
+                modifier = Modifier.align(Alignment.CenterVertically)
+                    .onPointerEvent(PointerEventType.Enter) { hovering = true }
+                    .onPointerEvent(PointerEventType.Exit) { hovering = false }
+                    .clickable(enabled = providerEnabled) { showingSettings = !showingSettings },
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (enabled) {
+            if (providerEnabled && hovering) {
                 BasicIcon(
                     painter = painterResource("icons/settings.png"),
                     size = 30.dp,
                     modifier = Modifier.align(Alignment.CenterVertically).padding(end = 10.dp)
-                        .clickable { showingSettings = !showingSettings }
                 )
             }
 
             BasicIcon(
-                painter = if (enabled) painterResource("icons/tick.png") else painterResource("icons/untick.png"),
+                painter = if (providerEnabled) painterResource("icons/tick.png") else painterResource("icons/untick.png"),
                 size = 30.dp,
                 modifier = Modifier.align(Alignment.CenterVertically).clickable {
-                    enabled = !enabled
-                    if (enabled) onEnable()
-                    if (!enabled) onDisable()
+                    providerEnabled = !providerEnabled
+                    if (providerEnabled) onEnable()
+                    if (!providerEnabled) onDisable()
                 }
             )
 
@@ -408,15 +414,16 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
             ) {
                 H6Text(heading, highlight = true, modifier = Modifier.align(Alignment.CenterHorizontally).scale(1.1f))
                 Spacer(modifier = Modifier.height(10.dp))
-                if (requirementMet) {
-                    content()
-                } else {
-                    H6Text(
-                        text = Locale["config.provider.source_not_bound"],
-                        italicize = true,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
+//                if (requirementMet) {
+//                    content()
+//                } else {
+//                    H6Text(
+//                        text = Locale["config.provider.source_not_bound"],
+//                        italicize = true,
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    )
+//                }
+                content()
             }
         }
     }

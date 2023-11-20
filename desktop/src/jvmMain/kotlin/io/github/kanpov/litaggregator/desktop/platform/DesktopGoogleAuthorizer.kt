@@ -1,7 +1,7 @@
 package io.github.kanpov.litaggregator.desktop.platform
 
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.GoogleSession
+import io.github.kanpov.litaggregator.engine.authorization.GoogleAuthorizer
+import io.github.kanpov.litaggregator.engine.authorization.GoogleSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.ServerSocket

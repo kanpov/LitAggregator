@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.engine.authorizer
+package io.github.kanpov.litaggregator.engine.authorization
 
 import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.engine.util.io.*

@@ -16,9 +16,9 @@ import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.platform.DesktopGoogleAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.MeshAuthorizer
-import io.github.kanpov.litaggregator.engine.authorizer.CredentialPair
-import io.github.kanpov.litaggregator.engine.authorizer.UlyssesAuthorizer
+import io.github.kanpov.litaggregator.engine.authorization.MeshAuthorizer
+import io.github.kanpov.litaggregator.engine.authorization.CredentialPair
+import io.github.kanpov.litaggregator.engine.authorization.UlyssesAuthorizer
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi

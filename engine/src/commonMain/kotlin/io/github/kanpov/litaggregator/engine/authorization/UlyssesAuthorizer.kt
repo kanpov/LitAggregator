@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.engine.authorizer
+package io.github.kanpov.litaggregator.engine.authorization
 
 import io.github.kanpov.litaggregator.engine.util.io.error
 import io.github.kanpov.litaggregator.engine.util.io.findCookie
