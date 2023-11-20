@@ -1,6 +1,5 @@
 package io.github.kanpov.litaggregator.engine.authorizer
 
-import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.io.error
 import io.github.kanpov.litaggregator.engine.util.io.findCookie
 import io.github.kanpov.litaggregator.engine.util.io.ktorClient
@@ -32,8 +31,7 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
 
     override val name: String = "УЛИСС"
     @Transient override val authorizers: Set<suspend () -> Unit> = setOf(
-        ::authorizeThroughHttp,
-        ::authorizeThroughBrowserEmulator
+        ::authorizeThroughHttp
     )
     @Transient override val validationUrl: String = ULYSS_VALIDATION_URL
 
@@ -68,25 +66,6 @@ class UlyssAuthorizer(private val credentials: StandardAuthorizerCredentials,
         session.csrfToken = authResponse.findCookie("csrftoken").value
         session.id = authResponse.findCookie("sessionid").value
         session.expiry = authResponse.findCookie("sessionid").expires!!.toJvmDate().toInstant().toString()
-    }
-
-    private suspend fun authorizeThroughBrowserEmulator() {
-        EnginePlatform.current.browserEmulator.use {
-            loadUrl(ULYSS_LOGIN_URL)
-            awaitElement(xpath = """.//input[@name="username"]""").inputText(credentials.username)
-            awaitElement(xpath = """.//input[@name="password"]""").inputText(credentials.password)
-            awaitElement(xpath = """.//button[@type="submit"]""").click()
-            awaitUrl { !it.contains("/login/") }
-
-            cookies.first { it.name == "csrftoken" }.let {
-                session.csrfToken = it.value
-            }
-
-            cookies.first { it.name == "sessionid" }.let {
-                session.id = it.value
-                session.expiry = it.expiry!!.toString()
-            }
-        }
     }
 }
 

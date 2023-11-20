@@ -7,6 +7,7 @@ button.next=Next
 button.previous=Previous
 button.bind=Bind
 button.bound=Bound
+button.try_again=Try again
 
 system_config.ui_language=Interface language:
 system_config.configure_your_system=Configure your system
@@ -29,19 +30,22 @@ profile_select.info_dialog.kb=|1| KB
 
 restart.please_wait=Please, wait
 
-onboarding.creating_profile=Profile creation
+config.configuring_profile=Configuring profile
 
-onboarding.identity=General settings
-onboarding.identity.profile_name_hint=My profile
-onboarding.identity.profile_name=The profile's name:
-onboarding.identity.parallel_hint=From 5 up to 11
-onboarding.identity.parallel=Your parallel's number:
-onboarding.identity.group_hint=From 1 to 6
-onboarding.identity.group=Your group's number:
+config.identity=General settings
+config.identity.profile_name_hint=My profile
+config.identity.profile_name=The profile's name:
+config.identity.parallel_hint=From 5 up to 11
+config.identity.parallel=Your parallel's number:
+config.identity.group_hint=From 1 to 6
+config.identity.group=Your group's number:
 
-onboarding.authorization=Authorization
-onboarding.authorization.mesh=Mesh
-onboarding.authorization.ulysses=Ulysses
-onboarding.authorization.google=Google
-onboarding.authorization.login=Login:
-onboarding.authorization.password=Password:
+config.authorization=Authorization
+config.authorization.mesh=Mesh
+config.authorization.ulysses=Ulysses
+config.authorization.google=Google
+config.authorization.login=Login:
+config.authorization.password=Password:
+config.authorization.account_data_not_required=Account data not required
+
+config.provider=Providers

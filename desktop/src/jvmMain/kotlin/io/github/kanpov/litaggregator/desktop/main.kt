@@ -21,24 +21,13 @@ var currentProfileManager: ProfileManager? = null
 lateinit var resizeAppWindow: (DpSize) -> Unit
 
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
-val SMALL_WINDOW_SIZE = DpSize(600.dp, 500.dp)
+val SMALL_WINDOW_SIZE = DpSize(400.dp, 400.dp)
 
 @OptIn(ExperimentalResourceApi::class)
 fun main() {
     EnginePlatform.current = DesktopEnginePlatform
     DesktopEnginePlatform.initialize()
 
-//    val bootScreen: Screen = if (DesktopEnginePlatform.firstBoot) {
-//        SystemConfigScreen()
-//    } else {
-//        val cachedProfileFile = ProfileManager.tryLocateCachedProfile()
-//
-//        if (cachedProfileFile == null) {
-//            ProfileSelectScreen()
-//        } else {
-//            AuthScreen(cachedProfileFile)
-//        }
-//    }
     val bootScreen: Screen = SystemConfigScreen()
 
     application {
@@ -53,7 +42,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             icon = painterResource("logos/ulysses.png"),
             state = windowState,
-            resizable = true
+            resizable = false
         ) {
             Navigator(bootScreen) { navigator ->
                 SlideTransition(navigator)

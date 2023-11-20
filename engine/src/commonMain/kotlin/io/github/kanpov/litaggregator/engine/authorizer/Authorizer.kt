@@ -19,22 +19,21 @@ abstract class Authorizer {
     protected abstract val validationUrl: String?
 
     suspend fun authorize(): Boolean {
-        var attempts = 1
-
-        for (authorizer in authorizers) {
+        for ((attempts, authorizer) in authorizers.withIndex()) {
             try {
                 authorizer.invoke()
-            } catch (e: Exception) {
-                println(e.stackTraceToString())
+            } catch (_: Exception) {
                 continue
             }
 
-            if (validateAuthorization()) {
-                Logger.i { "Authorization to $name was successful after $attempts attempt(s)" }
-                return true
+            try {
+                if (validateAuthorization()) {
+                    Logger.i { "Authorization to $name was successful after $attempts attempt(s)" }
+                    return true
+                }
+            } catch (_: Exception) {
+                continue
             }
-
-            attempts++
         }
 
         return false

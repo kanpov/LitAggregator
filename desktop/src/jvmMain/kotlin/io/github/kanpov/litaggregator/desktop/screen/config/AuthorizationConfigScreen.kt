@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.desktop.screen.onboarding
+package io.github.kanpov.litaggregator.desktop.screen.config
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -24,12 +24,12 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-class AuthorizationOnboardingScreen(profile: Profile, index: Int) : OnboardingScreen(
-    Locale["onboarding.authorization"], profile, index) {
+class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
+    Locale["config.authorization"], profile, index) {
     @Composable
     override fun OnboardingContent() {
         Row(
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 15.dp)
         ) {
             MeshAuthorizationElement()
             Spacer(modifier = Modifier.width(10.dp))
@@ -51,15 +51,15 @@ class AuthorizationOnboardingScreen(profile: Profile, index: Int) : OnboardingSc
             alreadyAuthorized = alreadyAuthorized,
             isReadyToAuth = { login.isNotBlank() && password.isNotBlank() }) {
 
-            CredentialAsker(Locale["onboarding.authorization.login"]) { login = it }
-            CredentialAsker(Locale["onboarding.authorization.password"], sensitive = true, limiter = 15) { password = it }
+            CredentialAsker(Locale["config.authorization.login"]) { login = it }
+            CredentialAsker(Locale["config.authorization.password"], sensitive = true, limiter = 15) { password = it }
         }
     }
 
     @Composable
     private fun RowScope.MeshAuthorizationElement() {
         LoginPasswordAuthorizationElement(
-            title = Locale["onboarding.authorization.mesh"],
+            title = Locale["config.authorization.mesh"],
             alreadyAuthorized = profile.authorization.mos != null
         ) { login, password ->
             profile.setupAuthorizer(MosAuthorizer(StandardAuthorizerCredentials(login, password)))
@@ -69,7 +69,7 @@ class AuthorizationOnboardingScreen(profile: Profile, index: Int) : OnboardingSc
     @Composable
     private fun RowScope.UlyssesAuthorizationElement() {
         LoginPasswordAuthorizationElement(
-            title = Locale["onboarding.authorization.ulysses"],
+            title = Locale["config.authorization.ulysses"],
             alreadyAuthorized = profile.authorization.ulyss != null
         ) { login, password ->
             profile.setupAuthorizer(UlyssAuthorizer(StandardAuthorizerCredentials(login, password)))
@@ -78,12 +78,15 @@ class AuthorizationOnboardingScreen(profile: Profile, index: Int) : OnboardingSc
 
     @Composable
     private fun RowScope.GoogleAuthorizationElement() {
-        AuthorizationElement(Locale["onboarding.authorization.google"],
+        AuthorizationElement(Locale["config.authorization.google"],
             authorizer = {
                 profile.setupAuthorizer(DesktopGoogleAuthorizer())
             },
             alreadyAuthorized = profile.authorization.googleSession != null,
-            isReadyToAuth = { true })
+            isReadyToAuth = { true }) {
+
+            H6Text(Locale["config.authorization.account_data_not_required"], italicize = true)
+        }
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -101,6 +104,7 @@ class AuthorizationOnboardingScreen(profile: Profile, index: Int) : OnboardingSc
             ) {
                 var authorized by remember { mutableStateOf(alreadyAuthorized) }
                 var authorizing by remember { mutableStateOf(false) }
+                var authorizationFailed by remember { mutableStateOf(false) }
                 val coroutineScope = rememberCoroutineScope()
 
                 // heading
@@ -128,22 +132,35 @@ class AuthorizationOnboardingScreen(profile: Profile, index: Int) : OnboardingSc
                         onClick = {
                             authorizing = true
                             coroutineScope.launch {
-                                authorizer()
+                                if (authorizer()) {
+                                    authorized = true
+                                } else {
+                                    authorizationFailed = true
+                                }
                                 authorizing = false
-                                authorized = true
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green
+                            backgroundColor = MaterialTheme.colors.secondary
                         ),
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         enabled = !authorized && isReadyToAuth()
                     ) {
-                        H6Text(if (authorized) Locale["button.bound"] else Locale["button.bind"])
+                        val text = if (authorized) {
+                            Locale["button.bound"]
+                        } else {
+                            if (authorizationFailed) {
+                                Locale["button.try_again"]
+                            } else {
+                                Locale["button.bind"]
+                            }
+                        }
+
+                        H6Text(text)
                     }
                 } else { // progress bar when authorizing
                     CircularProgressIndicator(
-                        modifier = Modifier.width(40.dp).align(Alignment.CenterHorizontally),
+                        modifier = Modifier.width(40.dp).align(Alignment.CenterHorizontally).padding(top = 5.dp),
                         color = MaterialTheme.colors.primary,
                     )
                 }

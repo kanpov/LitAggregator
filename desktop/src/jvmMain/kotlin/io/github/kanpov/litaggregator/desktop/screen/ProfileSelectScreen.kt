@@ -21,7 +21,7 @@ import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.resizeAppWindow
-import io.github.kanpov.litaggregator.desktop.screen.onboarding.OnboardingScreen
+import io.github.kanpov.litaggregator.desktop.screen.config.ConfigScreen
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -61,7 +61,7 @@ class ProfileSelectScreen : Screen {
                     // TODO implement
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Cyan
+                    backgroundColor = MaterialTheme.colors.primary
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
@@ -71,10 +71,10 @@ class ProfileSelectScreen : Screen {
             // create new profile button
             Button(
                 onClick = {
-                    OnboardingScreen.startOnboarding(navigator)
+                    ConfigScreen.startConfig(navigator)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Green
+                    backgroundColor = MaterialTheme.colors.primaryVariant
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 15.dp)
             ) {
@@ -86,7 +86,7 @@ class ProfileSelectScreen : Screen {
     @Composable
     private fun ColumnScope.RecentProfiles(navigator: Navigator) {
         Column(
-            modifier = Modifier.padding(top = 20.dp).align(Alignment.CenterHorizontally)
+            modifier = Modifier.padding(top = 30.dp).align(Alignment.CenterHorizontally)
         ) {
             H6Text(Locale["profile_select.recent_profiles"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
@@ -111,7 +111,7 @@ class ProfileSelectScreen : Screen {
     private fun RecentProfile(cachedProfile: CachedProfile, navigator: Navigator) {
         Row {
             // profile icon
-            BasicIcon(painterResource("icons/profile.png"), 25.dp, modifier = Modifier.align(Alignment.CenterVertically))
+            BasicIcon(painterResource("icons/dot.png"), 25.dp, modifier = Modifier.align(Alignment.CenterVertically))
 
             // profile name
             H6Text(cachedProfile.profileName, highlight = true, modifier = Modifier
@@ -120,10 +120,6 @@ class ProfileSelectScreen : Screen {
                     .clickable {
                     // TODO implement
                 })
-
-            Spacer(
-                modifier = Modifier.weight(1f)
-            )
 
             // starred or not
             BasicIcon(
@@ -198,7 +194,7 @@ class ProfileSelectScreen : Screen {
                 Button(
                     onClick = onDismissRequest,
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Yellow
+                        backgroundColor = Color.Green
                     ),
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {

@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.desktop.screen.onboarding
+package io.github.kanpov.litaggregator.desktop.screen.config
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -27,7 +27,7 @@ import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-abstract class OnboardingScreen(private val name: String, protected val profile: Profile, private val index: Int) : Screen {
+abstract class ConfigScreen(private val name: String, protected val profile: Profile, private val index: Int) : Screen {
     private lateinit var setValidity: (String, Boolean) -> Unit
     private lateinit var getValidity: (String) -> Boolean
 
@@ -54,7 +54,7 @@ abstract class OnboardingScreen(private val name: String, protected val profile:
         ) {
             // creating profile heading
             Spacer(modifier = Modifier.height(5.dp))
-            H5Text(Locale["onboarding.creating_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
+            H5Text(Locale["config.configuring_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             // category sub-heading
             H6Text(
@@ -75,17 +75,18 @@ abstract class OnboardingScreen(private val name: String, protected val profile:
 
             // next and before
             Row(
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(5.dp)
             ) {
                 SwitchButton(if (index == 0) Locale["button.cancel"] else Locale["button.previous"],
-                    offset = -1, navigator)
+                    offset = -1, navigator, color = MaterialTheme.colors.primary)
 
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
 
-                SwitchButton(Locale["button.next"], offset = 1, navigator,
-                    enabled = validityTracker.all { (_, valid) -> valid })
+                SwitchButton(if (index == screenInvokers.size - 1) Locale["button.finish"] else Locale["button.next"],
+                    offset = 1, navigator,
+                    enabled = validityTracker.all { (_, valid) -> valid }, color = MaterialTheme.colors.primaryVariant)
             }
         }
     }
@@ -134,13 +135,13 @@ abstract class OnboardingScreen(private val name: String, protected val profile:
     }
 
     @Composable
-    private fun SwitchButton(text: String, offset: Int, navigator: Navigator, enabled: Boolean = true) {
-        val onClick = { switchOnboardingScreen(navigator, profile, index, offset) }
+    private fun SwitchButton(text: String, offset: Int, navigator: Navigator, color: Color, enabled: Boolean = true) {
+        val onClick = { switchConfigScreen(navigator, profile, index, offset) }
 
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Cyan
+                backgroundColor = color
             ),
             enabled = enabled
         ) {
@@ -152,17 +153,18 @@ abstract class OnboardingScreen(private val name: String, protected val profile:
     abstract fun OnboardingContent()
 
     companion object {
-        private val screenInvokers: List<(Profile, Int) -> OnboardingScreen> = listOf(
-            ::IdentityOnboardingScreen,
-            ::AuthorizationOnboardingScreen
+        private val screenInvokers: List<(Profile, Int) -> ConfigScreen> = listOf(
+            ::IdentityConfigScreen,
+            ::AuthorizationConfigScreen,
+            ::ProviderConfigScreen
         )
 
-        fun startOnboarding(navigator: Navigator) {
+        fun startConfig(navigator: Navigator) {
             val emptyProfile = Profile(IdentitySettings(), ProviderSettings(), Authorization(), FeedSettings(), Feed())
             navigator.push(screenInvokers.first().invoke(emptyProfile, 0))
         }
 
-        private fun switchOnboardingScreen(navigator: Navigator, profile: Profile, index: Int, offset: Int) {
+        private fun switchConfigScreen(navigator: Navigator, profile: Profile, index: Int, offset: Int) {
             val newIndex = index + offset
 
             if (newIndex < 0) { // onboarding cancelled

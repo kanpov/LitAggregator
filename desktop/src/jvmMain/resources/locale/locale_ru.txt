@@ -7,6 +7,9 @@ button.next=Далее
 button.previous=Обратно
 button.bind=Привязать
 button.bound=Привязан
+button.try_again=Попытаться снова
+button.ok=ОК
+button.finish=Закончить
 
 system_config.ui_language=Язык интерфейса:
 system_config.configure_your_system=Настройте вашу систему
@@ -29,19 +32,40 @@ profile_select.info_dialog.kb=|1| КБ
 
 restart.please_wait=Пожалуйста, подождите
 
-onboarding.creating_profile=Создание профиля
+config.configuring_profile=Настройка профиля
 
-onboarding.identity=Общие настройки
-onboarding.identity.profile_name_hint=Мой профиль
-onboarding.identity.profile_name=Название профиля:
-onboarding.identity.parallel_hint=От 5 до 11
-onboarding.identity.parallel=Номер параллели:
-onboarding.identity.group_hint=От 1 до 6
-onboarding.identity.group=Номер группы:
+config.identity=Общие настройки
+config.identity.profile_name_hint=Мой профиль
+config.identity.profile_name=Название профиля:
+config.identity.parallel_hint=От 5 до 11
+config.identity.parallel=Номер параллели:
+config.identity.group_hint=От 1 до 6
+config.identity.group=Номер группы:
 
-onboarding.authorization=Авторизация
-onboarding.authorization.mesh=МЭШ
-onboarding.authorization.ulysses=УЛИСС
-onboarding.authorization.google=Google
-onboarding.authorization.login=Логин:
-onboarding.authorization.password=Пароль:
+config.authorization=Авторизация
+config.authorization.mesh=МЭШ
+config.authorization.ulysses=УЛИСС
+config.authorization.google=Google
+config.authorization.login=Логин:
+config.authorization.password=Пароль:
+config.authorization.account_data_not_required=Данные аккаунта не требуются
+
+config.provider=Провайдеры
+config.provider.source_not_bound=Портал не привязан
+config.provider.settings=Настройки провайдера
+config.provider.heading_mesh=Из МЭШ
+config.provider.heading_lit=Из УЛИСС
+config.provider.heading_google=Из Google
+config.provider.heading_portfolio=Из Портфолио
+config.provider.mesh.homework=Домашние задания
+config.provider.mesh.homework.title_formatter=Форматирование заголовка
+config.provider.mesh.homework.only_include_oo=Только включать обязательные
+config.provider.mesh.marks=Оценки
+config.provider.mesh.ratings=Рейтинги
+config.provider.mesh.visits=Посещаемость
+config.provider.mesh.banners=Баннеры
+config.provider.lit.homework=Домашние задания
+config.provider.lit.announcements=Новости Лицея
+config.provider.google.classroom=Задания Classroom
+config.provider.portfolio.diagnostics=Диагностики
+config.provider.portfolio.events=Олимпиады

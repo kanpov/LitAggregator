@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -40,9 +39,7 @@ class SystemConfigScreen : Screen {
             // heading
             H5Text(Locale["system_config.configure_your_system"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
-            Column(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
+            Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 // language setting
                 DropdownSetting(
                     label = Locale["system_config.ui_language"],
@@ -100,9 +97,9 @@ class SystemConfigScreen : Screen {
                     navigator.push(ProfileSelectScreen())
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Cyan
+                    backgroundColor = MaterialTheme.colors.primary
                 ),
-                modifier = Modifier.padding(top = 15.dp).scale(1.1f).align(Alignment.CenterHorizontally)
+                modifier = Modifier.padding(top = 15.dp).align(Alignment.CenterHorizontally)
             ) {
                 H6Text(Locale["button.continue"])
             }

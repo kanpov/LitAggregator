@@ -7,17 +7,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProviderSettings(
-    var announcements: AnnouncementProviderSettings? = AnnouncementProviderSettings(),
-    var ulyss: UlyssProviderSettings? = UlyssProviderSettings(),
-    var meshHomework: MeshHomeworkProviderSettings? = MeshHomeworkProviderSettings(),
-    var meshMarks: MeshMarkProviderSettings? = MeshMarkProviderSettings(),
-    var meshRatings: MeshRatingProviderSettings? = MeshRatingProviderSettings(),
-    var meshVisits: MeshVisitProviderSettings? = MeshVisitProviderSettings(),
-    var meshBanners: MeshBannerProviderSettings? = MeshBannerProviderSettings(),
-    var portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = PortfolioDiagnosticProviderSettings(),
-    var portfolioEvents: PortfolioEventProviderSettings? = PortfolioEventProviderSettings(),
-    var classroom: ClassroomProviderSettings? = ClassroomProviderSettings(),
-    var gmail: GmailProviderSettings? = GmailProviderSettings()
+    var announcements: AnnouncementProviderSettings? = null,
+    var ulyss: UlyssProviderSettings? = null,
+    var meshHomework: MeshHomeworkProviderSettings? = null,
+    var meshMarks: MeshMarkProviderSettings? = null,
+    var meshRatings: MeshRatingProviderSettings? = null,
+    var meshVisits: MeshVisitProviderSettings? = null,
+    var meshBanners: MeshBannerProviderSettings? = null,
+    var portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = null,
+    var portfolioEvents: PortfolioEventProviderSettings? = null,
+    var classroom: ClassroomProviderSettings? = null,
+    var gmail: GmailProviderSettings? = null
 )
 
 @Serializable
@@ -48,8 +48,8 @@ data class UlyssExclusions(
 
 @Serializable
 data class MeshHomeworkProviderSettings(
-    val titleFormatter: String = "!{subject} на !{assigned_time}",
-    val onlyIncludeOO: Boolean = false
+    var titleFormatter: String = "!{subject} на !{assigned_time}",
+    var onlyIncludeOO: Boolean = false
 )
 
 @Serializable
