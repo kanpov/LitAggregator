@@ -412,16 +412,15 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
             ) {
                 H6Text(heading, highlight = true, modifier = Modifier.align(Alignment.CenterHorizontally).scale(1.1f))
                 Spacer(modifier = Modifier.height(10.dp))
-//                if (requirementMet) {
-//                    content()
-//                } else {
-//                    H6Text(
-//                        text = Locale["config.provider.source_not_bound"],
-//                        italicize = true,
-//                        modifier = Modifier.align(Alignment.CenterHorizontally)
-//                    )
-//                }
-                content()
+                if (requirementMet) {
+                    content()
+                } else {
+                    H6Text(
+                        text = Locale["config.provider.source_not_bound"],
+                        italicize = true,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
     }
