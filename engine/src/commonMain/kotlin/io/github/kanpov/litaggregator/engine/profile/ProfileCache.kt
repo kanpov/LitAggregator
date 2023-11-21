@@ -13,7 +13,7 @@ import java.io.File
 data class CachedProfile(
     val relativePath: String,
     val profileName: String,
-    var starred: Boolean
+    var starred: Boolean = false
 ) {
     val file: File by lazy { EnginePlatform.current.getPersistentPath(relativePath).asFile() }
 }
@@ -58,12 +58,8 @@ object ProfileCache {
         write()
     }
 
-    fun add(profile: Profile, relativePath: String) {
-        wrapper.profiles.add(CachedProfile(
-            relativePath = relativePath,
-            profileName = profile.identity.profileName,
-            starred = false
-        ))
+    fun add(cachedProfile: CachedProfile) {
+        wrapper.profiles.add(cachedProfile)
         write()
     }
 

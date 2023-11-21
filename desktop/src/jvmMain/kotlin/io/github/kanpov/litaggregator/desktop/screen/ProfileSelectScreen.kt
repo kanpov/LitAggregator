@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.SMALL_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
@@ -22,10 +23,15 @@ import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import io.github.kanpov.litaggregator.desktop.screen.config.ConfigScreen
+import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
+import io.github.kanpov.litaggregator.engine.profile.PROFILE_EXTENSION
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
+import io.github.kanpov.litaggregator.engine.util.io.readFile
+import io.github.kanpov.litaggregator.engine.util.io.writeFile
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import java.io.File
 
 class ProfileSelectScreen : Screen {
     @Composable
@@ -56,9 +62,10 @@ class ProfileSelectScreen : Screen {
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 30.dp)
         ) {
             // load existing profile button
+            var showFilePicker by remember { mutableStateOf(false) }
             Button(
                 onClick = {
-                    // TODO implement
+                    showFilePicker = true
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary
@@ -79,6 +86,19 @@ class ProfileSelectScreen : Screen {
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 15.dp)
             ) {
                 H6Text(Locale["profile_select.create_profile"])
+            }
+
+            // file picking
+            FilePicker(show = showFilePicker, fileExtensions = listOf(PROFILE_EXTENSION)) { mpFile ->
+                showFilePicker = false
+                if (mpFile != null) {
+                    val file = File(mpFile.path)
+                    val relativePath = file.name
+                    // copy file to app directory
+                    writeFile(EnginePlatform.current.getPersistentPath(relativePath), readFile(file) ?: return@FilePicker)
+                    ProfileCache.add(CachedProfile(relativePath, profileName = file.nameWithoutExtension))
+                }
+                restartScreen(navigator)
             }
         }
     }
@@ -118,8 +138,8 @@ class ProfileSelectScreen : Screen {
                     .align(Alignment.CenterVertically)
                     .padding(start = 5.dp)
                     .clickable {
-                    // TODO implement
-                })
+                        navigator.push(UnlockScreen(cachedProfile))
+                    })
 
             Spacer(modifier = Modifier.weight(1f))
 

@@ -85,7 +85,7 @@ class MeshHomeworkProvider(authorizer: MeshAuthorizer) : MeshProvider<HomeworkFe
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, HomeworkFeedEntry> {
         override val name: String = "Домашние задания из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshHomework != null }
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.authorization.mos!!) }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, HomeworkFeedEntry> = { MeshHomeworkProvider(it.authorization.mesh!!) }
     }
 }

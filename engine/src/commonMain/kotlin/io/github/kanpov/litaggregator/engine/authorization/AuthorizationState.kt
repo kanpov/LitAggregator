@@ -7,8 +7,8 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class AuthorizationState(
-    var ulyss: UlyssesAuthorizer? = null,
-    var mos: MeshAuthorizer? = null,
+    var ulysses: UlyssesAuthorizer? = null,
+    var mesh: MeshAuthorizer? = null,
     @SerialName("google") var googleSession: GoogleSession? = null
 ) {
     @Transient private var backer: GoogleAuthorizer? = null

@@ -38,7 +38,7 @@ class MeshBannerProvider(authorizer: MeshAuthorizer) : MeshProvider<BannerFeedEn
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, BannerFeedEntry> {
         override val name: String = "Баннеры из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshBanners != null }
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, BannerFeedEntry> = { MeshBannerProvider(it.authorization.mos!!) }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, BannerFeedEntry> = { MeshBannerProvider(it.authorization.mesh!!) }
     }
 }

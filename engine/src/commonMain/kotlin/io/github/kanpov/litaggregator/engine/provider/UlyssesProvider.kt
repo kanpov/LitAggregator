@@ -93,9 +93,9 @@ class UlyssesProvider(authorizer: UlyssesAuthorizer) : AuthorizedProvider<Ulysse
     }
 
     object Definition : AuthorizedProviderDefinition<UlyssesAuthorizer, HomeworkFeedEntry> {
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.ulyss != null }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.ulysses != null }
         override val name: String = "Учебные материалы из УЛИСС"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.ulysses != null }
-        override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { UlyssesProvider(it.authorization.ulyss!!) }
+        override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { UlyssesProvider(it.authorization.ulysses!!) }
     }
 }

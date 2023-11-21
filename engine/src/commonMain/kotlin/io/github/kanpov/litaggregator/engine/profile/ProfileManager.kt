@@ -10,7 +10,7 @@ import java.time.Instant
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-private const val PROFILE_EXTENSION = "agr"
+const val PROFILE_EXTENSION = "agr"
 
 class ProfileManager private constructor(private val profileFile: File, private val password: String) {
     private var currentProfile: Profile? = null
@@ -87,7 +87,7 @@ class ProfileManager private constructor(private val profileFile: File, private 
             return if (createResult.isError) {
                 createResult to null
             } else {
-                ProfileCache.add(profile, relativePath)
+                ProfileCache.add(CachedProfile(relativePath, profile.identity.profileName))
                 createResult to manager
             }
         }

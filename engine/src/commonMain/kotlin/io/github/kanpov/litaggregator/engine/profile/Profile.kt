@@ -21,8 +21,8 @@ data class Profile(
         if (!authorizer.authorize()) return false
 
         when (authorizer) {
-            is UlyssesAuthorizer -> this.authorization.ulyss = authorizer
-            is MeshAuthorizer -> this.authorization.mos = authorizer
+            is UlyssesAuthorizer -> this.authorization.ulysses = authorizer
+            is MeshAuthorizer -> this.authorization.mesh = authorizer
             is GoogleAuthorizer -> this.authorization.google = authorizer
         }
 

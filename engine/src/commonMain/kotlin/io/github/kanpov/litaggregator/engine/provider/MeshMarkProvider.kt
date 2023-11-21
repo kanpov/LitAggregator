@@ -57,7 +57,7 @@ class MeshMarkProvider(authorizer: MeshAuthorizer) : MeshProvider<MarkFeedEntry>
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, MarkFeedEntry> {
         override val name: String = "Оценки из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshMarks != null }
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, MarkFeedEntry> = { MeshMarkProvider(it.authorization.mos!!) }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, MarkFeedEntry> = { MeshMarkProvider(it.authorization.mesh!!) }
     }
 }

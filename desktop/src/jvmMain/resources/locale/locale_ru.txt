@@ -10,6 +10,7 @@ button.bound=Привязан
 button.try_again=Попытаться снова
 button.ok=ОК
 button.finish=Закончить
+button.login=Войти
 
 system_config.ui_language=Язык интерфейса:
 system_config.configure_your_system=Настройте вашу систему
@@ -96,3 +97,6 @@ config.feed.look_behind_days=Лимит возраста старейших за
 config.feed.look_behind_days_hint=От 1 до 31 (дня)
 config.feed.look_ahead_days=Лимит возраста новейших записей
 config.feed.look_ahead_days_hint=От 1 до 21 (дня)
+
+unlock.enter_password=Введите пароль:
+unlock.repeat_attempt=Повторите попытку

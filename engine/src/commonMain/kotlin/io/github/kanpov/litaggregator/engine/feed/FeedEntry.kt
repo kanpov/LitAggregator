@@ -27,7 +27,6 @@ data class FeedEntryMetadata(
     val creationTime: JsonInstant?,
     var comments: MutableSet<String> = mutableSetOf(),
     var markers: MutableSet<String> = mutableSetOf(),
-    var attachments: MutableSet<FeedEntryAttachment> = mutableSetOf(),
     var taskLists: MutableSet<FeedEntryTaskList> = mutableSetOf(),
     var starred: Boolean = false,
     var pinned: Boolean = false
@@ -37,12 +36,6 @@ data class FeedEntryMetadata(
         // no option other than accepting the other instance's value
         other.comments.forEach { this.comments += it }
         other.markers.forEach { this.markers += it }
-        other.attachments.forEach { attachment ->
-            val matchingAttachment = this.attachments.firstOrNull { it.thumbnailUrl == attachment.thumbnailUrl && it.downloadUrl == attachment.downloadUrl }
-            if (matchingAttachment == null) {
-                this.attachments += attachment
-            }
-        }
         other.taskLists.forEach { taskList ->
             val matchingTaskList = this.taskLists.firstOrNull { it.name == taskList.name }
 
@@ -62,7 +55,6 @@ data class FeedEntryMetadata(
         // don't include creation time
         var result = comments.hashCode()
         result = 31 * result + markers.hashCode()
-        result = 31 * result + attachments.hashCode()
         result = 31 * result + taskLists.hashCode()
         result = 31 * result + starred.hashCode()
         result = 31 * result + pinned.hashCode()

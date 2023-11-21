@@ -50,9 +50,9 @@ class PortfolioDiagnosticProvider(authorizer: MeshAuthorizer) : MeshProvider<Dia
     }
 
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, DiagnosticFeedEntry> {
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
         override val name: String = "Диагностики из Портфолио МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.portfolioDiagnostics != null }
-        override val factory: (Profile) -> SimpleProvider<DiagnosticFeedEntry> = { PortfolioDiagnosticProvider(it.authorization.mos!!) }
+        override val factory: (Profile) -> SimpleProvider<DiagnosticFeedEntry> = { PortfolioDiagnosticProvider(it.authorization.mesh!!) }
     }
 }

@@ -18,6 +18,7 @@ import org.jetbrains.compose.resources.painterResource
 
 lateinit var resizeAppWindow: (DpSize) -> Unit
 
+val LARGE_WINDOW_SIZE = DpSize(1200.dp, 800.dp)
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
 val SMALL_WINDOW_SIZE = DpSize(400.dp, 400.dp)
 

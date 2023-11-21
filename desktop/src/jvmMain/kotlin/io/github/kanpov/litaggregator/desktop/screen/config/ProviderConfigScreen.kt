@@ -7,12 +7,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import io.github.kanpov.litaggregator.desktop.Locale
@@ -52,13 +49,14 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
         Container(
             heading = Locale["config.provider.heading_mesh"],
             modifier = Modifier.fillMaxWidth(),
-            requirementMet = profile.authorization.mos != null
+            requirementMet = profile.authorization.mesh != null
         ) {
             ProviderElement(
                 name = Locale["config.provider.mesh.homework"],
                 onEnable = { profile.providers.meshHomework = MeshHomeworkProviderSettings() },
                 onDisable = { profile.providers.meshHomework = null },
-                detector = profile.providers.meshHomework
+                detector = profile.providers.meshHomework,
+                isDefaultOption = true
             ) {
                 TextInputSetting(
                     name = Locale["config.provider.mesh.homework.title_formatter"],
@@ -76,7 +74,8 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 name = Locale["config.provider.mesh.marks"],
                 onEnable = { profile.providers.meshMarks = MeshMarkProviderSettings() },
                 onDisable = { profile.providers.meshMarks = null },
-                detector = profile.providers.meshMarks
+                detector = profile.providers.meshMarks,
+                isDefaultOption = true
             ) {
                 BooleanInputSetting(
                     name = Locale["config.provider.mesh.marks.only_include_marks"],
@@ -136,13 +135,14 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
         Container(
             heading = Locale["config.provider.heading_lit"],
             modifier = Modifier.fillMaxWidth(),
-            requirementMet = profile.authorization.ulyss != null
+            requirementMet = profile.authorization.ulysses != null
         ) {
             ProviderElement(
                 name = Locale["config.provider.lit.homework"],
                 onEnable = { profile.providers.ulysses = UlyssesProviderSettings() },
                 onDisable = { profile.providers.ulysses = null },
-                detector = profile.providers.ulysses
+                detector = profile.providers.ulysses,
+                isDefaultOption = true
             ) {
                 profile.providers.ulysses!!.apply {
                     BooleanInputSetting(
@@ -211,7 +211,8 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 name = Locale["config.provider.google.classroom"],
                 onEnable = { profile.providers.classroom = ClassroomProviderSettings() },
                 onDisable = { profile.providers.classroom = null },
-                detector = profile.providers.classroom
+                detector = profile.providers.classroom,
+                isDefaultOption = true
             ) {
                 FilterInputSetting(
                     name = Locale["config.provider.lit.announcements.html_filter"],
@@ -227,7 +228,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
         Container(
             heading = Locale["config.provider.heading_portfolio"],
             modifier = Modifier.fillMaxWidth(),
-            requirementMet = profile.authorization.mos != null
+            requirementMet = profile.authorization.mesh != null
         ) {
             ProviderElement(
                 name = Locale["config.provider.portfolio.diagnostics"],
@@ -325,8 +326,8 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ProviderElement(name: String, onEnable: () -> Unit, onDisable: () -> Unit, detector: Any?,
-                                alertContent: @Composable ColumnScope.() -> Unit) {
-        var providerEnabled by remember { mutableStateOf(detector != null) }
+                                isDefaultOption: Boolean = false, alertContent: @Composable ColumnScope.() -> Unit) {
+        var providerEnabled by remember { mutableStateOf(detector != null || isDefaultOption) }
         var showingSettings by remember { mutableStateOf(false) }
 
         Row {

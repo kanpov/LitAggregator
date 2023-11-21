@@ -60,7 +60,7 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
     private fun RowScope.MeshAuthorizationElement() {
         LoginPasswordAuthorizationElement(
             title = Locale["config.authorization.mesh"],
-            alreadyAuthorized = profile.authorization.mos != null
+            alreadyAuthorized = profile.authorization.mesh != null
         ) { login, password ->
             profile.setupAuthorizer(MeshAuthorizer(CredentialPair(login, password)))
         }
@@ -70,7 +70,7 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
     private fun RowScope.UlyssesAuthorizationElement() {
         LoginPasswordAuthorizationElement(
             title = Locale["config.authorization.ulysses"],
-            alreadyAuthorized = profile.authorization.ulyss != null
+            alreadyAuthorized = profile.authorization.ulysses != null
         ) { login, password ->
             profile.setupAuthorizer(UlyssesAuthorizer(CredentialPair(login, password)))
         }

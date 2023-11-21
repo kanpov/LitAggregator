@@ -53,9 +53,9 @@ class PortfolioEventProvider(authorizer: MeshAuthorizer) : MeshProvider<EventFee
     }
 
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, EventFeedEntry> {
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
         override val name: String = "Соревнования из Портфолио МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.portfolioEvents != null }
-        override val factory: (Profile) -> SimpleProvider<EventFeedEntry> = { PortfolioEventProvider(it.authorization.mos!!) }
+        override val factory: (Profile) -> SimpleProvider<EventFeedEntry> = { PortfolioEventProvider(it.authorization.mesh!!) }
     }
 }

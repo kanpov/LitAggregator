@@ -50,7 +50,7 @@ class MeshVisitProvider(authorizer: MeshAuthorizer) : MeshProvider<VisitFeedEntr
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, VisitFeedEntry> {
         override val name: String = "Посещаемость из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshVisits != null }
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, VisitFeedEntry> = { MeshVisitProvider(it.authorization.mos!!) }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, VisitFeedEntry> = { MeshVisitProvider(it.authorization.mesh!!) }
     }
 }

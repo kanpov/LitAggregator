@@ -20,11 +20,10 @@ import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.resizeAppWindow
-import io.github.kanpov.litaggregator.desktop.screen.main.MainScreen
+import io.github.kanpov.litaggregator.desktop.screen.ProfileSelectScreen
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.authorization.AuthorizationState
-import io.github.kanpov.litaggregator.engine.profile.ProfileEncryptionOptions
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import io.github.kanpov.litaggregator.engine.settings.FeedSettings
 import io.github.kanpov.litaggregator.engine.settings.IdentitySettings
@@ -192,7 +191,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
                 }
                 val (result, manager) = ProfileManager.fromNew(profile, bufferedPassword!!)
                 if (manager != null) {
-                    navigator.push(MainScreen(manager))
+                    navigator.popUntil { it is ProfileSelectScreen }
                 } else {
                     Logger.e { "Failed to create a new profile because of $result" }
                 }

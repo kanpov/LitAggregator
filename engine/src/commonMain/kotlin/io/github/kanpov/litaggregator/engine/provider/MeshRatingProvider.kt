@@ -78,7 +78,7 @@ class MeshRatingProvider(authorizer: MeshAuthorizer) : MeshProvider<RatingFeedEn
     object Definition : AuthorizedProviderDefinition<MeshAuthorizer, RatingFeedEntry> {
         override val name: String = "Рейтинги из МЭШ"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.meshRatings != null }
-        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mos != null }
-        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, RatingFeedEntry> = { MeshRatingProvider(it.authorization.mos!!) }
+        override val isAuthorized: (AuthorizationState) -> Boolean = { it.mesh != null }
+        override val factory: (Profile) -> AuthorizedProvider<MeshAuthorizer, RatingFeedEntry> = { MeshRatingProvider(it.authorization.mesh!!) }
     }
 }

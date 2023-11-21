@@ -8,15 +8,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProviderSettings(
     var announcements: AnnouncementProviderSettings? = null,
-    var ulysses: UlyssesProviderSettings? = UlyssesProviderSettings(),
-    var meshHomework: MeshHomeworkProviderSettings? = MeshHomeworkProviderSettings(),
-    var meshMarks: MeshMarkProviderSettings? = MeshMarkProviderSettings(),
+    var ulysses: UlyssesProviderSettings? = null,
+    var meshHomework: MeshHomeworkProviderSettings? = null,
+    var meshMarks: MeshMarkProviderSettings? = null,
     var meshRatings: MeshRatingProviderSettings? = null,
     var meshVisits: MeshVisitProviderSettings? = null,
     var meshBanners: MeshBannerProviderSettings? = null,
     var portfolioDiagnostics: PortfolioDiagnosticProviderSettings? = null,
     var portfolioEvents: PortfolioEventProviderSettings? = null,
-    var classroom: ClassroomProviderSettings? = ClassroomProviderSettings()
+    var classroom: ClassroomProviderSettings? = null
 )
 
 @Serializable
