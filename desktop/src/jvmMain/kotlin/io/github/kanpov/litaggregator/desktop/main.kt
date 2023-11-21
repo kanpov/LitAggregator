@@ -13,11 +13,9 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.screen.SystemConfigScreen
 import io.github.kanpov.litaggregator.engine.EnginePlatform
-import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-var currentProfileManager: ProfileManager? = null
 lateinit var resizeAppWindow: (DpSize) -> Unit
 
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)

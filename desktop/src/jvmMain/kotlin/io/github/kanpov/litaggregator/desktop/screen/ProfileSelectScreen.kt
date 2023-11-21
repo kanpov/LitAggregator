@@ -121,6 +121,8 @@ class ProfileSelectScreen : Screen {
                     // TODO implement
                 })
 
+            Spacer(modifier = Modifier.weight(1f))
+
             // starred or not
             BasicIcon(
                 painter = if (cachedProfile.starred) painterResource("icons/star_filled.png")

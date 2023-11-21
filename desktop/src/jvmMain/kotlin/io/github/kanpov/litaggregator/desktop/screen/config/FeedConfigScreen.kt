@@ -7,7 +7,7 @@ import io.github.kanpov.litaggregator.engine.profile.Profile
 
 class FeedConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["config.feed"], profile, index) {
     @Composable
-    override fun OnboardingContent() {
+    override fun ConfigContent() {
         Column {
             ValidatedQuestion(
                 text = Locale["config.feed.max_pool_size"],

@@ -6,11 +6,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.MEDIUM_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
@@ -21,6 +24,8 @@ import io.github.kanpov.litaggregator.desktop.screen.main.MainScreen
 import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.profile.Profile
 import io.github.kanpov.litaggregator.engine.authorization.AuthorizationState
+import io.github.kanpov.litaggregator.engine.profile.ProfileEncryptionOptions
+import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import io.github.kanpov.litaggregator.engine.settings.FeedSettings
 import io.github.kanpov.litaggregator.engine.settings.IdentitySettings
 import io.github.kanpov.litaggregator.engine.settings.ProviderSettings
@@ -30,6 +35,7 @@ import org.jetbrains.compose.resources.painterResource
 abstract class ConfigScreen(private val name: String, protected val profile: Profile, private val index: Int) : Screen {
     private lateinit var setValidity: (String, Boolean) -> Unit
     private lateinit var getValidity: (String) -> Boolean
+    private var firstRender = true
 
     @Composable
     override fun Content() {
@@ -66,7 +72,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
             Box(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                OnboardingContent()
+                ConfigContent()
             }
 
             Spacer(
@@ -89,12 +95,14 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
                     enabled = validityTracker.all { (_, valid) -> valid }, color = MaterialTheme.colors.primaryVariant)
             }
         }
+
+        if (firstRender) firstRender = false
     }
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     protected fun ValidatedQuestion(text: String, onChangeAnswer: (String) -> Unit, validator: (String) -> Boolean,
-                                    placeholder: String = "", knownValue: String? = null) {
+                                    placeholder: String = "", knownValue: String? = null, sensitive: Boolean = false) {
         Row(
             modifier = Modifier.padding(top = 10.dp)
         ) {
@@ -107,9 +115,13 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
 
             // set up question's answer based off known value if needed
             var answer by remember { mutableStateOf("") }
-            if (knownValue != null && validator(knownValue) && answer == "") {
+            if (knownValue != null && validator(knownValue) && answer == "" && firstRender) {
+                answer = knownValue
                 onChangeAnswer(knownValue)
+                setValidity(text, true)
             }
+
+            Spacer(modifier = Modifier.width(15.dp))
 
             // input field
             TextField(
@@ -127,7 +139,8 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
                 textStyle = MaterialTheme.typography.h6,
                 placeholder = {
                     H6Text(placeholder, italicize = true)
-                }
+                },
+                visualTransformation = if (sensitive) PasswordVisualTransformation() else VisualTransformation.None
             )
         }
     }
@@ -148,7 +161,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
     }
 
     @Composable
-    abstract fun OnboardingContent()
+    abstract fun ConfigContent()
 
     companion object {
         private val screenInvokers: List<(Profile, Int) -> ConfigScreen> = listOf(
@@ -157,6 +170,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
             ::ProviderConfigScreen,
             ::FeedConfigScreen
         )
+        var bufferedPassword: String? = null
 
         fun startConfig(navigator: Navigator) {
             val emptyProfile = Profile(IdentitySettings(), ProviderSettings(), AuthorizationState(), FeedSettings(), Feed())
@@ -166,14 +180,22 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
         private fun switchConfigScreen(navigator: Navigator, profile: Profile, index: Int, offset: Int) {
             val newIndex = index + offset
 
-            if (newIndex < 0) { // onboarding cancelled
+            if (newIndex < 0) { // config cancelled
                 navigator.pop()
                 return
             }
 
-            if (newIndex > screenInvokers.size - 1) { // onboarding complete
-                // TODO create profile manager and save the newly created profile
-                navigator.push(MainScreen())
+            if (newIndex > screenInvokers.size - 1) { // config complete
+                if (bufferedPassword == null) {
+                    Logger.e { "User has not set a password for their password. Likely a validation failure" }
+                    return
+                }
+                val (result, manager) = ProfileManager.fromNew(profile, bufferedPassword!!)
+                if (manager != null) {
+                    navigator.push(MainScreen(manager))
+                } else {
+                    Logger.e { "Failed to create a new profile because of $result" }
+                }
                 return
             }
 
@@ -182,6 +204,12 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
                 navigator.push(newScreen)
             } else { // when moving backward, pop back to an existing previous screen
                 navigator.pop()
+                if (navigator.lastItem is ConfigScreen) {
+                    // since no new instance is created, firstRender needs to be set manually
+                    (navigator.lastItem as ConfigScreen).firstRender = true
+                } else {
+                    Logger.e { "Tried to pop back to non-ConfigScreen. Render behavior may be broken" }
+                }
             }
         }
     }

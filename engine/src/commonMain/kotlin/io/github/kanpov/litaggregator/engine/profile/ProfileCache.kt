@@ -58,6 +58,15 @@ object ProfileCache {
         write()
     }
 
+    fun add(profile: Profile, relativePath: String) {
+        wrapper.profiles.add(CachedProfile(
+            relativePath = relativePath,
+            profileName = profile.identity.profileName,
+            starred = false
+        ))
+        write()
+    }
+
     fun exists(): Boolean = cacheFile.exists()
 
     private fun handleIOError(verb: String, reason: String): Boolean {

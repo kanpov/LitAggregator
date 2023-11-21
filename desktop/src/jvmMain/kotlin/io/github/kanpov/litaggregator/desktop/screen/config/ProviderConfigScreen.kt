@@ -29,7 +29,7 @@ import org.jetbrains.compose.resources.painterResource
 
 class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["config.provider"], profile, index) {
     @Composable
-    override fun OnboardingContent() {
+    override fun ConfigContent() {
         Row(
             modifier = Modifier.padding(top = 15.dp)
         ) {
@@ -322,13 +322,12 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalComposeUiApi::class)
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ProviderElement(name: String, onEnable: () -> Unit, onDisable: () -> Unit, detector: Any?,
                                 alertContent: @Composable ColumnScope.() -> Unit) {
         var providerEnabled by remember { mutableStateOf(detector != null) }
         var showingSettings by remember { mutableStateOf(false) }
-        var hovering by remember { mutableStateOf(false) }
 
         Row {
             BasicIcon(
@@ -341,18 +340,16 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 text = name,
                 highlight = providerEnabled,
                 modifier = Modifier.align(Alignment.CenterVertically)
-                    .onPointerEvent(PointerEventType.Enter) { hovering = true }
-                    .onPointerEvent(PointerEventType.Exit) { hovering = false }
-                    .clickable(enabled = providerEnabled) { showingSettings = !showingSettings },
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (providerEnabled && hovering) {
+            if (providerEnabled) {
                 BasicIcon(
                     painter = painterResource("icons/settings.png"),
                     size = 30.dp,
                     modifier = Modifier.align(Alignment.CenterVertically).padding(end = 10.dp)
+                        .clickable { showingSettings = true }
                 )
             }
 

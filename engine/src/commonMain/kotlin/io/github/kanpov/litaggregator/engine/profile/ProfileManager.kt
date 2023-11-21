@@ -7,6 +7,8 @@ import io.github.kanpov.litaggregator.engine.util.io.readFile
 import io.github.kanpov.litaggregator.engine.util.io.writeFile
 import java.io.File
 import java.time.Instant
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 private const val PROFILE_EXTENSION = "agr"
 
@@ -62,6 +64,8 @@ class ProfileManager private constructor(private val profileFile: File, private 
     }
 
     companion object {
+        private val PROFILE_FILENAME_RANGE = 10000..1000000
+
         fun fromCache(cachedProfile: CachedProfile, password: String): Pair<ProfileResult, ProfileManager?> {
             val manager = ProfileManager(cachedProfile.file, password)
             val readResult = manager.readFromDisk()
@@ -73,17 +77,17 @@ class ProfileManager private constructor(private val profileFile: File, private 
             }
         }
 
-        fun fromNew(profile: Profile, options: ProfileEncryptionOptions,
-                    profileName: String, password: String): Pair<ProfileResult, ProfileManager?> {
-            val relativePath = "$profileName.$PROFILE_EXTENSION"
+        fun fromNew(profile: Profile, password: String): Pair<ProfileResult, ProfileManager?> {
+            val relativePath = "${Random.nextInt(PROFILE_FILENAME_RANGE)}.$PROFILE_EXTENSION"
             val file = EnginePlatform.current.getPersistentPath(relativePath).asFile()
 
             val manager = ProfileManager(file, password)
-            val createResult = manager.create(profile, options)
+            val createResult = manager.create(profile, ProfileEncryptionOptions())
 
             return if (createResult.isError) {
                 createResult to null
             } else {
+                ProfileCache.add(profile, relativePath)
                 createResult to manager
             }
         }

@@ -35,8 +35,11 @@ restart.please_wait=Пожалуйста, подождите
 config.configuring_profile=Настройка профиля
 
 config.identity=Общие настройки
-config.identity.profile_name_hint=Мой профиль
+config.identity.profile_name_hint=Не более 17 символов
 config.identity.profile_name=Название профиля:
+config.identity.password=Пароль от профиля:
+config.identity.password_hint=Не менее 6 символов
+config.identity.password_repeat=Повторите пароль:
 config.identity.parallel_hint=От 5 до 11
 config.identity.parallel=Номер параллели:
 config.identity.group_hint=От 1 до 6

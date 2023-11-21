@@ -12,14 +12,32 @@ import io.github.kanpov.litaggregator.engine.settings.MIN_VALID_PARALLEL
 class IdentityConfigScreen(profile: Profile, index: Int) : ConfigScreen(
     Locale["config.identity"], profile, index) {
     @Composable
-    override fun OnboardingContent() {
+    override fun ConfigContent() {
         Column {
             ValidatedQuestion(
                 text = Locale["config.identity.profile_name"],
                 onChangeAnswer = { profile.identity.profileName = it },
-                validator = { it.isNotBlank() },
+                validator = { it.isNotBlank() && it.length <= 17 },
                 placeholder = Locale["config.identity.profile_name_hint"],
                 knownValue = profile.identity.profileName
+            )
+
+            ValidatedQuestion(
+                text = Locale["config.identity.password"],
+                onChangeAnswer = { bufferedPassword = it },
+                validator = { it.length >= 6 },
+                placeholder = Locale["config.identity.password_hint"],
+                knownValue = bufferedPassword,
+                sensitive = true
+            )
+
+            ValidatedQuestion(
+                text = Locale["config.identity.password_repeat"],
+                onChangeAnswer = {},
+                validator = { it == bufferedPassword },
+                placeholder = Locale["config.identity.password_hint"],
+                knownValue = bufferedPassword,
+                sensitive = true
             )
 
             ValidatedQuestion(

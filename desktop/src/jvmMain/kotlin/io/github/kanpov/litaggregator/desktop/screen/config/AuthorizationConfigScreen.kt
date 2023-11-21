@@ -27,7 +27,7 @@ import org.jetbrains.compose.resources.painterResource
 class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
     Locale["config.authorization"], profile, index) {
     @Composable
-    override fun OnboardingContent() {
+    override fun ConfigContent() {
         Row(
             modifier = Modifier.padding(top = 15.dp)
         ) {
