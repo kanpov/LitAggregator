@@ -11,4 +11,7 @@ enum class ProfileResult {
 
     val isError: Boolean
         get() = this != Success
+
+    val isSuccess: Boolean
+        get() = this == Success
 }

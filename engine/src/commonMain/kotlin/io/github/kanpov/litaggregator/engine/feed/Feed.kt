@@ -34,6 +34,16 @@ data class Feed(
 
         action(subPool)
     }
+
+    fun countEntries(): Int {
+        var result = 0
+
+        for ((_, set) in allPools) {
+            result += set.size
+        }
+
+        return result
+    }
 }
 
 fun <T : FeedEntry> MutableSet<T>.sortedByRelevancy(): List<T> {

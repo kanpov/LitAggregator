@@ -101,6 +101,11 @@ config.feed.look_ahead_days_hint=От 1 до 21 (дня)
 unlock.enter_password=Введите пароль:
 unlock.repeat_attempt=Повторите попытку
 
-browser.toolbar.settings_button=Настройки профиля
-browser.toolbar.profile_select_button=Выбрать другой профиль
-
+browser.toolbar.settings_tooltip=Настройки профиля
+browser.toolbar.profile_select_tooltip=Выбрать другой профиль
+browser.toolbar.system_config_tooltip=Изменить системную конфигурацию
+browser.toolbar.sync_tooltip=Обновить ленту
+browser.toolbar.save_tooltip=Сохранить профиль
+browser.toolbar.tasks_completed_tooltip=Выполненные задачи
+browser.toolbar.entry_amount_tooltip=Количество записей в ленте
+browser.toolbar.parallel_group_pair=|1|.|2|

@@ -52,7 +52,7 @@ class UnlockScreen(private val cachedProfile: CachedProfile) : Screen {
                     value = password,
                     onValueChange = { password = it },
                     singleLine = true,
-                    textStyle = MaterialTheme.typography.h6,
+                    textStyle = MaterialTheme.typography.h5,
                     modifier = Modifier.padding(top = 15.dp).align(Alignment.CenterHorizontally),
                     visualTransformation = PasswordVisualTransformation()
                 )

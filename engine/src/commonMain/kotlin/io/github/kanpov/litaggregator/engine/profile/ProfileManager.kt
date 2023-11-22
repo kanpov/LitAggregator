@@ -13,7 +13,7 @@ import kotlin.random.nextInt
 const val PROFILE_EXTENSION = "agr"
 
 class ProfileManager private constructor(private val profileFile: File, val password: String) {
-    private var currentProfile: Profile? = null
+    var currentProfile: Profile? = null
     private var currentWrapper: ProfileWrapper? = null
 
     fun create(profile: Profile, options: ProfileEncryptionOptions = ProfileEncryptionOptions()): ProfileResult {
@@ -47,6 +47,10 @@ class ProfileManager private constructor(private val profileFile: File, val pass
     fun withProfile(scope: Profile.() -> Unit) {
         currentProfile?.scope()
     }
+
+    fun getProfile() = currentProfile
+
+    fun countEntries(): Int? = currentProfile?.feed?.countEntries()
 
     fun mergeWithProfile(newProfile: Profile): ProfileResult {
         val readResult = readFromDisk()

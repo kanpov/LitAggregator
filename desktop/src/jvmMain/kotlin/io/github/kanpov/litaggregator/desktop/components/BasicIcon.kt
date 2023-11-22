@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
@@ -16,6 +15,6 @@ fun BasicIcon(painter: Painter, size: Dp, modifier: Modifier = Modifier, tint: C
         painter = painter,
         contentDescription = null,
         modifier = modifier.size(size),
-        colorFilter = ColorFilter.tint(tint, BlendMode.Overlay)
+        colorFilter = if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
     )
 }

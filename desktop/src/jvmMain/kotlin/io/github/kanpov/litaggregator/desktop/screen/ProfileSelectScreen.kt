@@ -139,6 +139,7 @@ class ProfileSelectScreen : Screen {
             H6Text(cachedProfile.profileName, highlight = true, modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(start = 5.dp)
+                    .scale(1.1f)
                     .clickable {
                         navigator.push(UnlockScreen(cachedProfile))
                     })

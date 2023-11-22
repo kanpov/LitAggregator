@@ -30,7 +30,7 @@ class UlyssesProvider(authorizer: UlyssesAuthorizer) : AuthorizedProvider<Ulysse
             if (studyGrade != profile.identity.parallel) continue
 
             val homeworks = authorizer.getJsonArray<JsonObject>(
-                "https://in.lit.msu.ru/api/v1/Ulysses/$schoolYear/$studyGrade/$subjectId/$teacherId")!!
+                "https://in.lit.msu.ru/api/v1/Ulysses/$schoolYear/$studyGrade/$subjectId/$teacherId/")!!
 
             for (homeworkObj in homeworks) {
                 addHomework(profile, homeworkObj, earliestTime)
