@@ -16,6 +16,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.MEDIUM_WINDOW_SIZE
+import io.github.kanpov.litaggregator.desktop.browser.BrowserScreen
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
@@ -170,10 +171,14 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
             ::FeedConfigScreen
         )
         var bufferedPassword: String? = null
+        private lateinit var bufferedIntent: ConfigIntent
 
-        fun startConfig(navigator: Navigator) {
+        fun startConfig(navigator: Navigator, intent: ConfigIntent,
+                        existingProfile: Profile? = null, existingPassword: String? = null) {
+            bufferedIntent = intent
+            bufferedPassword = existingPassword
             val emptyProfile = Profile(IdentitySettings(), ProviderSettings(), AuthorizationState(), FeedSettings(), Feed())
-            navigator.push(screenInvokers.first().invoke(emptyProfile, 0))
+            navigator.push(screenInvokers.first().invoke(existingProfile ?: emptyProfile, 0))
         }
 
         private fun switchConfigScreen(navigator: Navigator, profile: Profile, index: Int, offset: Int) {
@@ -186,15 +191,28 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
 
             if (newIndex > screenInvokers.size - 1) { // config complete
                 if (bufferedPassword == null) {
-                    Logger.e { "User has not set a password for their password. Likely a validation failure" }
+                    Logger.e { "Buffered password has not been set. Likely a validation failure" }
                     return
                 }
-                val (result, manager) = ProfileManager.fromNew(profile, bufferedPassword!!)
-                if (manager != null) {
-                    navigator.popUntil { it is ProfileSelectScreen }
-                } else {
-                    Logger.e { "Failed to create a new profile because of $result" }
+                when (bufferedIntent) {
+                    ConfigIntent.CreateNewProfile -> {
+                        val (result, manager) = ProfileManager.fromNew(profile, bufferedPassword!!)
+                        if (manager != null) {
+                            navigator.popUntil { it is ProfileSelectScreen }
+                        } else {
+                            Logger.e { "Failed to create a new profile because of $result" }
+                        }
+                    }
+                    ConfigIntent.EditExistingProfile -> {
+                        val (result, manager) = ProfileManager.fromReconfigured(profile, bufferedPassword!!)
+                        if (manager != null) {
+                            navigator.push(BrowserScreen(manager))
+                        } else {
+                            Logger.e { "Failed to reconfigure an existing profile because of $result" }
+                        }
+                    }
                 }
+
                 return
             }
 
@@ -212,4 +230,9 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
             }
         }
     }
+}
+
+enum class ConfigIntent {
+    CreateNewProfile,
+    EditExistingProfile
 }

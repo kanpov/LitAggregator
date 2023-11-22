@@ -10,6 +10,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import io.github.kanpov.litaggregator.desktop.SMALL_WINDOW_SIZE
+import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import kotlinx.coroutines.delay
 
 private const val RESTART_DELAY = 500L
@@ -18,6 +20,7 @@ private const val INDICATOR_FREQUENCY = 10L
 class RestartScreen(private val newScreen: Screen? = null) : Screen {
     @Composable
     override fun Content() {
+        resizeAppWindow(SMALL_WINDOW_SIZE)
         val navigator = LocalNavigator.currentOrThrow
         var progress by remember { mutableStateOf(0f) }
 

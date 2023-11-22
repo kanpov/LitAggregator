@@ -78,7 +78,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 isDefaultOption = true
             ) {
                 BooleanInputSetting(
-                    name = Locale["config.provider.mesh.marks.only_include_marks"],
+                    name = Locale["config.provider.mesh.marks.only_include_exams"],
                     onValueChange = { profile.providers.meshMarks!!.onlyIncludeExams = it },
                     defaultValue = profile.providers.meshMarks!!.onlyIncludeExams
                 )

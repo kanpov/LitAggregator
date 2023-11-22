@@ -2,7 +2,7 @@ window_name=ЛИТ Агрегатор
 
 button.continue=Продолжить
 button.confirm=Подтвердить
-button.cancel=Отменить
+button.cancel=Отмена
 button.next=Далее
 button.previous=Обратно
 button.bind=Привязать
@@ -63,9 +63,9 @@ config.provider.heading_google=Из Google
 config.provider.heading_portfolio=Из Портфолио
 config.provider.mesh.homework=Домашние задания
 config.provider.mesh.homework.title_formatter=Форматирование заголовка
-config.provider.mesh.homework.only_include_oo=Только включать обязательные
+config.provider.mesh.homework.only_include_oo=Только включать обязательные уроки
 config.provider.mesh.marks=Оценки
-config.provider.mesh.marks.only_include_marks=Только включать контрольные работы
+config.provider.mesh.marks.only_include_exams=Только включать контрольные работы
 config.provider.mesh.marks.weight_filter=Фильтр по коэффициэнту включаемых оценок
 config.provider.mesh.ratings=Рейтинги
 config.provider.mesh.ratings.include_classmate_ratings=Определять рейтинги одноклассников
@@ -100,3 +100,7 @@ config.feed.look_ahead_days_hint=От 1 до 21 (дня)
 
 unlock.enter_password=Введите пароль:
 unlock.repeat_attempt=Повторите попытку
+
+browser.toolbar.settings_button=Настройки профиля
+browser.toolbar.profile_select_button=Выбрать другой профиль
+

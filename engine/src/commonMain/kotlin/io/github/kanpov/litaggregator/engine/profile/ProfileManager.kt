@@ -12,7 +12,7 @@ import kotlin.random.nextInt
 
 const val PROFILE_EXTENSION = "agr"
 
-class ProfileManager private constructor(private val profileFile: File, private val password: String) {
+class ProfileManager private constructor(private val profileFile: File, val password: String) {
     private var currentProfile: Profile? = null
     private var currentWrapper: ProfileWrapper? = null
 
@@ -40,8 +40,27 @@ class ProfileManager private constructor(private val profileFile: File, private 
         return readFromString(readFile(profileFile) ?: return ProfileResult.FileError)
     }
 
-    suspend fun withProfile(scope: suspend Profile.() -> Unit) {
+    suspend fun withProfileSuspend(scope: suspend Profile.() -> Unit) {
         currentProfile?.scope()
+    }
+
+    fun withProfile(scope: Profile.() -> Unit) {
+        currentProfile?.scope()
+    }
+
+    fun mergeWithProfile(newProfile: Profile): ProfileResult {
+        val readResult = readFromDisk()
+        if (readResult.isError) return readResult
+
+        withProfile {
+            // only keep feed
+            this.identity = newProfile.identity
+            this.authorization = newProfile.authorization
+            this.providers = newProfile.providers
+            this.feedSettings = newProfile.feedSettings
+        }
+
+        return writeToDisk()
     }
 
     private fun readFromString(wrapperJson: String): ProfileResult {
@@ -89,6 +108,19 @@ class ProfileManager private constructor(private val profileFile: File, private 
             } else {
                 ProfileCache.add(CachedProfile(relativePath, profile.identity.profileName))
                 createResult to manager
+            }
+        }
+
+        fun fromReconfigured(profile: Profile, password: String): Pair<ProfileResult, ProfileManager?> {
+            val cachedProfile = ProfileCache.iterator().asSequence()
+                .first { it.profileName == profile.identity.profileName }
+            val manager = ProfileManager(cachedProfile.file, password)
+            val mergeResult = manager.mergeWithProfile(profile)
+
+            return if (mergeResult.isError) {
+                mergeResult to null
+            } else {
+                mergeResult to manager
             }
         }
     }

@@ -8,9 +8,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -22,6 +24,7 @@ import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.resizeAppWindow
+import io.github.kanpov.litaggregator.desktop.screen.config.ConfigIntent
 import io.github.kanpov.litaggregator.desktop.screen.config.ConfigScreen
 import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
@@ -78,7 +81,7 @@ class ProfileSelectScreen : Screen {
             // create new profile button
             Button(
                 onClick = {
-                    ConfigScreen.startConfig(navigator)
+                    ConfigScreen.startConfig(navigator, ConfigIntent.CreateNewProfile)
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primaryVariant
@@ -94,11 +97,10 @@ class ProfileSelectScreen : Screen {
                 if (mpFile != null) {
                     val file = File(mpFile.path)
                     val relativePath = file.name
-                    // copy file to app directory
                     writeFile(EnginePlatform.current.getPersistentPath(relativePath), readFile(file) ?: return@FilePicker)
                     ProfileCache.add(CachedProfile(relativePath, profileName = file.nameWithoutExtension))
+                    restartScreen(navigator)
                 }
-                restartScreen(navigator)
             }
         }
     }
@@ -106,12 +108,12 @@ class ProfileSelectScreen : Screen {
     @Composable
     private fun ColumnScope.RecentProfiles(navigator: Navigator) {
         Column(
-            modifier = Modifier.padding(top = 30.dp).align(Alignment.CenterHorizontally)
+            modifier = Modifier.padding(top = 15.dp).align(Alignment.CenterHorizontally)
         ) {
             H6Text(Locale["profile_select.recent_profiles"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             Spacer(
-                modifier = Modifier.height(15.dp)
+                modifier = Modifier.height(10.dp)
             )
 
             val starPrioritizedProfiles = ProfileCache.iterator()
@@ -222,13 +224,17 @@ class ProfileSelectScreen : Screen {
                 ) {
                     H6Text(Locale["button.cancel"], highlight = true)
                 }
-            }
+            },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
         )
     }
 
     @Composable
     private fun InfoDialog(cachedProfile: CachedProfile, onDismissRequest: () -> Unit) {
-        Dialog(onDismissRequest = onDismissRequest) {
+        Dialog(
+            onDismissRequest = onDismissRequest,
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
             Card(
                 modifier = Modifier.fillMaxWidth().padding(20.dp),
                 shape = RoundedCornerShape(size = 10.dp)
