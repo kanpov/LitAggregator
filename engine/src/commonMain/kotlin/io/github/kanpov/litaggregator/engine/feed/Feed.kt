@@ -19,6 +19,13 @@ data class Feed(
         get() = mapOf("homework" to homework, "marks" to marks, "ratings" to ratings, "visits" to visits,
             "banners" to banners, "announcements" to announcements, "events" to events, "diagnostics" to diagnostics)
 
+    private val combinedPool: Set<FeedEntry>
+        get() = buildSet {
+            for ((_, pool) in allPools) {
+                addAll(pool)
+            }
+        }
+
     inline fun <reified E : FeedEntry> withPool(action: (MutableSet<E>) -> Unit) {
         val subPool = when (E::class) {
             HomeworkFeedEntry::class -> homework
@@ -43,6 +50,18 @@ data class Feed(
         }
 
         return result
+    }
+
+    fun query(text: String, sorter: FeedSorter): List<FeedEntry> {
+        val filteredPool = combinedPool.filter { entry -> entry.contentParams.any { param -> param.toString().contains(text) } }
+
+        // dirty casts, but haven't found a way to circumvent them yet
+        val sortedPool = when (sorter.order) {
+            FeedSortOrder.Ascending -> filteredPool.sortedBy { sorter.parameter.element(it) as Comparable<Any> }
+            FeedSortOrder.Descending -> filteredPool.sortedByDescending { sorter.parameter.element(it) as Comparable<Any> }
+        }.toMutableList()
+
+        return sortedPool
     }
 }
 

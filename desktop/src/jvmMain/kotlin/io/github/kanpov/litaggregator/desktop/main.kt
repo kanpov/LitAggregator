@@ -18,7 +18,7 @@ import org.jetbrains.compose.resources.painterResource
 
 lateinit var resizeAppWindow: (DpSize) -> Unit
 
-val LARGE_WINDOW_SIZE = DpSize(1500.dp, 1000.dp)
+val LARGE_WINDOW_SIZE = DpSize(900.dp, 800.dp)
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
 val SMALL_WINDOW_SIZE = DpSize(400.dp, 400.dp)
 
@@ -34,7 +34,10 @@ fun main() {
             position = WindowPosition.Aligned(Alignment.Center),
             size = MEDIUM_WINDOW_SIZE
         )
-        resizeAppWindow = { windowState.size = it }
+        resizeAppWindow = {
+            windowState.size = it
+            windowState.position = WindowPosition.Aligned(Alignment.Center) // realign
+        }
 
         Window(
             title = Locale["window_name"],
