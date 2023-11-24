@@ -62,9 +62,10 @@ fun BasicHoverable(tooltip: String, content: @Composable () -> Unit) {
                 modifier = Modifier.shadow(4.dp),
                 shape = RoundedCornerShape(4.dp)
             ) {
-                H6Text(
+                Text(
                     text = tooltip,
-                    italicize = true,
+                    fontStyle = FontStyle.Italic,
+                    style = MaterialTheme.typography.body1,
                     modifier = Modifier.padding(3.dp)
                 )
             }

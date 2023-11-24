@@ -58,6 +58,8 @@ class MeshHomeworkProvider(authorizer: MeshAuthorizer) : MeshProvider<HomeworkFe
             val assignedTime = TimeFormatters.isoLocalDateTime.parseInstant(homeworkObj.jString("date_prepared_for"))
             val objectId = homeworkObj.jInt("homework_id")
             val entryId = homeworkObj.jInt("homework_entry_id")
+            val content = homeworkObj.jString("homework")
+            if (!profile.providers.meshHomework!!.contentFilter.match(content)) continue
 
             insert(profile.feed, HomeworkFeedEntry(
                 title = formatHomeworkTitle(subjectName, teacherName, assignedTime, profile),

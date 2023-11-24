@@ -2,6 +2,7 @@ package io.github.kanpov.litaggregator.desktop.browser
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.MaterialTheme
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -26,6 +28,7 @@ import io.github.kanpov.litaggregator.desktop.screen.config.ConfigScreen
 import io.github.kanpov.litaggregator.engine.feed.FeedQuery
 import io.github.kanpov.litaggregator.engine.feed.FeedSortOrder
 import io.github.kanpov.litaggregator.engine.feed.FeedSortParameter
+import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -39,13 +42,15 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
         Column {
             // top row
-            Row(modifier = Modifier.fillMaxWidth().height(intrinsicSize = IntrinsicSize.Max)) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 ActionBar(navigator)
                 Spacer(modifier = Modifier.weight(1f))
                 SearchBar(query.filterText) { query = query.copy(filterText = it) }
                 Spacer(modifier = Modifier.weight(1f))
                 SortBar(query) { order, parameter -> query = query.copy(sortOrder = order, sortParameter = parameter) }
             }
+            // feed
+            FeedView(manager, query)
         }
     }
 
@@ -86,12 +91,15 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
             // sync
             ProlongedActionButton(
                 tooltip = Locale["browser.action_bar.sync_tooltip"],
-                iconPath = "icons/sync.png"
+                iconPath = "icons/sync.png",
+                restartAfterwards = true,
+                navigator = navigator
             ) {
                 var noErrors = true
                 manager.withProfileSuspend {
                     if (refreshFeed().isNotEmpty()) noErrors = false
                 }
+                manager.writeToDisk()
                 noErrors
             }
 
@@ -122,7 +130,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
             BasicTextField(
                 value = filterText,
                 onValueChange = {
-                    filterText = it
+                    filterText = it.take(SEARCH_LENGTH_LIMIT) // cap text length
                     changeFilterText(filterText)
                 },
                 textStyle = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Normal),
@@ -155,11 +163,33 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
                     sortParameter = FeedSortParameter.fromId(parameterIds[parameterTranslations.indexOf(it)])
                     changeQuery(sortOrder, sortParameter)
                 },
-                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp)
+                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp),
+                fontStyle = FontStyle.Italic
             )
+        }
+    }
+
+    @Composable
+    private fun ColumnScope.FeedView(manager: ProfileManager, query: FeedQuery) {
+        val entries = manager.getProfile()?.feed?.performQuery(query) ?: throw IllegalArgumentException("Unexpected error")
+
+        LazyColumn(modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 20.dp)) {
+            for ((index, entry) in entries.withIndex()) {
+                item(key = "entry_$index") {
+                    when (entry) {
+                        is HomeworkFeedEntry -> {
+                            HomeworkEntry(entry)
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                    }
+
+                }
+            }
         }
     }
 }
 
 val Color.Companion.Orange: Color
     get() = Color(red = 255,green = 140,blue = 0)
+
+private const val SEARCH_LENGTH_LIMIT = 30

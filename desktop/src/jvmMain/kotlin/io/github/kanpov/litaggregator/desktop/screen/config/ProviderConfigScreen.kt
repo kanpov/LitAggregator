@@ -55,8 +55,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 name = Locale["config.provider.mesh.homework"],
                 onEnable = { profile.providers.meshHomework = MeshHomeworkProviderSettings() },
                 onDisable = { profile.providers.meshHomework = null },
-                detector = profile.providers.meshHomework,
-                isDefaultOption = true
+                detector = profile.providers.meshHomework
             ) {
                 TextInputSetting(
                     name = Locale["config.provider.mesh.homework.title_formatter"],
@@ -68,14 +67,18 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                     onValueChange = { profile.providers.meshHomework!!.onlyIncludeOO = it },
                     defaultValue = profile.providers.meshHomework!!.onlyIncludeOO
                 )
+                FilterInputSetting(
+                    name = Locale["config.provider.mesh.homework.content_filter"],
+                    onValueChange = { profile.providers.meshHomework!!.contentFilter = it },
+                    defaultValue = profile.providers.meshHomework!!.contentFilter, serializer = ListFilter
+                )
             }
 
             ProviderElement(
                 name = Locale["config.provider.mesh.marks"],
                 onEnable = { profile.providers.meshMarks = MeshMarkProviderSettings() },
                 onDisable = { profile.providers.meshMarks = null },
-                detector = profile.providers.meshMarks,
-                isDefaultOption = true
+                detector = profile.providers.meshMarks
             ) {
                 BooleanInputSetting(
                     name = Locale["config.provider.mesh.marks.only_include_exams"],
@@ -141,8 +144,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 name = Locale["config.provider.lit.homework"],
                 onEnable = { profile.providers.ulysses = UlyssesProviderSettings() },
                 onDisable = { profile.providers.ulysses = null },
-                detector = profile.providers.ulysses,
-                isDefaultOption = true
+                detector = profile.providers.ulysses
             ) {
                 profile.providers.ulysses!!.apply {
                     BooleanInputSetting(
@@ -211,8 +213,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                 name = Locale["config.provider.google.classroom"],
                 onEnable = { profile.providers.classroom = ClassroomProviderSettings() },
                 onDisable = { profile.providers.classroom = null },
-                detector = profile.providers.classroom,
-                isDefaultOption = true
+                detector = profile.providers.classroom
             ) {
                 FilterInputSetting(
                     name = Locale["config.provider.lit.announcements.html_filter"],
@@ -326,8 +327,8 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun ProviderElement(name: String, onEnable: () -> Unit, onDisable: () -> Unit, detector: Any?,
-                                isDefaultOption: Boolean = false, alertContent: @Composable ColumnScope.() -> Unit) {
-        var providerEnabled by remember { mutableStateOf(detector != null || isDefaultOption) }
+                                alertContent: @Composable ColumnScope.() -> Unit) {
+        var providerEnabled by remember { mutableStateOf(detector != null) }
         var showingSettings by remember { mutableStateOf(false) }
 
         Row {

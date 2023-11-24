@@ -52,7 +52,7 @@ data class Feed(
         return result
     }
 
-    fun query(query: FeedQuery): List<FeedEntry> {
+    fun performQuery(query: FeedQuery): List<FeedEntry> {
         val filteredPool = combinedPool.filter { entry ->
             entry.contentParams.any { param -> param.toString().contains(query.filterText) }
         }

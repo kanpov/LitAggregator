@@ -2,14 +2,23 @@ package io.github.kanpov.litaggregator.desktop.components
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import cafe.adriel.voyager.navigator.Navigator
 import io.github.kanpov.litaggregator.desktop.browser.Orange
+import io.github.kanpov.litaggregator.desktop.screen.restartScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProlongedActionButton(tooltip: String, iconPath: String, action: suspend () -> Boolean) {
+fun ProlongedActionButton(tooltip: String, iconPath: String, restartAfterwards: Boolean = false, navigator: Navigator? = null,
+                          action: suspend () -> Boolean) {
     var state by remember { mutableStateOf(ProlongedActionState.Off) }
     val coroutineScope = rememberCoroutineScope()
+    var shouldRestart by remember { mutableStateOf(false) }
+
+    if (shouldRestart) {
+        restartScreen(navigator!!)
+        shouldRestart = false
+    }
 
     HoverableIconButton(
         tooltip = tooltip,
@@ -20,8 +29,12 @@ fun ProlongedActionButton(tooltip: String, iconPath: String, action: suspend () 
         coroutineScope.launch {
             state = ProlongedActionState.Working
             state = if (action()) ProlongedActionState.RecentlyFinished else ProlongedActionState.RecentlyErrored
-            delay(10000L) // cool-off period
-            state = ProlongedActionState.Off
+            if (!restartAfterwards || navigator == null) {
+                delay(10000L) // cool-off period
+                state = ProlongedActionState.Off
+            } else {
+                shouldRestart = true
+            }
         }
     }
 }

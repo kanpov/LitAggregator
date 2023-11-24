@@ -6,6 +6,13 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+    google()
+    maven("https://jogamp.org/deployment/maven")
+}
+
 kotlin {
     jvm()
     sourceSets {
@@ -28,6 +35,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization)
                 implementation(libs.kermit)
                 implementation(libs.apache.commons.lang)
+                implementation(libs.apache.commons.text)
             }
         }
     }
@@ -45,6 +53,9 @@ compose.desktop {
             )
             packageName = "LitAggregator"
             packageVersion = "1.0.0"
+            buildTypes.release.proguard {
+                isEnabled = false
+            }
         }
     }
 }

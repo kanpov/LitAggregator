@@ -1,6 +1,7 @@
 package io.github.kanpov.litaggregator.engine.settings
 
 import io.github.kanpov.litaggregator.engine.util.ComparisonFilter
+import io.github.kanpov.litaggregator.engine.util.FilterPolicy
 import io.github.kanpov.litaggregator.engine.util.ListFilter
 import io.github.kanpov.litaggregator.engine.util.RegexFilter
 import kotlinx.serialization.Serializable
@@ -48,7 +49,8 @@ data class UlyssesFilters(
 @Serializable
 data class MeshHomeworkProviderSettings(
     var titleFormatter: String = "!{subject} на !{assigned_time}",
-    var onlyIncludeOO: Boolean = false
+    var onlyIncludeOO: Boolean = false,
+    var contentFilter: ListFilter = ListFilter(policy = FilterPolicy.ByExclusion, values = listOf("см улисс", "см. улисс", "выполнить"))
 )
 
 @Serializable

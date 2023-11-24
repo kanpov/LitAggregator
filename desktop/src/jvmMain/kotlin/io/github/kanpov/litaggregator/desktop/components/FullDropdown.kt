@@ -4,12 +4,14 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FullDropdown(options: List<String>, defaultOption: String = options.first(),
-                 onSelectedOptionChange: (String) -> Unit, modifier: Modifier = Modifier) {
+                 onSelectedOptionChange: (String) -> Unit, modifier: Modifier = Modifier,
+                 fontStyle: FontStyle = FontStyle.Normal) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(defaultOption) }
 
@@ -22,7 +24,7 @@ fun FullDropdown(options: List<String>, defaultOption: String = options.first(),
             readOnly = true,
             value = selectedOption,
             onValueChange = { },
-            textStyle = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Normal)
+            textStyle = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Normal, fontStyle = fontStyle)
 //            label = { },
 //            trailingIcon = {
 //                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)

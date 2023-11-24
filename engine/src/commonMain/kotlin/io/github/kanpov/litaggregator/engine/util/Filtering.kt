@@ -29,8 +29,8 @@ data class ListFilter(
 ) {
     fun match(otherValue: String): Boolean = when (policy) {
         FilterPolicy.Disabled -> true
-        FilterPolicy.ByExclusion -> values.none { it.contains(otherValue) }
-        FilterPolicy.ByInclusion -> values.any { it.contains(otherValue) }
+        FilterPolicy.ByExclusion -> values.none { it.lowercase().contains(otherValue.lowercase()) }
+        FilterPolicy.ByInclusion -> values.any { it.lowercase().contains(otherValue.lowercase()) }
     }
 
     fun matchList(otherValues: List<String>) = otherValues.any { match(it) }

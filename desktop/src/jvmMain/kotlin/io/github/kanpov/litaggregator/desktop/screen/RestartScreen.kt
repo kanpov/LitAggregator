@@ -24,7 +24,7 @@ class RestartScreen(private val newScreen: Screen? = null) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         var progress by remember { mutableStateOf(0f) }
 
-        LaunchedEffect(null) {
+        LaunchedEffect(Unit) {
             val cycles = RESTART_DELAY / INDICATOR_FREQUENCY
             for (i in 1..cycles) {
                 progress = i.toFloat() / cycles

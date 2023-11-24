@@ -64,6 +64,7 @@ config.provider.heading_portfolio=Из Портфолио
 config.provider.mesh.homework=Домашние задания
 config.provider.mesh.homework.title_formatter=Форматирование заголовка
 config.provider.mesh.homework.only_include_oo=Только включать обязательные уроки
+config.provider.mesh.homework.content_filter=Фильтр содержания
 config.provider.mesh.marks=Оценки
 config.provider.mesh.marks.only_include_exams=Только включать контрольные работы
 config.provider.mesh.marks.weight_filter=Фильтр по коэффициэнту включаемых оценок
@@ -114,3 +115,15 @@ browser.query_bar.parameter.is_pinned=Прикреплено
 browser.query_bar.parameter.is_marked=Маркирован
 browser.query_bar.parameter.none=Не сортировать
 browser.query_bar.search_tooltip=Текст поиска
+
+browser.misc.content=Содержание
+browser.misc.about_entry=О записи
+browser.misc.creation_time=Время создания:
+browser.misc.attachments=Приложенные файлы:
+
+browser.homework.full_title_formatting=|1| на |2|
+browser.homework.short_title_formatting=|1| на ближайший урок
+browser.homework.subject=Предмет:
+browser.homework.teacher=Учитель:
+browser.homework.assigned_time=Дата сдачи:
+browser.homework.submission_url=Ссылка для сдачи:
