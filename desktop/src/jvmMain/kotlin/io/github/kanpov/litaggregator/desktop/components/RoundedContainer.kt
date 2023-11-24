@@ -18,7 +18,7 @@ fun RoundedContainer(shape: RoundedCornerShape, modifier: Modifier = Modifier, c
         shape = shape,
         border = BorderStroke(2.dp, Color.Black)
     ) {
-        Row(modifier = modifier.padding(5.dp).height(38.dp)) {
+        Row(modifier = modifier.padding(5.dp)) {
             content()
         }
     }

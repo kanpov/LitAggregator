@@ -52,13 +52,15 @@ data class Feed(
         return result
     }
 
-    fun query(text: String, sorter: FeedSorter): List<FeedEntry> {
-        val filteredPool = combinedPool.filter { entry -> entry.contentParams.any { param -> param.toString().contains(text) } }
+    fun query(query: FeedQuery): List<FeedEntry> {
+        val filteredPool = combinedPool.filter { entry ->
+            entry.contentParams.any { param -> param.toString().contains(query.filterText) }
+        }
 
         // dirty casts, but haven't found a way to circumvent them yet
-        val sortedPool = when (sorter.order) {
-            FeedSortOrder.Ascending -> filteredPool.sortedBy { sorter.parameter.element(it) as Comparable<Any> }
-            FeedSortOrder.Descending -> filteredPool.sortedByDescending { sorter.parameter.element(it) as Comparable<Any> }
+        val sortedPool = when (query.sortOrder) {
+            FeedSortOrder.Ascending -> filteredPool.sortedBy { query.sortParameter.element(it) as Comparable<Any> }
+            FeedSortOrder.Descending -> filteredPool.sortedByDescending { query.sortParameter.element(it) as Comparable<Any> }
         }.toMutableList()
 
         return sortedPool
