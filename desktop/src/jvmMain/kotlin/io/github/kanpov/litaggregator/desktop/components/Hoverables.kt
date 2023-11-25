@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -55,7 +55,7 @@ fun HoverableStat(tooltip: String, iconPath: String, value: String) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BasicHoverable(tooltip: String, content: @Composable () -> Unit) {
+fun BasicHoverable(tooltip: String, delayMillis: Int = 600, startPadding: Dp = 10.dp, content: @Composable () -> Unit) {
     TooltipArea(
         tooltip = {
             Surface(
@@ -70,8 +70,8 @@ fun BasicHoverable(tooltip: String, content: @Composable () -> Unit) {
                 )
             }
         },
-        modifier = Modifier.padding(start = 10.dp),
-        delayMillis = 600,
+        modifier = Modifier.padding(start = startPadding),
+        delayMillis = delayMillis,
         tooltipPlacement = TooltipPlacement.CursorPoint(
             alignment = Alignment.BottomEnd,
             offset = DpOffset(x = 10.dp, y = 10.dp)

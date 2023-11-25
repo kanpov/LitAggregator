@@ -107,14 +107,24 @@ browser.action_bar.profile_select_tooltip=Выбрать другой профи
 browser.action_bar.system_config_tooltip=Изменить системную конфигурацию
 browser.action_bar.sync_tooltip=Обновить ленту
 browser.action_bar.save_tooltip=Сохранить профиль
+
 browser.query_bar.ascending_order_tooltip=Сортировать от меньшего к большему
 browser.query_bar.descending_order_tooltip=Сортировать от большего к меньшему
-browser.query_bar.parameter.creation_time=Актуальность
+browser.query_bar.parameter.relevancy=Актуальность
 browser.query_bar.parameter.is_starred=Отмечено
 browser.query_bar.parameter.is_pinned=Прикреплено
 browser.query_bar.parameter.is_marked=Маркирован
 browser.query_bar.parameter.none=Не сортировать
 browser.query_bar.search_tooltip=Текст поиска
+
+browser.pool_bar.announcements=Новости
+browser.pool_bar.banners=Баннеры
+browser.pool_bar.diagnostics=Диагностики
+browser.pool_bar.events=События (олимпиады)
+browser.pool_bar.homework=Задания
+browser.pool_bar.marks=Оценки
+browser.pool_bar.ratings=Рейтинги
+browser.pool_bar.visits=Посещаемость
 
 browser.misc.content=Содержание
 browser.misc.about_entry=О записи
@@ -122,7 +132,7 @@ browser.misc.creation_time=Время создания:
 browser.misc.attachments=Приложенные файлы:
 
 browser.homework.full_title_formatting=|1| на |2|
-browser.homework.short_title_formatting=|1| на ближайший урок
+browser.homework.short_title_formatting=|1| от |2|
 browser.homework.subject=Предмет:
 browser.homework.teacher=Учитель:
 browser.homework.assigned_time=Дата сдачи:

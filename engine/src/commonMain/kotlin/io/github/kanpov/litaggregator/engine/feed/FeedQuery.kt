@@ -4,9 +4,10 @@ import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import java.time.Instant
 
 data class FeedQuery(
-    val sortOrder: FeedSortOrder = FeedSortOrder.Ascending,
-    val sortParameter: FeedSortParameter = FeedSortParameter.None,
-    val filterText: String = ""
+    val sortOrder: FeedSortOrder = FeedSortOrder.Descending,
+    val sortParameter: FeedSortParameter = FeedSortParameter.Relevancy,
+    val filterText: String = "",
+    val filterPools: Set<String> = setOf()
 )
 
 enum class FeedSortOrder(val id: String) {
@@ -18,13 +19,13 @@ enum class FeedSortOrder(val id: String) {
 }
 
 enum class FeedSortParameter(val element: (FeedEntry) -> Any, val id: String) {
-    CreationTime(element = {
-        if (it is HomeworkFeedEntry) {
-            if (it.assignedTime != null) it.assignedTime.epochSecond - Instant.MIN.epochSecond else 0
+    Relevancy(element = {
+        if (it is HomeworkFeedEntry && it.assignedTime != null) {
+            it.assignedTime.epochSecond - Instant.MIN.epochSecond
         } else {
             it.metadata.creationTime?.epochSecond?.minus(Instant.MIN.epochSecond) ?: Instant.MIN.epochSecond
         }
-   }, "creation_time"),
+   }, "relevancy"),
     IsStarred(element = { it.metadata.starred }, "is_starred"),
     IsPinned(element = { it.metadata.pinned }, "is_pinned"),
     IsMarked(element = { it.metadata.markers.isNotEmpty() }, "is_marked"),

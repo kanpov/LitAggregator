@@ -39,7 +39,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
 
     @Composable
     override fun Content() {
-        resizeAppWindow(MEDIUM_WINDOW_SIZE)
+        resizeAppWindow(MEDIUM_WINDOW_SIZE, false)
 
         val navigator = LocalNavigator.currentOrThrow
         val validityTracker = remember { mutableStateMapOf<String, Boolean>() }

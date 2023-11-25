@@ -13,12 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RoundedContainer(shape: RoundedCornerShape, modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
+fun RoundedContainer(roundStart: Boolean = false, roundEnd: Boolean = false,
+                     modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
     Surface(
-        shape = shape,
+        shape = RoundedCornerShape(bottomStart = if (roundStart) 10.dp else 0.dp, bottomEnd = if (roundEnd) 10.dp else 0.dp),
         border = BorderStroke(2.dp, Color.Black)
     ) {
-        Row(modifier = modifier.padding(5.dp).height(35.dp)) {
+        Row(modifier = modifier.padding(5.dp).height(32.dp)) {
             content()
         }
     }

@@ -1,5 +1,6 @@
 package io.github.kanpov.litaggregator.desktop
 
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -13,12 +14,14 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.screen.SystemConfigScreen
 import io.github.kanpov.litaggregator.engine.EnginePlatform
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-lateinit var resizeAppWindow: (DpSize) -> Unit
+lateinit var resizeAppWindow: (size: DpSize, resizable: Boolean) -> Unit
 
-val LARGE_WINDOW_SIZE = DpSize(900.dp, 800.dp)
+val LARGE_WINDOW_SIZE = DpSize(1000.dp, 800.dp)
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
 val SMALL_WINDOW_SIZE = DpSize(400.dp, 400.dp)
 
@@ -34,9 +37,11 @@ fun main() {
             position = WindowPosition.Aligned(Alignment.Center),
             size = MEDIUM_WINDOW_SIZE
         )
-        resizeAppWindow = {
-            windowState.size = it
+        var resizable by remember { mutableStateOf(false) }
+        resizeAppWindow = { newSize, newResizable ->
+            windowState.size = newSize
             windowState.position = WindowPosition.Aligned(Alignment.Center) // realign
+            resizable = newResizable
         }
 
         Window(
@@ -44,7 +49,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             icon = painterResource("logos/ulysses.png"),
             state = windowState,
-            resizable = false
+            resizable = resizable
         ) {
             Navigator(bootScreen) { navigator ->
                 SlideTransition(navigator)

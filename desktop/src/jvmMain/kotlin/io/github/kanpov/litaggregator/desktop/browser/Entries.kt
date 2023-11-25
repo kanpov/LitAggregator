@@ -24,22 +24,25 @@ import androidx.compose.ui.window.DialogProperties
 import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
+import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
+import io.github.kanpov.litaggregator.engine.feed.entry.MarkFeedEntry
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import org.apache.commons.text.StringEscapeUtils
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import java.net.URI
+import java.net.URLDecoder
 
 @Composable
-fun ColumnScope.BaseEntry(detailedContent: @Composable ColumnScope.() -> Unit, content: @Composable ColumnScope.() -> Unit) {
+fun ColumnScope.BaseEntry(entry: FeedEntry, detailedContent: @Composable ColumnScope.() -> Unit, content: @Composable ColumnScope.() -> Unit) {
     var showDetails by remember { mutableStateOf(false) }
 
     Surface(
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, Color.Black),
-        modifier = Modifier.width(850.dp).align(Alignment.CenterHorizontally).clickable {
+        modifier = Modifier.clickable {
             showDetails = !showDetails
         }
     ) {
@@ -58,23 +61,24 @@ fun ColumnScope.BaseEntry(detailedContent: @Composable ColumnScope.() -> Unit, c
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier.width(700.dp)
         ) {
-            LazyColumn(modifier = Modifier.padding(10.dp)) {
+            LazyColumn(modifier = Modifier.padding(10.dp).fillMaxWidth()) {
                 item(null) {
-                    // Content
                     SelectionContainer {
-                        Column {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            // Content
                             detailedContent()
+
+                            // Metadata
+                            Text(
+                                Locale["browser.misc.about_entry"],
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 1.05.em,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                            TextProperty(Locale["browser.misc.creation_time"],
+                                TimeFormatters.isoLocalDateTime.format(entry.metadata.creationTime))
                         }
                     }
-
-                    // Metadata
-                    Text(
-                        Locale["browser.misc.about_entry"],
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 1.05.em,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    Text("Не готово")
                 }
             }
         }
@@ -83,7 +87,7 @@ fun ColumnScope.BaseEntry(detailedContent: @Composable ColumnScope.() -> Unit, c
 
 @Composable
 fun ColumnScope.HomeworkEntry(entry: HomeworkFeedEntry) {
-    BaseEntry(detailedContent = {
+    BaseEntry(entry, detailedContent = {
         TextProperty(Locale["browser.homework.subject"], entry.subject)
         if (entry.teacher != null) {
             TextProperty(Locale["browser.homework.teacher"], entry.teacher!!)
@@ -100,9 +104,11 @@ fun ColumnScope.HomeworkEntry(entry: HomeworkFeedEntry) {
         Text(entry.plain.normalizePlainTextFromHtml(), modifier = Modifier.padding(top = 5.dp))
     }) {
         val heading = if (entry.assignedTime == null) {
-            Locale["browser.homework.short_title_formatting", entry.subject]
+            Locale["browser.homework.short_title_formatting", entry.subject,
+                TimeFormatters.dottedMeshDate.format(entry.metadata.creationTime)]
         } else {
-            Locale["browser.homework.full_title_formatting", entry.subject, TimeFormatters.dottedMeshDate.format(entry.assignedTime)]
+            Locale["browser.homework.full_title_formatting", entry.subject,
+                TimeFormatters.dottedMeshDate.format(entry.assignedTime)]
         }
 
         Text(
@@ -113,10 +119,10 @@ fun ColumnScope.HomeworkEntry(entry: HomeworkFeedEntry) {
         )
 
         val previewTextNormalized = entry.plain.normalizePlainTextFromHtml(stripNewLines = true)
-        val previewText = if (previewTextNormalized.length <= PREVIEW_CHAR_LIMIT) {
+        val previewText = if (previewTextNormalized.length <= 200) {
             previewTextNormalized
         } else {
-            previewTextNormalized.take(PREVIEW_CHAR_LIMIT) + "..."
+            previewTextNormalized.take(200) + "..."
         }
 
         Text(
@@ -126,11 +132,40 @@ fun ColumnScope.HomeworkEntry(entry: HomeworkFeedEntry) {
     }
 }
 
+@Composable
+fun ColumnScope.MarkEntry(entry: MarkFeedEntry) {
+    BaseEntry(entry, detailedContent = {
+
+    }) {
+        Row {
+            // mark surface
+            Surface(
+                shape = RoundedCornerShape(5.dp),
+                border = BorderStroke(1.dp, Color.Black),
+                modifier = Modifier.size(50.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        entry.value.toString(),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 2.5.em,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                    Text(
+                        entry.weight.toString(),
+                        modifier = Modifier.align(Alignment.BottomEnd).padding(end = 5.dp, bottom = 5.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+// --- UTILS ---
+
 fun String.normalizePlainTextFromHtml(stripNewLines: Boolean = false): String {
     return StringEscapeUtils.unescapeHtml4(this).replace("\n", if (stripNewLines) " " else "\n")
 }
-
-const val PREVIEW_CHAR_LIMIT = 500
 
 @Composable
 private fun BaseProperty(title: String, value: @Composable () -> Unit) {
@@ -155,7 +190,8 @@ private fun LinkProperty(title: String, url: String, text: String? = null) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun Link(text: String? = null, url: String, modifier: Modifier = Modifier) {
-    Text(text ?: url, textDecoration = TextDecoration.Underline, color = Color.Blue, modifier = modifier.onPointerEvent(
+    val linkText = text ?: URLDecoder.decode(url)
+    Text(linkText, textDecoration = TextDecoration.Underline, color = Color.Blue, modifier = modifier.onPointerEvent(
         PointerEventType.Press) {
         DesktopEnginePlatform.openBrowser(URI.create(url))
     })
@@ -170,7 +206,8 @@ private fun AttachmentList(attachments: List<FeedEntryAttachment>) {
         Row {
             BasicIcon(
                 painter = painterResource("icons/dot.png"),
-                size = 10.dp
+                size = 10.dp,
+                modifier = Modifier.align(Alignment.CenterVertically)
             )
             val text = if (attachment.title != null) attachment.title!! else attachment.downloadUrl
             Link(text = text, url = attachment.downloadUrl, modifier = Modifier.padding(start = 5.dp))

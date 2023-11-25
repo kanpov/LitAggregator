@@ -30,7 +30,7 @@ import org.jetbrains.compose.resources.painterResource
 class SystemConfigScreen : Screen {
     @Composable
     override fun Content() {
-        resizeAppWindow(MEDIUM_WINDOW_SIZE)
+        resizeAppWindow(MEDIUM_WINDOW_SIZE, false)
         val navigator = LocalNavigator.currentOrThrow
 
         Column(

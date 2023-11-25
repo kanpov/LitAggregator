@@ -20,7 +20,7 @@ private const val INDICATOR_FREQUENCY = 10L
 class RestartScreen(private val newScreen: Screen? = null) : Screen {
     @Composable
     override fun Content() {
-        resizeAppWindow(SMALL_WINDOW_SIZE)
+        resizeAppWindow(SMALL_WINDOW_SIZE, false)
         val navigator = LocalNavigator.currentOrThrow
         var progress by remember { mutableStateOf(0f) }
 

@@ -40,7 +40,7 @@ class ProfileSelectScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        resizeAppWindow(SMALL_WINDOW_SIZE)
+        resizeAppWindow(SMALL_WINDOW_SIZE, false)
 
         Column(
             modifier = Modifier.fillMaxSize().padding(10.dp)
