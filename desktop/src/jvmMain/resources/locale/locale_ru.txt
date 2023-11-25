@@ -1,5 +1,8 @@
 window_name=ЛИТ Агрегатор
 
+yes=Да
+no=Нет
+
 button.continue=Продолжить
 button.confirm=Подтвердить
 button.cancel=Отмена
@@ -137,3 +140,25 @@ browser.homework.subject=Предмет:
 browser.homework.teacher=Учитель:
 browser.homework.assigned_time=Дата сдачи:
 browser.homework.submission_url=Ссылка для сдачи:
+
+browser.marks.title_formatting=|1| за |2|
+browser.marks.subject=Предмет:
+browser.marks.work_form=Тип работы:
+browser.marks.period=Учебный период:
+browser.marks.comment=Комментарий преподавателя:
+browser.marks.topic=Изучаемая тема:
+
+browser.ratings.title_formatting=Рейтинги за |1|
+browser.ratings.place_formatting=|1| место
+browser.ratings.increase=увеличивается
+browser.ratings.decrease=уменьшается
+browser.ratings.stagnation=нет изменений
+browser.ratings.quarterly_marks=Мои четвертные оценки
+browser.ratings.classmate_ratings=Рейтинги одноклассников
+
+browser.visits.title_formatting=Посещение в |1|
+browser.visits.entry_time=Время входа
+browser.visits.exit_time=Время выхода
+browser.visits.short_address=Школа:
+browser.visits.full_address=Адрес:
+browser.visits.irregular_pattern=Подозрительный вход/выход:

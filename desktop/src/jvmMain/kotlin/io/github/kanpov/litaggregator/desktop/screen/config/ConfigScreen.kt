@@ -16,7 +16,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
 import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.desktop.MEDIUM_WINDOW_SIZE
-import io.github.kanpov.litaggregator.desktop.browser.BrowserScreen
+import io.github.kanpov.litaggregator.desktop.screen.browser.BrowserScreen
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text

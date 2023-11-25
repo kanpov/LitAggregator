@@ -3,7 +3,7 @@ package io.github.kanpov.litaggregator.desktop.components
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.navigator.Navigator
-import io.github.kanpov.litaggregator.desktop.browser.Orange
+import io.github.kanpov.litaggregator.desktop.screen.browser.Orange
 import io.github.kanpov.litaggregator.desktop.screen.restartScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

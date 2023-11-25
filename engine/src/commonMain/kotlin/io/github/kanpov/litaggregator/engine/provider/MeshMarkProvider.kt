@@ -30,8 +30,8 @@ class MeshMarkProvider(authorizer: MeshAuthorizer) : MeshProvider<MarkFeedEntry>
                 for (markObj in periodObj.jArray("marks")) {
                     val valueObj = markObj.jArray("values").first()
                     val creationTime = TimeFormatters.dottedMeshDate.parseInstant(markObj.jString("date"))
-                    val isExam = markObj.jBoolean("is_exam")
                     val weight = markObj.jInt("weight")
+                    val isExam = markObj.jBoolean("is_exam") || weight >= 3
 
                     if (creationTime.isBefore(relevancyLimit)) continue
                     if (!isExam && profile.providers.meshMarks!!.onlyIncludeExams) continue

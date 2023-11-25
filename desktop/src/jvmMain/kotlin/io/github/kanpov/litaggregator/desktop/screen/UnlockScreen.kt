@@ -15,7 +15,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.github.kanpov.litaggregator.desktop.Locale
-import io.github.kanpov.litaggregator.desktop.browser.BrowserScreen
+import io.github.kanpov.litaggregator.desktop.screen.browser.BrowserScreen
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile

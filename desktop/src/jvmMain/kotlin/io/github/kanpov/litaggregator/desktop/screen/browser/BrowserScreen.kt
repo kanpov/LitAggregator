@@ -1,9 +1,8 @@
-package io.github.kanpov.litaggregator.desktop.browser
+package io.github.kanpov.litaggregator.desktop.screen.browser
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -34,6 +33,8 @@ import io.github.kanpov.litaggregator.engine.feed.FeedSortOrder
 import io.github.kanpov.litaggregator.engine.feed.FeedSortParameter
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.feed.entry.MarkFeedEntry
+import io.github.kanpov.litaggregator.engine.feed.entry.RatingFeedEntry
+import io.github.kanpov.litaggregator.engine.feed.entry.VisitFeedEntry
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -213,7 +214,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
     }
 
     @Composable
-    private fun ColumnScope.FeedView(manager: ProfileManager, query: FeedQuery) {
+    private fun FeedView(manager: ProfileManager, query: FeedQuery) {
         val entries = manager.getProfile()?.feed?.performQuery(query) ?: throw IllegalArgumentException("Unexpected error")
         if (entries.isEmpty()) return
 
@@ -225,8 +226,10 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
         ) {
             items(entries) { entry ->
                 when (entry) {
-                    is HomeworkFeedEntry -> HomeworkEntry(entry)
-                    is MarkFeedEntry -> MarkEntry(entry)
+                    is HomeworkFeedEntry -> HomeworkFeedEntryRenderer(entry).Render()
+                    is MarkFeedEntry -> MarkFeedEntryRenderer(entry).Render()
+                    is RatingFeedEntry -> RatingFeedEntryRenderer(entry).Render()
+                    is VisitFeedEntry -> VisitFeedEntryRenderer(entry).Render()
                 }
             }
         }
@@ -235,3 +238,12 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
 val Color.Companion.Orange: Color
     get() = Color(red = 255,green = 140,blue = 0)
+
+val Color.Companion.Gold: Color
+    get() = Color(red = 255, green = 215, blue = 0)
+
+val Color.Companion.Silver: Color
+    get() = Color(red = 169, green = 169, blue = 169)
+
+val Color.Companion.Bronze: Color
+    get() = Color(red = 205, green = 133, blue = 63)
