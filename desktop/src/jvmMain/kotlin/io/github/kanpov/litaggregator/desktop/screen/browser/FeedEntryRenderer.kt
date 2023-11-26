@@ -32,7 +32,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import java.net.URI
-import java.net.URLDecoder
 
 abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
     @Composable
@@ -120,7 +119,11 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     protected fun Link(text: String? = null, url: String, modifier: Modifier = Modifier) {
-        val linkText = text ?: URLDecoder.decode(url)
+        val linkText = if (text == null || text == url) {
+            URI.create(url).path
+        } else {
+            text
+        }
         Text(linkText, textDecoration = TextDecoration.Underline, color = Color.Blue, modifier = modifier.onPointerEvent(
             PointerEventType.Press) {
             DesktopEnginePlatform.openBrowser(URI.create(url))
@@ -139,7 +142,7 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
                     size = 10.dp,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
-                val text = if (attachment.title != null) attachment.title!! else attachment.downloadUrl
+                val text = if (attachment.title != null) attachment.title!! else null
                 Link(text = text, url = attachment.downloadUrl, modifier = Modifier.padding(start = 5.dp))
             }
         }
