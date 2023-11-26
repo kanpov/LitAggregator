@@ -33,7 +33,7 @@ data class ListFilter(
         FilterPolicy.ByInclusion -> values.any { it.lowercase().contains(otherValue.lowercase()) }
     }
 
-    fun matchList(otherValues: List<String>) = otherValues.any { match(it) }
+    fun matchList(otherValues: List<String>) = policy == FilterPolicy.Disabled || otherValues.any { match(it) }
 
     companion object : BasicSerializer<ListFilter> {
         override fun encode(value: ListFilter): String {

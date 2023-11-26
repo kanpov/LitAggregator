@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.desktop.platform.DesktopGoogleAuthorizer
@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
-    Locale["config.authorization"], profile, index) {
+    DesktopLocale["config.authorization"], profile, index) {
     @Composable
     override fun ConfigContent() {
         Row(
@@ -51,15 +51,15 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
             alreadyAuthorized = alreadyAuthorized,
             isReadyToAuth = { login.isNotBlank() && password.isNotBlank() }) {
 
-            CredentialAsker(Locale["config.authorization.login"]) { login = it }
-            CredentialAsker(Locale["config.authorization.password"], sensitive = true, limiter = 15) { password = it }
+            CredentialAsker(DesktopLocale["config.authorization.login"]) { login = it }
+            CredentialAsker(DesktopLocale["config.authorization.password"], sensitive = true, limiter = 15) { password = it }
         }
     }
 
     @Composable
     private fun RowScope.MeshAuthorizationElement() {
         LoginPasswordAuthorizationElement(
-            title = Locale["config.authorization.mesh"],
+            title = DesktopLocale["config.authorization.mesh"],
             alreadyAuthorized = profile.authorization.mesh != null
         ) { login, password ->
             profile.setupAuthorizer(MeshAuthorizer(CredentialPair(login, password)))
@@ -69,7 +69,7 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
     @Composable
     private fun RowScope.UlyssesAuthorizationElement() {
         LoginPasswordAuthorizationElement(
-            title = Locale["config.authorization.ulysses"],
+            title = DesktopLocale["config.authorization.ulysses"],
             alreadyAuthorized = profile.authorization.ulysses != null
         ) { login, password ->
             profile.setupAuthorizer(UlyssesAuthorizer(CredentialPair(login, password)))
@@ -78,14 +78,15 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
 
     @Composable
     private fun RowScope.GoogleAuthorizationElement() {
-        AuthorizationElement(Locale["config.authorization.google"],
+        AuthorizationElement(
+            DesktopLocale["config.authorization.google"],
             authorizer = {
                 profile.setupAuthorizer(DesktopGoogleAuthorizer())
             },
             alreadyAuthorized = profile.authorization.googleSession != null,
             isReadyToAuth = { true }) {
 
-            H6Text(Locale["config.authorization.account_data_not_required"], italicize = true)
+            H6Text(DesktopLocale["config.authorization.account_data_not_required"], italicize = true)
         }
     }
 
@@ -147,12 +148,12 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
                         enabled = !authorized && isReadyToAuth()
                     ) {
                         val text = if (authorized) {
-                            Locale["button.bound"]
+                            DesktopLocale["button.bound"]
                         } else {
                             if (authorizationFailed) {
-                                Locale["button.try_again"]
+                                DesktopLocale["button.try_again"]
                             } else {
-                                Locale["button.bind"]
+                                DesktopLocale["button.bind"]
                             }
                         }
 

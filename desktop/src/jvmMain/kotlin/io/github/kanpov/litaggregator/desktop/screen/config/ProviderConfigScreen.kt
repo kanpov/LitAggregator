@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
 import io.github.kanpov.litaggregator.engine.profile.Profile
@@ -24,7 +24,7 @@ import io.github.kanpov.litaggregator.engine.util.RegexFilter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["config.provider"], profile, index) {
+class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(DesktopLocale["config.provider"], profile, index) {
     @Composable
     override fun ConfigContent() {
         Row(
@@ -47,87 +47,74 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     @Composable
     private fun MeshContainer() {
         Container(
-            heading = Locale["config.provider.heading_mesh"],
+            heading = DesktopLocale["config.provider.heading_mesh"],
             modifier = Modifier.fillMaxWidth(),
             requirementMet = profile.authorization.mesh != null
         ) {
             ProviderElement(
-                name = Locale["config.provider.mesh.homework"],
+                name = DesktopLocale["config.provider.mesh.homework"],
                 onEnable = { profile.providers.meshHomework = MeshHomeworkProviderSettings() },
                 onDisable = { profile.providers.meshHomework = null },
                 detector = profile.providers.meshHomework
             ) {
                 TextInputSetting(
-                    name = Locale["config.provider.mesh.homework.title_formatter"],
+                    name = DesktopLocale["config.provider.mesh.homework.title_formatter"],
                     onValueChange = { profile.providers.meshHomework!!.titleFormatter = it },
                     defaultValue = profile.providers.meshHomework!!.titleFormatter
                 )
                 BooleanInputSetting(
-                    name = Locale["config.provider.mesh.homework.only_include_oo"],
+                    name = DesktopLocale["config.provider.mesh.homework.only_include_oo"],
                     onValueChange = { profile.providers.meshHomework!!.onlyIncludeOO = it },
                     defaultValue = profile.providers.meshHomework!!.onlyIncludeOO
                 )
                 FilterInputSetting(
-                    name = Locale["config.provider.mesh.homework.content_filter"],
+                    name = DesktopLocale["config.provider.mesh.homework.content_filter"],
                     onValueChange = { profile.providers.meshHomework!!.contentFilter = it },
                     defaultValue = profile.providers.meshHomework!!.contentFilter, serializer = ListFilter
                 )
             }
 
             ProviderElement(
-                name = Locale["config.provider.mesh.marks"],
+                name = DesktopLocale["config.provider.mesh.marks"],
                 onEnable = { profile.providers.meshMarks = MeshMarkProviderSettings() },
                 onDisable = { profile.providers.meshMarks = null },
                 detector = profile.providers.meshMarks
             ) {
                 BooleanInputSetting(
-                    name = Locale["config.provider.mesh.marks.only_include_exams"],
+                    name = DesktopLocale["config.provider.mesh.marks.only_include_exams"],
                     onValueChange = { profile.providers.meshMarks!!.onlyIncludeExams = it },
                     defaultValue = profile.providers.meshMarks!!.onlyIncludeExams
                 )
                 FilterInputSetting(
-                    name = Locale["config.provider.mesh.marks.weight_filter"],
+                    name = DesktopLocale["config.provider.mesh.marks.weight_filter"],
                     defaultValue = profile.providers.meshMarks!!.weightFilter,
                     onValueChange = { profile.providers.meshMarks!!.weightFilter = it }, serializer = ComparisonFilter
                 )
             }
 
             ProviderElement(
-                name = Locale["config.provider.mesh.ratings"],
+                name = DesktopLocale["config.provider.mesh.ratings"],
                 onEnable = { profile.providers.meshRatings = MeshRatingProviderSettings() },
                 onDisable = { profile.providers.meshRatings = null },
                 detector = profile.providers.meshRatings
             ) {
                 BooleanInputSetting(
-                    name = Locale["config.provider.mesh.ratings.include_classmate_ratings"],
+                    name = DesktopLocale["config.provider.mesh.ratings.include_classmate_ratings"],
                     onValueChange = { profile.providers.meshRatings!!.includeClassmateRatings = it },
                     defaultValue = profile.providers.meshRatings!!.includeClassmateRatings
                 )
             }
 
             ProviderElement(
-                name = Locale["config.provider.mesh.visits"],
+                name = DesktopLocale["config.provider.mesh.visits"],
                 onEnable = { profile.providers.meshVisits = MeshVisitProviderSettings() },
                 onDisable = { profile.providers.meshVisits = null },
                 detector = profile.providers.meshVisits
             ) {
                 BooleanInputSetting(
-                    name = Locale["config.provider.mesh.visits.include_irregular_patterns"],
+                    name = DesktopLocale["config.provider.mesh.visits.include_irregular_patterns"],
                     onValueChange = { profile.providers.meshVisits!!.includeIrregularPatterns = it },
                     defaultValue = profile.providers.meshVisits!!.includeIrregularPatterns
-                )
-            }
-
-            ProviderElement(
-                name = Locale["config.provider.mesh.banners"],
-                onEnable = { profile.providers.meshBanners = MeshBannerProviderSettings() },
-                onDisable = { profile.providers.meshBanners = null },
-                detector = profile.providers.meshBanners
-            ) {
-                BooleanInputSetting(
-                    name = Locale["config.provider.mesh.banners.add_links"],
-                    onValueChange = { profile.providers.meshBanners!!.addLinks = it },
-                    defaultValue = profile.providers.meshBanners!!.addLinks
                 )
             }
         }
@@ -136,44 +123,44 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     @Composable
     private fun UlyssesContainer() {
         Container(
-            heading = Locale["config.provider.heading_lit"],
+            heading = DesktopLocale["config.provider.heading_lit"],
             modifier = Modifier.fillMaxWidth(),
             requirementMet = profile.authorization.ulysses != null
         ) {
             ProviderElement(
-                name = Locale["config.provider.lit.homework"],
+                name = DesktopLocale["config.provider.lit.homework"],
                 onEnable = { profile.providers.ulysses = UlyssesProviderSettings() },
                 onDisable = { profile.providers.ulysses = null },
                 detector = profile.providers.ulysses
             ) {
                 profile.providers.ulysses!!.apply {
                     BooleanInputSetting(
-                        name = Locale["config.provider.lit.homework.include_study_materials"],
+                        name = DesktopLocale["config.provider.lit.homework.include_study_materials"],
                         onValueChange = { inclusions.studyMaterials = it },
                         defaultValue = inclusions.studyMaterials
                     )
                     BooleanInputSetting(
-                        name = Locale["config.provider.lit.homework.include_hidden"],
+                        name = DesktopLocale["config.provider.lit.homework.include_hidden"],
                         onValueChange = { inclusions.hidden = it },
                         defaultValue = inclusions.hidden
                     )
                     BooleanInputSetting(
-                        name = Locale["config.provider.lit.homework.include_solely_for_other_groups"],
+                        name = DesktopLocale["config.provider.lit.homework.include_solely_for_other_groups"],
                         onValueChange = { inclusions.solelyForOtherGroups = it },
                         defaultValue = inclusions.solelyForOtherGroups
                     )
                     FilterInputSetting(
-                        name = Locale["config.provider.lit.homework.title_filter"],
+                        name = DesktopLocale["config.provider.lit.homework.title_filter"],
                         onValueChange = { filters.titleFilter = it },
                         defaultValue = filters.titleFilter, serializer = RegexFilter
                     )
                     FilterInputSetting(
-                        name = Locale["config.provider.lit.homework.clean_content_filter"],
+                        name = DesktopLocale["config.provider.lit.homework.clean_content_filter"],
                         onValueChange = { filters.cleanContentFilter = it },
                         defaultValue = filters.cleanContentFilter, serializer = RegexFilter
                     )
                     FilterInputSetting(
-                        name = Locale["config.provider.lit.homework.html_content_filter"],
+                        name = DesktopLocale["config.provider.lit.homework.html_content_filter"],
                         onValueChange = { filters.htmlContentFilter = it },
                         defaultValue = filters.htmlContentFilter, serializer = RegexFilter
                     )
@@ -181,19 +168,19 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
             }
 
             ProviderElement(
-                name = Locale["config.provider.lit.announcements"],
+                name = DesktopLocale["config.provider.lit.announcements"],
                 onEnable = { profile.providers.announcements = AnnouncementProviderSettings() },
                 onDisable = { profile.providers.announcements = null },
                 detector = profile.providers.announcements
             ) {
                 profile.providers.announcements!!.apply {
                     FilterInputSetting(
-                        name = Locale["config.provider.lit.announcements.category_filter"],
+                        name = DesktopLocale["config.provider.lit.announcements.category_filter"],
                         onValueChange = { categoryFilter = it },
                         defaultValue = categoryFilter, serializer = ListFilter
                     )
                     FilterInputSetting(
-                        name = Locale["config.provider.lit.announcements.html_filter"],
+                        name = DesktopLocale["config.provider.lit.announcements.html_filter"],
                         onValueChange = { htmlFilter = it },
                         defaultValue = htmlFilter, serializer = ListFilter
                     )
@@ -205,18 +192,18 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     @Composable
     private fun GoogleContainer() {
         Container(
-            heading = Locale["config.provider.heading_google"],
+            heading = DesktopLocale["config.provider.heading_google"],
             modifier = Modifier.fillMaxWidth(),
             requirementMet = profile.authorization.googleSession != null
         ) {
             ProviderElement(
-                name = Locale["config.provider.google.classroom"],
+                name = DesktopLocale["config.provider.google.classroom"],
                 onEnable = { profile.providers.classroom = ClassroomProviderSettings() },
                 onDisable = { profile.providers.classroom = null },
                 detector = profile.providers.classroom
             ) {
                 FilterInputSetting(
-                    name = Locale["config.provider.lit.announcements.html_filter"],
+                    name = DesktopLocale["config.provider.lit.announcements.html_filter"],
                     onValueChange = { profile.providers.classroom!!.courseFilter = it },
                     defaultValue = profile.providers.classroom!!.courseFilter, serializer = ListFilter
                 )
@@ -227,31 +214,31 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
     @Composable
     private fun PortfolioContainer() {
         Container(
-            heading = Locale["config.provider.heading_portfolio"],
+            heading = DesktopLocale["config.provider.heading_portfolio"],
             modifier = Modifier.fillMaxWidth(),
             requirementMet = profile.authorization.mesh != null
         ) {
             ProviderElement(
-                name = Locale["config.provider.portfolio.diagnostics"],
+                name = DesktopLocale["config.provider.portfolio.diagnostics"],
                 onEnable = { profile.providers.portfolioDiagnostics = PortfolioDiagnosticProviderSettings() },
                 onDisable = { profile.providers.portfolioDiagnostics = null },
                 detector = profile.providers.portfolioDiagnostics
             ) {
                 BooleanInputSetting(
-                    name = Locale["config.provider.portfolio.diagnostics.include_comparisons"],
+                    name = DesktopLocale["config.provider.portfolio.diagnostics.include_comparisons"],
                     onValueChange = { profile.providers.portfolioDiagnostics!!.includeComparisons = it },
                     defaultValue = profile.providers.portfolioDiagnostics!!.includeComparisons
                 )
             }
 
             ProviderElement(
-                name = Locale["config.provider.portfolio.events"],
+                name = DesktopLocale["config.provider.portfolio.events"],
                 onEnable = { profile.providers.portfolioEvents = PortfolioEventProviderSettings() },
                 onDisable = { profile.providers.portfolioEvents = null },
                 detector = profile.providers.portfolioEvents
             ) {
                 BooleanInputSetting(
-                    name = Locale["config.provider.portfolio.events.only_vos"],
+                    name = DesktopLocale["config.provider.portfolio.events.only_vos"],
                     onValueChange = { profile.providers.portfolioEvents!!.onlyVos = it },
                     defaultValue = profile.providers.portfolioEvents!!.onlyVos
                 )
@@ -369,7 +356,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
 
             AlertDialog(
                 title = {
-                    H6Text(Locale["config.provider.settings"], highlight = true)
+                    H6Text(DesktopLocale["config.provider.settings"], highlight = true)
                 },
                 text = {
                     Column {
@@ -390,7 +377,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                         ),
                         modifier = Modifier.padding(bottom = 10.dp)
                     ) {
-                        H6Text(Locale["button.ok"])
+                        H6Text(DesktopLocale["button.ok"])
                     }
                 },
                 properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -417,7 +404,7 @@ class ProviderConfigScreen(profile: Profile, index: Int) : ConfigScreen(Locale["
                     content()
                 } else {
                     H6Text(
-                        text = Locale["config.provider.source_not_bound"],
+                        text = DesktopLocale["config.provider.source_not_bound"],
                         italicize = true,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )

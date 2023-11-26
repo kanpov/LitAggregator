@@ -14,7 +14,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.screen.browser.BrowserScreen
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H6Text
@@ -42,7 +42,7 @@ class UnlockScreen(private val cachedProfile: CachedProfile) : Screen {
 
             Column(modifier = Modifier.align(Alignment.Center)) {
                 H6Text(
-                    Locale["unlock.enter_password"],
+                    DesktopLocale["unlock.enter_password"],
                     highlight = true,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
@@ -72,12 +72,12 @@ class UnlockScreen(private val cachedProfile: CachedProfile) : Screen {
                     },
                     modifier = Modifier.padding(top = 15.dp).align(Alignment.CenterHorizontally)
                 ) {
-                    H6Text(Locale["button.login"])
+                    H6Text(DesktopLocale["button.login"])
                 }
 
                 if (showError) {
                     H6Text(
-                        Locale["unlock.repeat_attempt"],
+                        DesktopLocale["unlock.repeat_attempt"],
                         italicize = true,
                         modifier = Modifier.padding(top = 10.dp).align(Alignment.CenterHorizontally)
                     )

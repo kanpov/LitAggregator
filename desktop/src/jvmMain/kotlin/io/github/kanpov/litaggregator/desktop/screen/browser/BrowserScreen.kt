@@ -21,20 +21,18 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.github.kanpov.litaggregator.desktop.LARGE_WINDOW_SIZE
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.components.*
 import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import io.github.kanpov.litaggregator.desktop.screen.ProfileSelectScreen
 import io.github.kanpov.litaggregator.desktop.screen.SystemConfigScreen
 import io.github.kanpov.litaggregator.desktop.screen.config.ConfigIntent
 import io.github.kanpov.litaggregator.desktop.screen.config.ConfigScreen
+import io.github.kanpov.litaggregator.engine.feed.Feed
 import io.github.kanpov.litaggregator.engine.feed.FeedQuery
 import io.github.kanpov.litaggregator.engine.feed.FeedSortOrder
 import io.github.kanpov.litaggregator.engine.feed.FeedSortParameter
-import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
-import io.github.kanpov.litaggregator.engine.feed.entry.MarkFeedEntry
-import io.github.kanpov.litaggregator.engine.feed.entry.RatingFeedEntry
-import io.github.kanpov.litaggregator.engine.feed.entry.VisitFeedEntry
+import io.github.kanpov.litaggregator.engine.feed.entry.*
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -70,7 +68,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
         RoundedContainer(roundEnd = true) {
             // profile settings
             HoverableIconButton(
-                tooltip = Locale["browser.action_bar.settings_tooltip"],
+                tooltip = DesktopLocale["browser.action_bar.settings_tooltip"],
                 iconPath = "icons/settings_alt.png"
             ) {
                 manager.withProfile {
@@ -81,7 +79,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
             // profile selection
             HoverableIconButton(
-                tooltip = Locale["browser.action_bar.profile_select_tooltip"],
+                tooltip = DesktopLocale["browser.action_bar.profile_select_tooltip"],
                 iconPath = "icons/select.png"
             ) {
                 navigator.popUntil { it is ProfileSelectScreen }
@@ -89,7 +87,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
             // system config
             HoverableIconButton(
-                tooltip = Locale["browser.action_bar.system_config_tooltip"],
+                tooltip = DesktopLocale["browser.action_bar.system_config_tooltip"],
                 iconPath = "icons/system_config.png"
             ) {
                 navigator.push(SystemConfigScreen())
@@ -101,7 +99,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
             // sync
             ProlongedActionButton(
-                tooltip = Locale["browser.action_bar.sync_tooltip"],
+                tooltip = DesktopLocale["browser.action_bar.sync_tooltip"],
                 iconPath = "icons/sync.png",
                 restartAfterwards = true,
                 navigator = navigator
@@ -116,7 +114,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
             // save to disk
             ProlongedActionButton(
-                tooltip = Locale["browser.action_bar.save_tooltip"],
+                tooltip = DesktopLocale["browser.action_bar.save_tooltip"],
                 iconPath = "icons/save2disk.png"
             ) {
                 manager.writeToDisk().isSuccess
@@ -154,18 +152,9 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
     private fun PoolBar(selectPool: (String) -> Unit, deselectPool: (String) -> Unit) {
         RoundedContainer(roundStart = true, roundEnd = true) {
             Spacer(modifier = Modifier.width(3.dp))
-            for (id in setOf(
-                "homework",
-                "marks",
-                "ratings",
-                "visits",
-                "banners",
-                "announcements",
-                "events",
-                "diagnostics"
-            )) {
-                val tooltip = Locale["browser.pool_bar.$id"]
-                var selected by remember { mutableStateOf(false) }
+            for (id in Feed.poolIds) {
+                val tooltip = DesktopLocale["browser.pool_bar.$id"]
+                var selected by remember { mutableStateOf(true) }
                 BasicHoverable(tooltip, delayMillis = 100, startPadding = 2.dp) {
                     H5Text(
                         text = tooltip.first().toString(),
@@ -189,7 +178,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
 
         RoundedContainer(roundStart = true) {
             HoverableIconButton(
-                tooltip = Locale["browser.query_bar.${sortOrder.id}_tooltip"],
+                tooltip = DesktopLocale["browser.query_bar.${sortOrder.id}_tooltip"],
                 iconPath = "icons/${sortOrder.id}.png"
             ) {
                 sortOrder = sortOrder.opposite
@@ -197,7 +186,7 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
             }
 
             val parameterIds = FeedSortParameter.entries.map { it.id }
-            val parameterTranslations = parameterIds.map { Locale["browser.query_bar.parameter.$it"] }
+            val parameterTranslations = parameterIds.map { DesktopLocale["browser.query_bar.parameter.$it"] }
             val defaultTranslation = parameterTranslations[parameterIds.indexOf(sortParameter.id)]
 
             FullDropdown(
@@ -222,7 +211,8 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
             columns = GridCells.Adaptive(minSize = 300.dp),
             horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top),
-            contentPadding = PaddingValues(10.dp)
+            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
+            modifier = Modifier.padding(top = 10.dp)
         ) {
             items(entries) { entry ->
                 when (entry) {
@@ -230,6 +220,9 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
                     is MarkFeedEntry -> MarkFeedEntryRenderer(entry).Render()
                     is RatingFeedEntry -> RatingFeedEntryRenderer(entry).Render()
                     is VisitFeedEntry -> VisitFeedEntryRenderer(entry).Render()
+                    is AnnouncementFeedEntry -> AnnouncementFeedEntryRenderer(entry).Render()
+                    is DiagnosticFeedEntry -> DiagnosticFeedEntryRenderer(entry).Render()
+                    is EventFeedEntry -> EventFeedEntryRenderer(entry).Render()
                 }
             }
         }
@@ -240,10 +233,10 @@ val Color.Companion.Orange: Color
     get() = Color(red = 255,green = 140,blue = 0)
 
 val Color.Companion.Gold: Color
-    get() = Color(red = 255, green = 215, blue = 0)
+    get() = Color(red = 255, green = 191, blue = 0)
 
 val Color.Companion.Silver: Color
-    get() = Color(red = 169, green = 169, blue = 169)
+    get() = DarkGray
 
 val Color.Companion.Bronze: Color
-    get() = Color(red = 205, green = 133, blue = 63)
+    get() = Color(red = 205, green = 127, blue = 50)

@@ -14,7 +14,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.MEDIUM_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.screen.browser.BrowserScreen
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
@@ -60,7 +60,7 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
         ) {
             // creating profile heading
             Spacer(modifier = Modifier.height(5.dp))
-            H5Text(Locale["config.configuring_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
+            H5Text(DesktopLocale["config.configuring_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             // category sub-heading
             H6Text(
@@ -83,14 +83,14 @@ abstract class ConfigScreen(private val name: String, protected val profile: Pro
             Row(
                 modifier = Modifier.padding(5.dp)
             ) {
-                SwitchButton(if (index == 0) Locale["button.cancel"] else Locale["button.previous"],
+                SwitchButton(if (index == 0) DesktopLocale["button.cancel"] else DesktopLocale["button.previous"],
                     offset = -1, navigator, color = MaterialTheme.colors.primary)
 
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
 
-                SwitchButton(if (index == screenInvokers.size - 1) Locale["button.finish"] else Locale["button.next"],
+                SwitchButton(if (index == screenInvokers.size - 1) DesktopLocale["button.finish"] else DesktopLocale["button.next"],
                     offset = 1, navigator,
                     enabled = validityTracker.all { (_, valid) -> valid }, color = MaterialTheme.colors.primaryVariant)
             }

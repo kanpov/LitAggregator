@@ -21,7 +21,7 @@ class PortfolioDiagnosticProvider(authorizer: MeshAuthorizer) : MeshProvider<Dia
         for (yearObj in diagnosticYears) {
             for (ratingObj in yearObj.jArray("independentDiagnosticRating")) {
                 if (insert(profile.feed, DiagnosticFeedEntry(
-                    year = yearObj.jString("learningYear"),
+                    years = yearObj.jString("learningYear"),
                     subject = ratingObj.jString("subject"),
                     place = ratingObj.jObject("ratingClass").jInt("studentPlace"),
                     maxResult = ratingObj.jInt("maxResult"),
@@ -41,7 +41,9 @@ class PortfolioDiagnosticProvider(authorizer: MeshAuthorizer) : MeshProvider<Dia
         return if (profile.providers.portfolioDiagnostics!!.includeComparisons) {
             DiagnosticResultComparison(
                 sameResultAmount = obj.jInt("studentPlaceStudentsCount"),
-                bestResultAmount = obj.jInt("firstPlaceStudentCount"),
+                firstPlaceAmount = obj.jInt("firstPlaceStudentCount"),
+                secondPlaceAmount = obj.jInt("secondPlaceStudentCount"),
+                thirdPlaceAmount = obj.jInt("thirdPlaceStudentCount"),
                 percentile = obj.jFloat("diagnosticPercentLowerOthers")
             )
         } else {

@@ -75,8 +75,6 @@ config.provider.mesh.ratings=Рейтинги
 config.provider.mesh.ratings.include_classmate_ratings=Определять рейтинги одноклассников
 config.provider.mesh.visits=Посещаемость
 config.provider.mesh.visits.include_irregular_patterns=Включать подозрительные входы и выходы
-config.provider.mesh.banners=Баннеры
-config.provider.mesh.banners.add_links=Добавлять ссылки из баннеров
 config.provider.lit.homework=Домашние задания
 config.provider.lit.homework.include_study_materials=Включать прикрепленные материалы
 config.provider.lit.homework.include_hidden=Включать скрытые материалы
@@ -121,7 +119,6 @@ browser.query_bar.parameter.none=Не сортировать
 browser.query_bar.search_tooltip=Текст поиска
 
 browser.pool_bar.announcements=Новости
-browser.pool_bar.banners=Баннеры
 browser.pool_bar.diagnostics=Диагностики
 browser.pool_bar.events=События (олимпиады)
 browser.pool_bar.homework=Задания
@@ -155,6 +152,7 @@ browser.ratings.decrease=уменьшается
 browser.ratings.stagnation=нет изменений
 browser.ratings.quarterly_marks=Мои четвертные оценки
 browser.ratings.classmate_ratings=Рейтинги одноклассников
+browser.ratings.quarterly_mark=Четвертная оценка
 
 browser.visits.title_formatting=Посещение в |1|
 browser.visits.entry_time=Время входа
@@ -162,3 +160,29 @@ browser.visits.exit_time=Время выхода
 browser.visits.short_address=Школа:
 browser.visits.full_address=Адрес:
 browser.visits.irregular_pattern=Подозрительный вход/выход:
+
+browser.announcements.no_categories=Нет категорий
+browser.announcements.categories=Категории:
+
+browser.diagnostics.title_formatting=|1| за |2|
+browser.diagnostics.place_formatting=|1|% хуже
+browser.diagnostics.among_group=В группе
+browser.diagnostics.among_school=В школе
+browser.diagnostics.among_region=В регионе
+browser.diagnostics.points=баллов
+browser.diagnostics.subject=Предмет:
+browser.diagnostics.years=Года:
+browser.diagnostics.level=Уровень:
+browser.diagnostics.same_result=Тот же результат
+browser.diagnostics.first_place_result=Первое место
+browser.diagnostics.second_place_result=Второе место
+browser.diagnostics.third_place_result=Третье место
+
+browser.events.full_name=Полное название:
+browser.events.reward=Награда:
+browser.events.organizer=Организатор:
+browser.events.subject=Предмет:
+browser.events.start_time=Дата начала:
+browser.events.end_time=Дата конца:
+browser.events.participant_category=Категория участия:
+browser.events.profession=Профессия:

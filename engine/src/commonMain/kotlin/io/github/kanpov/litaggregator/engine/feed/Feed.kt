@@ -10,14 +10,13 @@ data class Feed(
     val marks: MutableSet<MarkFeedEntry> = mutableSetOf(),
     val ratings: MutableSet<RatingFeedEntry> = mutableSetOf(),
     val visits: MutableSet<VisitFeedEntry> = mutableSetOf(),
-    val banners: MutableSet<BannerFeedEntry> = mutableSetOf(),
     val announcements: MutableSet<AnnouncementFeedEntry> = mutableSetOf(),
     val events: MutableSet<EventFeedEntry> = mutableSetOf(),
     val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf()
 ) {
     val allPools: Map<String, MutableSet<out FeedEntry>>
         get() = mapOf("homework" to homework, "marks" to marks, "ratings" to ratings, "visits" to visits,
-            "banners" to banners, "announcements" to announcements, "events" to events, "diagnostics" to diagnostics)
+            "announcements" to announcements, "events" to events, "diagnostics" to diagnostics)
 
     inline fun <reified E : FeedEntry> withPool(action: (MutableSet<E>) -> Unit) {
         val subPool = when (E::class) {
@@ -25,7 +24,6 @@ data class Feed(
             MarkFeedEntry::class -> marks
             RatingFeedEntry::class -> ratings
             VisitFeedEntry::class -> visits
-            BannerFeedEntry::class -> banners
             AnnouncementFeedEntry::class -> announcements
             EventFeedEntry::class -> events
             DiagnosticFeedEntry::class -> diagnostics
@@ -67,6 +65,10 @@ data class Feed(
         }.toMutableList()
 
         return sortedPool
+    }
+
+    companion object {
+        val poolIds = setOf("homework", "marks", "ratings", "visits", "announcements", "events", "diagnostics")
     }
 }
 

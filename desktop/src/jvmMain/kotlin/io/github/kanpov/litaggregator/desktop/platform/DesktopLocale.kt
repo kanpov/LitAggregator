@@ -1,4 +1,4 @@
-package io.github.kanpov.litaggregator.desktop
+package io.github.kanpov.litaggregator.desktop.platform
 
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.runBlocking
@@ -17,7 +17,7 @@ private const val LOCALE_COMMENT_SYMBOL = '#'
 private const val LOCALE_EQUALITY_SYMBOL = '='
 private const val LOCALE_ERROR_PLACEHOLDER = "!ERROR!"
 
-object Locale {
+object DesktopLocale {
     operator fun get(key: String, vararg fills: Any): String {
         if (localeValues[key] == null) {
             Logger.e { "Tried to access non-existent locale key: \"$key\". Default to: \"$LOCALE_ERROR_PLACEHOLDER\"" }

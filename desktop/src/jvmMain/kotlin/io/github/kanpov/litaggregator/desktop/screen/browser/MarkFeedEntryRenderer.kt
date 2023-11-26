@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.engine.feed.entry.MarkFeedEntry
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 
@@ -38,12 +38,8 @@ class MarkFeedEntryRenderer(entry: MarkFeedEntry) : FeedEntryRenderer<MarkFeedEn
         Row {
             MarkBox(modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp))
             Column(modifier = Modifier.fillMaxWidth().padding(start = 15.dp)) {
-                Text(
-                    Locale["browser.marks.title_formatting", entry.subject,
-                        TimeFormatters.dottedMeshDate.format(entry.metadata.creationTime)],
-                    fontSize = 1.1.em,
-                    fontWeight = FontWeight.Medium
-                )
+                PreviewHeading(DesktopLocale["browser.marks.title_formatting", entry.subject,
+                    TimeFormatters.dottedMeshDate.format(entry.metadata.creationTime)])
 
                 Text(
                     entry.workForm,
@@ -67,14 +63,14 @@ class MarkFeedEntryRenderer(entry: MarkFeedEntry) : FeedEntryRenderer<MarkFeedEn
     override fun ColumnScope.DetailedContent() {
         MarkBox()
         Spacer(modifier = Modifier.height(5.dp))
-        TextProperty(Locale["browser.marks.subject"], entry.subject)
-        TextProperty(Locale["browser.marks.work_form"], entry.workForm)
-        TextProperty(Locale["browser.marks.period"], entry.period)
+        TextProperty(DesktopLocale["browser.marks.subject"], entry.subject)
+        TextProperty(DesktopLocale["browser.marks.work_form"], entry.workForm)
+        TextProperty(DesktopLocale["browser.marks.period"], entry.period)
         if (entry.comment.isNotBlank()) {
-            TextProperty(Locale["browser.marks.comment"], entry.comment)
+            TextProperty(DesktopLocale["browser.marks.comment"], entry.comment)
         }
         if (entry.topic != null) {
-            TextProperty(Locale["browser.marks.topic"], entry.topic!!)
+            TextProperty(DesktopLocale["browser.marks.topic"], entry.topic!!)
         }
     }
 }

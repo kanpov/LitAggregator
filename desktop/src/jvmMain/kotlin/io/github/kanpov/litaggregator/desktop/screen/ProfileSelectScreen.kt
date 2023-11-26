@@ -18,7 +18,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.SMALL_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
@@ -46,7 +46,7 @@ class ProfileSelectScreen : Screen {
             modifier = Modifier.fillMaxSize().padding(10.dp)
         ) {
             // heading
-            H5Text(Locale["profile_select.select_your_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
+            H5Text(DesktopLocale["profile_select.select_your_profile"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             Column(
                 modifier = Modifier
@@ -75,7 +75,7 @@ class ProfileSelectScreen : Screen {
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                H6Text(Locale["profile_select.load_profile"])
+                H6Text(DesktopLocale["profile_select.load_profile"])
             }
 
             // create new profile button
@@ -88,7 +88,7 @@ class ProfileSelectScreen : Screen {
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 15.dp)
             ) {
-                H6Text(Locale["profile_select.create_profile"])
+                H6Text(DesktopLocale["profile_select.create_profile"])
             }
 
             // file picking
@@ -110,7 +110,7 @@ class ProfileSelectScreen : Screen {
         Column(
             modifier = Modifier.padding(top = 15.dp).align(Alignment.CenterHorizontally)
         ) {
-            H6Text(Locale["profile_select.recent_profiles"], modifier = Modifier.align(Alignment.CenterHorizontally))
+            H6Text(DesktopLocale["profile_select.recent_profiles"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             Spacer(
                 modifier = Modifier.height(10.dp)
@@ -119,7 +119,7 @@ class ProfileSelectScreen : Screen {
             val starPrioritizedProfiles = ProfileCache.iterator()
                 .asSequence().sortedByDescending { it.starred }.toList()
             if (starPrioritizedProfiles.isEmpty()) {
-                H6Text(Locale["profile_select.no_saved_profiles"], italicize = true)
+                H6Text(DesktopLocale["profile_select.no_saved_profiles"], italicize = true)
             } else {
                 for (cachedProfile in starPrioritizedProfiles) {
                     RecentProfile(cachedProfile, navigator)
@@ -194,10 +194,10 @@ class ProfileSelectScreen : Screen {
     private fun ConfirmDeleteDialog(cachedProfile: CachedProfile, navigator: Navigator, onDismissRequest: () -> Unit) {
         AlertDialog(
             title = {
-                H6Text(Locale["profile_select.profile_delete_dialog.heading"], highlight = true)
+                H6Text(DesktopLocale["profile_select.profile_delete_dialog.heading"], highlight = true)
             },
             text = {
-                H6Text(Locale["profile_select.profile_delete_dialog.text", cachedProfile.profileName])
+                H6Text(DesktopLocale["profile_select.profile_delete_dialog.text", cachedProfile.profileName])
             },
             onDismissRequest = onDismissRequest,
             confirmButton = {
@@ -212,7 +212,7 @@ class ProfileSelectScreen : Screen {
                     ),
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {
-                    H6Text(Locale["button.confirm"], highlight = true)
+                    H6Text(DesktopLocale["button.confirm"], highlight = true)
                 }
             },
             dismissButton = {
@@ -223,7 +223,7 @@ class ProfileSelectScreen : Screen {
                     ),
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {
-                    H6Text(Locale["button.cancel"], highlight = true)
+                    H6Text(DesktopLocale["button.cancel"], highlight = true)
                 }
             },
             properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -244,15 +244,16 @@ class ProfileSelectScreen : Screen {
                     Column(
                         modifier = Modifier.padding(15.dp)
                     ) {
-                        H6Text(Locale["profile_select.info_dialog.path_to_file"], highlight = true)
+                        H6Text(DesktopLocale["profile_select.info_dialog.path_to_file"], highlight = true)
 
                         H6Text(cachedProfile.file.absolutePath, modifier = Modifier.padding(top = 10.dp))
 
-                        H6Text(Locale["profile_select.info_dialog.file_size"],
+                        H6Text(
+                            DesktopLocale["profile_select.info_dialog.file_size"],
                             highlight = true, modifier = Modifier.padding(top = 15.dp))
 
                         val kbFileSize = cachedProfile.file.length() / 1024L
-                        H6Text(Locale["profile_select.info_dialog.kb", kbFileSize], modifier = Modifier.padding(top = 10.dp))
+                        H6Text(DesktopLocale["profile_select.info_dialog.kb", kbFileSize], modifier = Modifier.padding(top = 10.dp))
                     }
                 }
             }

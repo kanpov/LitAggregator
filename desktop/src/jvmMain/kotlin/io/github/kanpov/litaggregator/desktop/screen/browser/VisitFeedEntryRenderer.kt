@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.engine.feed.entry.VisitFeedEntry
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import java.time.Instant
@@ -19,10 +19,10 @@ class VisitFeedEntryRenderer(entry: VisitFeedEntry) : FeedEntryRenderer<VisitFee
     @Composable
     private fun ColumnScope.EntryExitTimes(modifier: Modifier = Modifier) {
         Row(modifier = modifier.align(Alignment.CenterHorizontally)) {
-            SingleTime(entry.entryTime, Color.Green, Locale["browser.visits.entry_time"])
+            SingleTime(entry.entryTime, Color.Green, DesktopLocale["browser.visits.entry_time"])
             if (entry.exitTime != null) {
                 Spacer(modifier = Modifier.width(20.dp))
-                SingleTime(entry.exitTime!!, Color.Red, Locale["browser.visits.exit_time"])
+                SingleTime(entry.exitTime!!, Color.Red, DesktopLocale["browser.visits.exit_time"])
             }
         }
     }
@@ -46,21 +46,17 @@ class VisitFeedEntryRenderer(entry: VisitFeedEntry) : FeedEntryRenderer<VisitFee
 
     @Composable
     override fun ColumnScope.PreviewContent() {
-        Text(
-            Locale["browser.visits.title_formatting", TimeFormatters.dottedMeshDate.format(entry.metadata.creationTime)],
-            fontWeight = FontWeight.Medium,
-            fontSize = 1.1.em,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+        PreviewHeading(
+            DesktopLocale["browser.visits.title_formatting", TimeFormatters.dottedMeshDate.format(entry.metadata.creationTime)]
         )
-
         EntryExitTimes(Modifier.padding(top = 5.dp))
     }
 
     @Composable
     override fun ColumnScope.DetailedContent() {
         EntryExitTimes()
-        TextProperty(Locale["browser.visits.short_address"], entry.shortAddress)
-        TextProperty(Locale["browser.visits.full_address"], entry.fullAddress)
-        TextProperty(Locale["browser.visits.irregular_pattern"], if (entry.irregularPattern) Locale["yes"] else Locale["no"])
+        TextProperty(DesktopLocale["browser.visits.short_address"], entry.shortAddress)
+        TextProperty(DesktopLocale["browser.visits.full_address"], entry.fullAddress)
+        TextProperty(DesktopLocale["browser.visits.irregular_pattern"], if (entry.irregularPattern) DesktopLocale["yes"] else DesktopLocale["no"])
     }
 }

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.engine.feed.entry.HomeworkFeedEntry
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 
@@ -17,19 +17,14 @@ class HomeworkFeedEntryRenderer(entry: HomeworkFeedEntry) : FeedEntryRenderer<Ho
     @Composable
     override fun ColumnScope.PreviewContent() {
         val heading = if (entry.assignedTime == null) {
-            Locale["browser.homework.short_title_formatting", entry.subject,
+            DesktopLocale["browser.homework.short_title_formatting", entry.subject,
                 TimeFormatters.dottedMeshDate.format(entry.metadata.creationTime)]
         } else {
-            Locale["browser.homework.full_title_formatting", entry.subject,
+            DesktopLocale["browser.homework.full_title_formatting", entry.subject,
                 TimeFormatters.dottedMeshDate.format(entry.assignedTime)]
         }
 
-        Text(
-            text = heading,
-            fontWeight = FontWeight.Medium,
-            fontSize = 1.1.em,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        PreviewHeading(heading)
 
         val previewTextNormalized = entry.plain.normalizePlainTextFromHtml(stripNewLines = true)
         val previewText = if (previewTextNormalized.length <= 200) {
@@ -46,18 +41,18 @@ class HomeworkFeedEntryRenderer(entry: HomeworkFeedEntry) : FeedEntryRenderer<Ho
 
     @Composable
     override fun ColumnScope.DetailedContent() {
-        TextProperty(Locale["browser.homework.subject"], entry.subject)
+        TextProperty(DesktopLocale["browser.homework.subject"], entry.subject)
         if (entry.teacher != null) {
-            TextProperty(Locale["browser.homework.teacher"], entry.teacher!!)
+            TextProperty(DesktopLocale["browser.homework.teacher"], entry.teacher!!)
         }
         if (entry.assignedTime != null) {
-            TextProperty(Locale["browser.homework.assigned_time"], TimeFormatters.dottedMeshDate.format(entry.assignedTime!!))
+            TextProperty(DesktopLocale["browser.homework.assigned_time"], TimeFormatters.dottedMeshDate.format(entry.assignedTime!!))
         }
         if (entry.attachments.isNotEmpty()) {
             AttachmentList(entry.attachments)
         }
         if (entry.allowsSubmissions && entry.submissionUrl != null) {
-            LinkProperty(Locale["browser.homework.submission_url"], entry.submissionUrl!!)
+            LinkProperty(DesktopLocale["browser.homework.submission_url"], entry.submissionUrl!!)
         }
         Text(entry.plain.normalizePlainTextFromHtml(), modifier = Modifier.padding(top = 5.dp))
     }

@@ -29,6 +29,7 @@ kotlin {
                 implementation(libs.voyager.navigation)
                 implementation(libs.voyager.transitions)
                 implementation(libs.mpfilepicker)
+                implementation(libs.compose.chart)
 
                 implementation(libs.selenium)
                 implementation(libs.web.driver.manager)

@@ -1,7 +1,6 @@
 package io.github.kanpov.litaggregator.desktop.platform
 
 import co.touchlab.kermit.Logger
-import io.github.kanpov.litaggregator.desktop.Locale
 import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.util.BrowserEmulator
 import io.github.kanpov.litaggregator.engine.util.io.asFile
@@ -27,7 +26,7 @@ object DesktopEnginePlatform : EnginePlatform {
             }
 
             field = value
-            Locale.loadById(value.localeId)
+            DesktopLocale.loadById(value.localeId)
         }
 
     private val systemConfigFile by lazy { getPersistentPath(SYSTEM_CONFIG_FILE_PATH).asFile() }
@@ -68,7 +67,7 @@ object DesktopEnginePlatform : EnginePlatform {
             supportsShellBrowserInvocation = SystemUtils.IS_OS_LINUX,
             browserBinary = DEFAULT_SHELL_BROWSER,
             shellBinary = DEFAULT_SHELL,
-            localeId = Locale.nameToId(Locale.localeNames.first())
+            localeId = DesktopLocale.nameToId(DesktopLocale.localeNames.first())
         )
 
         Logger.i { "Scanned a new system config: $systemConfig" }
@@ -82,7 +81,7 @@ object DesktopEnginePlatform : EnginePlatform {
         }
 
         systemConfig!!.scope()
-        Locale.loadById(systemConfig!!.localeId)
+        DesktopLocale.loadById(systemConfig!!.localeId)
         writeFile(systemConfigFile, jsonInstance.encodeToString(DesktopSystemConfig.serializer(), systemConfig!!))
         Logger.i { "Updated system config" }
     }

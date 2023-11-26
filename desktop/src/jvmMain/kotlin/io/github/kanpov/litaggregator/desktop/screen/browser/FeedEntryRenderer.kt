@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
@@ -37,7 +37,7 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
     @Composable
     fun Render() {
         var showDetails by remember { mutableStateOf(false) }
-        var borderColor by remember { mutableStateOf(if (entry.metadata.seenBefore) Color.LightGray else Color.Black) }
+        var borderColor by remember { mutableStateOf(if (entry.metadata.seenBefore) Color.Gray else Color.Black) }
 
         Surface(
             shape = RoundedCornerShape(10.dp),
@@ -74,14 +74,17 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
 
                                 // Metadata
                                 Text(
-                                    Locale["browser.misc.about_entry"],
+                                    DesktopLocale["browser.misc.about_entry"],
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 1.05.em,
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
                                 )
-                                TextProperty(
-                                    Locale["browser.misc.creation_time"],
-                                    TimeFormatters.isoLocalDateTime.format(entry.metadata.creationTime))
+                                if (entry.metadata.creationTime != null) {
+                                    TextProperty(
+                                        DesktopLocale["browser.misc.creation_time"],
+                                        TimeFormatters.longMeshDateTime.format(entry.metadata.creationTime!!)
+                                    )
+                                }
                             }
                         }
                     }
@@ -133,7 +136,7 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     protected fun AttachmentList(attachments: List<FeedEntryAttachment>) {
-        Text(Locale["browser.misc.attachments"], fontWeight = FontWeight.SemiBold)
+        Text(DesktopLocale["browser.misc.attachments"], fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.width(5.dp))
         for (attachment in attachments) {
             Row {
@@ -160,7 +163,34 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
         }
     }
 
+    @Composable
+    protected fun DetailedSubHeading(text: String) {
+        Text(
+            text,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 1.05.em,
+            modifier = Modifier.padding(start = 100.dp)
+        )
+    }
+
+    @Composable
+    protected fun ColumnScope.PreviewHeading(text: String) {
+        Text(
+            text,
+            fontSize = 1.1.em,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
+
     protected fun String.normalizePlainTextFromHtml(stripNewLines: Boolean = false): String {
         return StringEscapeUtils.unescapeHtml4(this).replace("\n", if (stripNewLines) " " else "\n")
+    }
+
+    protected fun getRewardColor(place: Int): Color = when (place) {
+        1 -> Color.Gold
+        2 -> Color.Silver
+        3 -> Color.Bronze
+        else -> Color.Black
     }
 }

@@ -7,7 +7,7 @@ data class FeedQuery(
     val sortOrder: FeedSortOrder = FeedSortOrder.Descending,
     val sortParameter: FeedSortParameter = FeedSortParameter.Relevancy,
     val filterText: String = "",
-    val filterPools: Set<String> = setOf()
+    val filterPools: Set<String> = Feed.poolIds
 )
 
 enum class FeedSortOrder(val id: String) {

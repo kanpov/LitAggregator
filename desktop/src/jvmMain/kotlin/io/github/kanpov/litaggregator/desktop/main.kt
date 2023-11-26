@@ -12,16 +12,15 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.screen.SystemConfigScreen
 import io.github.kanpov.litaggregator.engine.EnginePlatform
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 lateinit var resizeAppWindow: (size: DpSize, resizable: Boolean) -> Unit
 
-val LARGE_WINDOW_SIZE = DpSize(1000.dp, 800.dp)
+val LARGE_WINDOW_SIZE = DpSize(1400.dp, 900.dp)
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
 val SMALL_WINDOW_SIZE = DpSize(400.dp, 400.dp)
 
@@ -40,12 +39,11 @@ fun main() {
         var resizable by remember { mutableStateOf(false) }
         resizeAppWindow = { newSize, newResizable ->
             windowState.size = newSize
-            windowState.position = WindowPosition.Aligned(Alignment.Center) // realign
             resizable = newResizable
         }
 
         Window(
-            title = Locale["window_name"],
+            title = DesktopLocale["window_name"],
             onCloseRequest = ::exitApplication,
             icon = painterResource("logos/ulysses.png"),
             state = windowState,

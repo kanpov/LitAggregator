@@ -9,14 +9,13 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import io.github.kanpov.litaggregator.desktop.Locale
+import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
 import io.github.kanpov.litaggregator.desktop.MEDIUM_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
@@ -37,17 +36,17 @@ class SystemConfigScreen : Screen {
             modifier = Modifier.fillMaxSize().padding(10.dp)
         ) {
             // heading
-            H5Text(Locale["system_config.configure_your_system"], modifier = Modifier.align(Alignment.CenterHorizontally))
+            H5Text(DesktopLocale["system_config.configure_your_system"], modifier = Modifier.align(Alignment.CenterHorizontally))
 
             Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 // language setting
                 DropdownSetting(
-                    label = Locale["system_config.ui_language"],
-                    startOption = Locale.idToName(DesktopEnginePlatform.systemConfig!!.localeId),
-                    options = Locale.localeNames,
+                    label = DesktopLocale["system_config.ui_language"],
+                    startOption = DesktopLocale.idToName(DesktopEnginePlatform.systemConfig!!.localeId),
+                    options = DesktopLocale.localeNames,
                     onSelectOption = { localeName ->
                         DesktopEnginePlatform.updateSystemConfig {
-                            localeId = Locale.nameToId(localeName)
+                            localeId = DesktopLocale.nameToId(localeName)
                         }
                         restartScreen(navigator)
                     }
@@ -56,30 +55,30 @@ class SystemConfigScreen : Screen {
                 // web driver support setting
                 StaticSetting(
                     ok = DesktopEnginePlatform.systemConfig!!.supportsWebDriver,
-                    label = Locale["system_config.supports_web_driver"]
+                    label = DesktopLocale["system_config.supports_web_driver"]
                 )
 
                 // awt desktop support setting
                 StaticSetting(
                     ok = DesktopEnginePlatform.systemConfig!!.supportsAwtDesktop,
-                    label = Locale["system_config.supports_awt_desktop"]
+                    label = DesktopLocale["system_config.supports_awt_desktop"]
                 )
 
                 // shell browser support setting
                 StaticSetting(
                     ok = DesktopEnginePlatform.systemConfig!!.supportsShellBrowserInvocation,
-                    label = Locale["system_config.supports_shell_browser_invocation"],
+                    label = DesktopLocale["system_config.supports_shell_browser_invocation"],
                     whenOk = {
                         // exact shell setting
                         TypedSetting(
-                            label = Locale["system_config.shell_binary"],
+                            label = DesktopLocale["system_config.shell_binary"],
                             defaultValue = DesktopEnginePlatform.systemConfig!!.shellBinary,
                             setValue = { shellBinary = it }
                         )
 
                         // exact browser setting
                         TypedSetting(
-                            label = Locale["system_config.browser_binary"],
+                            label = DesktopLocale["system_config.browser_binary"],
                             defaultValue = DesktopEnginePlatform.systemConfig!!.browserBinary,
                             setValue = { browserBinary = it }
                         )
@@ -101,7 +100,7 @@ class SystemConfigScreen : Screen {
                 ),
                 modifier = Modifier.padding(top = 15.dp).align(Alignment.CenterHorizontally)
             ) {
-                H6Text(Locale["button.continue"])
+                H6Text(DesktopLocale["button.continue"])
             }
         }
     }
