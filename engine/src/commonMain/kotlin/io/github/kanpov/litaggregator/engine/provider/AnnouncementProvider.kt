@@ -79,7 +79,7 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
                             sourceFingerprint = MessageDigest.getInstance("SHA-256")
                                 .digest(content.toByteArray())
                                 .toString(),
-                            metadata = FeedEntryMetadata(creationTime = creationTime)
+                            metadata = FeedEntryMetadata(creationTime = creationTime, sourceName = "Сайт Лицея")
                         )
                     )
                 }
@@ -88,7 +88,7 @@ class AnnouncementProvider : SimpleProvider<AnnouncementFeedEntry>() {
     }
 
     object Definition : SimpleProviderDefinition<AnnouncementFeedEntry> {
-        override val name: String = "Новости из сайта Лицея 1533"
+        override val name: String = "Новости Лицея"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.announcements != null }
         override val factory: (Profile) -> SimpleProvider<AnnouncementFeedEntry> = { AnnouncementProvider() }
     }

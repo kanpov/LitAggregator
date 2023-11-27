@@ -113,7 +113,6 @@ browser.query_bar.ascending_order_tooltip=Сортировать от меньш
 browser.query_bar.descending_order_tooltip=Сортировать от большего к меньшему
 browser.query_bar.parameter.relevancy=Актуальность
 browser.query_bar.parameter.is_starred=Отмечено
-browser.query_bar.parameter.is_pinned=Прикреплено
 browser.query_bar.parameter.is_marked=Маркирован
 browser.query_bar.parameter.none=Не сортировать
 browser.query_bar.search_tooltip=Текст поиска

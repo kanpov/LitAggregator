@@ -46,7 +46,7 @@ class MeshMarkProvider(authorizer: MeshAuthorizer) : MeshProvider<MarkFeedEntry>
                         topic = markObj.jOptionalString("topic_name"),
                         workForm = markObj.jString("control_form_name"),
                         period = periodName,
-                        metadata = FeedEntryMetadata(creationTime = creationTime),
+                        metadata = FeedEntryMetadata(creationTime = creationTime, sourceName = "МЭШ"),
                         sourceFingerprint = FeedEntry.fingerprintFrom(subjectId, markObj.jLong("id"))
                     ))
                 }

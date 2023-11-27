@@ -82,7 +82,7 @@ class UlyssesProvider(authorizer: UlyssesAuthorizer) : AuthorizedProvider<Ulysse
             attachments = attachments,
             allowsSubmissions = false,
             sourceFingerprint = homeworkObj.jString("Post date"),
-            metadata = FeedEntryMetadata(creationTime = creationTime)
+            metadata = FeedEntryMetadata(creationTime = creationTime, sourceName = "УЛИСС")
         ))
     }
 

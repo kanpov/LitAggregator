@@ -40,7 +40,7 @@ class MeshVisitProvider(authorizer: MeshAuthorizer) : MeshProvider<VisitFeedEntr
                     irregularPattern = irregularPattern,
                     fullAddress = visitObj.jString("address"),
                     shortAddress = visitObj.jString("short_name"),
-                    metadata = FeedEntryMetadata(creationTime = fingerprintTime),
+                    metadata = FeedEntryMetadata(creationTime = fingerprintTime, sourceName = "МЭШ"),
                     sourceFingerprint = FeedEntry.fingerprintFrom(fingerprintTime)
                 ))
             }

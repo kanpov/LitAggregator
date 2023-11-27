@@ -72,7 +72,7 @@ class ClassroomProvider(authorizer: GoogleAuthorizer) : AuthorizedProvider<Googl
                     allowsSubmissions = true,
                     submissionUrl = courseWorkObj.jString("alternateLink"),
                     sourceFingerprint = courseWorkId,
-                    metadata = FeedEntryMetadata(creationTime = creationTime)
+                    metadata = FeedEntryMetadata(creationTime = creationTime, sourceName = "Classroom")
                 ))
             }
         }
@@ -80,7 +80,7 @@ class ClassroomProvider(authorizer: GoogleAuthorizer) : AuthorizedProvider<Googl
 
     object Definition : AuthorizedProviderDefinition<GoogleAuthorizer, HomeworkFeedEntry> {
         override val isAuthorized: (AuthorizationState) -> Boolean = { it.googleSession != null }
-        override val name: String = "Домашние задания из Google Classroom"
+        override val name: String = "Задания из Classroom"
         override val isEnabled: (ProviderSettings) -> Boolean = { it.classroom != null }
         override val factory: (Profile) -> SimpleProvider<HomeworkFeedEntry> = { ClassroomProvider(it.authorization.google) }
     }

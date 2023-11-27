@@ -31,7 +31,7 @@ class PortfolioDiagnosticProvider(authorizer: MeshAuthorizer) : MeshProvider<Dia
                     comparisonToSchool = parseResultComparison(profile, ratingObj.jObject("ratingSchool")),
                     comparisonToGroup = parseResultComparison(profile, ratingObj.jObject("ratingClass")),
                     sourceFingerprint = FeedEntry.fingerprintFrom(ratingObj.jInt("workId")),
-                    metadata = FeedEntryMetadata(creationTime = null)
+                    metadata = FeedEntryMetadata(creationTime = null, sourceName = "Портфолио")
                 ))) return
             }
         }

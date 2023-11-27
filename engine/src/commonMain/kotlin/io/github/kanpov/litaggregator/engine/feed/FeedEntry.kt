@@ -1,5 +1,6 @@
 package io.github.kanpov.litaggregator.engine.feed
 
+import io.github.kanpov.litaggregator.engine.provider.SimpleProviderDefinition
 import io.github.kanpov.litaggregator.engine.util.io.JsonInstant
 import kotlinx.serialization.Serializable
 
@@ -29,8 +30,8 @@ data class FeedEntryMetadata(
     var markers: MutableSet<String> = mutableSetOf(),
     var taskLists: MutableSet<FeedEntryTaskList> = mutableSetOf(),
     var starred: Boolean = false,
-    var pinned: Boolean = false,
-    var seenBefore: Boolean = false
+    var seenBefore: Boolean = false,
+    val sourceName: String
 ) {
     fun merge(other: FeedEntryMetadata) {
         // Note that the merge operation is conservative, meaning that it'll keep its own value when confronted with
@@ -58,8 +59,8 @@ data class FeedEntryMetadata(
         result = 31 * result + markers.hashCode()
         result = 31 * result + taskLists.hashCode()
         result = 31 * result + starred.hashCode()
-        result = 31 * result + pinned.hashCode()
         result = 31 * result + seenBefore.hashCode()
+        result = 31 * result + sourceName.hashCode()
         return result
     }
 }

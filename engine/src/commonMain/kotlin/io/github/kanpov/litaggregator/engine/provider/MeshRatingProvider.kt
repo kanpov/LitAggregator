@@ -58,7 +58,7 @@ class MeshRatingProvider(authorizer: MeshAuthorizer) : MeshProvider<RatingFeedEn
                 println()
                 if (insert(profile.feed, RatingFeedEntry(
                     sourceFingerprint = FeedEntry.fingerprintFrom(day),
-                    metadata = FeedEntryMetadata(creationTime = time),
+                    metadata = FeedEntryMetadata(creationTime = time, sourceName = "МЭШ"),
                     overallRating = personRating!!,
                     perSubjectRatings = subjectRatings,
                     classmateRatings = classmateRatings.ifEmpty { null }

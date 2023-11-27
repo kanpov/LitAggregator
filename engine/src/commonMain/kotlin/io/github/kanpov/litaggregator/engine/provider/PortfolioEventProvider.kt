@@ -47,7 +47,7 @@ class PortfolioEventProvider(authorizer: MeshAuthorizer) : MeshProvider<EventFee
                 participantCategory = eventObj.jOptionalString("participantCategory"),
                 profession = eventObj.jOptionalString("profession"),
                 sourceFingerprint = FeedEntry.fingerprintFrom(entityId, rewardId),
-                metadata = FeedEntryMetadata(creationTime = creationTime)
+                metadata = FeedEntryMetadata(creationTime = creationTime, sourceName = "Портфолио")
             ))
         }
     }

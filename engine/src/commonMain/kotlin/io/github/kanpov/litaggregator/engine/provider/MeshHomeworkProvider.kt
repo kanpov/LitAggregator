@@ -71,7 +71,7 @@ class MeshHomeworkProvider(authorizer: MeshAuthorizer) : MeshProvider<HomeworkFe
                 attachments = attachments,
                 allowsSubmissions = false,
                 sourceFingerprint = FeedEntry.fingerprintFrom(objectId, entryId),
-                metadata = FeedEntryMetadata(creationTime = creationTime)
+                metadata = FeedEntryMetadata(creationTime = creationTime, sourceName = "МЭШ")
             ))
         }
     }
