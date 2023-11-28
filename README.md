@@ -1,4 +1,4 @@
-## Development progress
+![image](https://github.com/kanpov/LitAggregator/assets/71177577/d0e1223f-43e5-4bb0-8cf0-226c419cb95a)## Development progress
 
 ### Engine
 
@@ -24,18 +24,17 @@
   - [x] Ratings
   - [x] Visits
 - [x] Provider API
-- [ ] Providers
-  - [ ] Lit.msu.ru announcements
+- [x] Providers
+  - [x] Lit.msu.ru announcements
   - [x] Ulyss homeworks
   - [x] Dnevnik homeworks
   - [x] Dnevnik marks
   - [x] Dnevnik ratings
   - [x] Dnevnik visits
-  - [x] Dnevnik banners
   - [x] Portfolio diagnostics
   - [x] Portfolio events
-  - [ ] Classroom assignments
-  - [ ] Gmail messages
+  - [x] Classroom assignments
+  - [x] Gmail messages
 
 ### Apps
 
@@ -45,10 +44,10 @@
 
 | Feature        | Desktop | Android |
 |----------------|---------|---------|
-| Launch screen  | ❌       | ❌       |
-| Onboarding     | ❌       | ❌       |
-| Sync and Save  | ❌       | ❌       |
-| Feed rendering | ❌       | ❌       |
-| Feed filtering | ❌       | ❌       |
-| Feed sorting   | ❌       | ❌       |
-| Feed editing   | ❌       | ❌       |
+| Launch screen  | ✅       | ❌       |
+| Onboarding     | ✅       | ❌       |
+| Sync and Save  | ✅       | ❌       |
+| Feed rendering | ✅       | ❌       |
+| Feed filtering | ✅       | ❌       |
+| Feed sorting   | ✅       | ❌       |
+| Feed editing   | 🚧       | ❌       |
