@@ -1,4 +1,4 @@
-![image](https://github.com/kanpov/LitAggregator/assets/71177577/d0e1223f-43e5-4bb0-8cf0-226c419cb95a)## Development progress
+## Development progress
 
 ### Engine
 
