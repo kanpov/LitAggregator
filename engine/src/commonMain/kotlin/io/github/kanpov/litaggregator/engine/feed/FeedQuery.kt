@@ -27,7 +27,6 @@ enum class FeedSortParameter(val element: (FeedEntry) -> Any, val id: String) {
         }
    }, "relevancy"),
     IsStarred(element = { it.metadata.starred }, "is_starred"),
-    IsMarked(element = { it.metadata.markers.isNotEmpty() }, "is_marked"),
     None(element = { 0 }, "none");
 
     companion object {

@@ -95,8 +95,7 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
             // source
             Text(
                 entry.metadata.sourceName,
-                fontSize = 1.02.em,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 1.02.em
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -143,7 +142,6 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
         // heading
         Text(
             DesktopLocale["browser.misc.about_entry"],
-            fontWeight = FontWeight.Medium,
             fontSize = 1.05.em,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )

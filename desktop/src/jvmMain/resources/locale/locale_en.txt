@@ -1,5 +1,8 @@
 window_name=LIT Aggregator
 
+yes=Yes
+no=No
+
 button.continue=Continue
 button.confirm=Confirm
 button.cancel=Cancel
@@ -64,6 +67,7 @@ config.provider.heading_portfolio=From Portfolio
 config.provider.mesh.homework=Homework
 config.provider.mesh.homework.title_formatter=Title formatting
 config.provider.mesh.homework.only_include_oo=Only include mandatory lessons
+config.provider.mesh.homework.content_filter=Filter for plaintext content
 config.provider.mesh.marks=Marks
 config.provider.mesh.marks.only_include_exams=Only include exams
 config.provider.mesh.marks.weight_filter=Filter of the marks' coefficients
@@ -90,11 +94,95 @@ config.provider.portfolio.events.only_vos=Only include VsOH
 
 config.feed=Feed limits
 config.feed.max_pool_size=Maximum length of a pool
-config.feed.max_pool_size_hint=From 10 up to 100 (entries)
+config.feed.max_pool_size_hint=From 10 up to 500 (entries)
 config.feed.look_behind_days=Maximum age of oldest refresh entries
-config.feed.look_behind_days_hint=From 1 up to 31 (days)
+config.feed.look_behind_days_hint=From 1 up to 100 (days)
 config.feed.look_ahead_days=Maximum age of newest refresh entries
-config.feed.look_ahead_days_hint=From 1 up to 21 (days)
+config.feed.look_ahead_days_hint=From 1 up to 100 (days)
 
 unlock.enter_password=Enter password:
 unlock.repeat_attempt=Repeat your attempt
+
+browser.action_bar.settings_tooltip=Change profile settings
+browser.action_bar.profile_select_tooltip=Choose another profile
+browser.action_bar.system_config_tooltip=Change the system configuration
+browser.action_bar.sync_tooltip=Synchronize the feed
+browser.action_bar.save_tooltip=Save the profile to disk
+
+browser.query_bar.ascending_order_tooltip=Sort in an ascending order
+browser.query_bar.descending_order_tooltip=Sort in a descending order
+browser.query_bar.parameter.relevancy=Relevancy
+browser.query_bar.parameter.is_starred=Is starred
+browser.query_bar.parameter.none=Do not sort
+browser.query_bar.search_tooltip=Search text
+
+browser.pool_bar.announcements=Announcements
+browser.pool_bar.diagnostics=Diagnostics
+browser.pool_bar.events=Events (olympiads)
+browser.pool_bar.homework=Homework
+browser.pool_bar.marks=Marks
+browser.pool_bar.ratings=Ratings
+browser.pool_bar.visits=Visits
+
+browser.misc.content=Content
+browser.misc.about_entry=About entry
+browser.misc.creation_time=Time of creation:
+browser.misc.source_name=Source name:
+browser.misc.comment=Comment:
+browser.misc.attachments=Attachments:
+
+browser.homework.full_title_formatting=|1| for |2|
+browser.homework.short_title_formatting=|1| from |2|
+browser.homework.subject=Subject:
+browser.homework.teacher=Teacher:
+browser.homework.assigned_time=Assigned time:
+browser.homework.submission_url=Link to send assignment:
+
+browser.marks.title_formatting=|1| for |2|
+browser.marks.subject=Subject:
+browser.marks.work_form=Work form:
+browser.marks.period=Studying period:
+browser.marks.comment=Teacher comment:
+browser.marks.topic=Topic:
+
+browser.ratings.title_formatting=Ratings from |1|
+browser.ratings.place_formatting=|1| place
+browser.ratings.increase=increasing
+browser.ratings.decrease=decreasing
+browser.ratings.stagnation=not changing
+browser.ratings.quarterly_marks=My quarterly marks
+browser.ratings.classmate_ratings=Classmate ratings
+browser.ratings.quarterly_mark=Quarterly mark
+
+browser.visits.title_formatting=Visit on |1|
+browser.visits.entry_time=Entry time
+browser.visits.exit_time=Exit time
+browser.visits.short_address=School:
+browser.visits.full_address=Address:
+browser.visits.irregular_pattern=Suspicious entry/exit:
+
+browser.announcements.no_categories=No categories
+browser.announcements.categories=Categories:
+
+browser.diagnostics.title_formatting=|1| for |2|
+browser.diagnostics.place_formatting=|1|% worse
+browser.diagnostics.among_group=Among group
+browser.diagnostics.among_school=Among school
+browser.diagnostics.among_region=Among region
+browser.diagnostics.points=points
+browser.diagnostics.subject=Subject:
+browser.diagnostics.years=Years:
+browser.diagnostics.level=Level:
+browser.diagnostics.same_result=Same result
+browser.diagnostics.first_place_result=First place
+browser.diagnostics.second_place_result=Second place
+browser.diagnostics.third_place_result=Third place
+
+browser.events.full_name=Full name:
+browser.events.reward=Reward:
+browser.events.organizer=Organizer:
+browser.events.subject=Subject:
+browser.events.start_time=Start date:
+browser.events.end_time=End date:
+browser.events.participant_category=Participant category:
+browser.events.profession=Profession:
