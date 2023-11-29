@@ -1,6 +1,5 @@
 package io.github.kanpov.litaggregator.engine.feed
 
-import io.github.kanpov.litaggregator.engine.provider.SimpleProviderDefinition
 import io.github.kanpov.litaggregator.engine.util.io.JsonInstant
 import kotlinx.serialization.Serializable
 
@@ -26,7 +25,7 @@ interface FeedEntry {
 @Serializable
 data class FeedEntryMetadata(
     val creationTime: JsonInstant?,
-    var comments: MutableSet<String> = mutableSetOf(),
+    var comment: String = "",
     var markers: MutableSet<String> = mutableSetOf(),
     var taskLists: MutableSet<FeedEntryTaskList> = mutableSetOf(),
     var starred: Boolean = false,
@@ -36,7 +35,6 @@ data class FeedEntryMetadata(
     fun merge(other: FeedEntryMetadata) {
         // Note that the merge operation is conservative, meaning that it'll keep its own value when confronted with
         // no option other than accepting the other instance's value
-        other.comments.forEach { this.comments += it }
         other.markers.forEach { this.markers += it }
         other.taskLists.forEach { taskList ->
             val matchingTaskList = this.taskLists.firstOrNull { it.name == taskList.name }
@@ -55,7 +53,7 @@ data class FeedEntryMetadata(
 
     override fun hashCode(): Int {
         // don't include creation time
-        var result = comments.hashCode()
+        var result = comment.hashCode()
         result = 31 * result + markers.hashCode()
         result = 31 * result + taskLists.hashCode()
         result = 31 * result + starred.hashCode()

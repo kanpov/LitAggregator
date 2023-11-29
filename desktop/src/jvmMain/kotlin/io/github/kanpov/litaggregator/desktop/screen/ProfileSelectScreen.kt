@@ -173,7 +173,7 @@ class ProfileSelectScreen : Screen {
             var confirmDeleteDialogShown by remember { mutableStateOf(false) }
 
             BasicIcon(
-                painter = painterResource("icons/file_delete.png"),
+                painter = painterResource("icons/delete.png"),
                 size = 40.dp,
                 modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp).clickable {
                     confirmDeleteDialogShown = true

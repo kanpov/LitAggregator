@@ -14,7 +14,7 @@ data class Feed(
     val events: MutableSet<EventFeedEntry> = mutableSetOf(),
     val diagnostics: MutableSet<DiagnosticFeedEntry> = mutableSetOf()
 ) {
-    val allPools: Map<String, MutableSet<out FeedEntry>>
+    private val allPools: Map<String, MutableSet<out FeedEntry>>
         get() = mapOf("homework" to homework, "marks" to marks, "ratings" to ratings, "visits" to visits,
             "announcements" to announcements, "events" to events, "diagnostics" to diagnostics)
 
@@ -65,6 +65,12 @@ data class Feed(
         }.toMutableList()
 
         return sortedPool
+    }
+
+    fun removeEntry(entry: FeedEntry) {
+        for ((_, pool) in allPools) {
+            if (pool.remove(entry)) break
+        }
     }
 
     companion object {

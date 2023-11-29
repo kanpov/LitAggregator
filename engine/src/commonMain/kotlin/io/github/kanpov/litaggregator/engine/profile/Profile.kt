@@ -64,22 +64,6 @@ data class Profile(
             Logger.i { "Feed refresh has completed with errors in the following of $runProviders configured provider(s): ${errors.joinToString()}" }
         }
 
-        shrinkFeed()
         return errors
-    }
-
-    private fun shrinkFeed() {
-        for ((poolName, pool) in this.feed.allPools) {
-            val entries = pool.sortedByRelevancy()
-
-            if (entries.size <= this.feedSettings.maxPoolSize) continue
-
-            val diff = entries.size - this.feedSettings.maxPoolSize
-            for (i in this.feedSettings.maxPoolSize..<this.feedSettings.maxPoolSize + diff) {
-                pool.remove(entries[i])
-            }
-
-            Logger.i { "Shrunk pool of $poolName by $diff entries" }
-        }
     }
 }

@@ -216,13 +216,13 @@ class BrowserScreen(private val manager: ProfileManager) : Screen {
         ) {
             items(entries) { entry ->
                 when (entry) {
-                    is HomeworkFeedEntry -> HomeworkFeedEntryRenderer(entry).Render()
-                    is MarkFeedEntry -> MarkFeedEntryRenderer(entry).Render()
-                    is RatingFeedEntry -> RatingFeedEntryRenderer(entry).Render()
-                    is VisitFeedEntry -> VisitFeedEntryRenderer(entry).Render()
-                    is AnnouncementFeedEntry -> AnnouncementFeedEntryRenderer(entry).Render()
-                    is DiagnosticFeedEntry -> DiagnosticFeedEntryRenderer(entry).Render()
-                    is EventFeedEntry -> EventFeedEntryRenderer(entry).Render()
+                    is HomeworkFeedEntry -> HomeworkFeedEntryRenderer(entry).Render(manager)
+                    is MarkFeedEntry -> MarkFeedEntryRenderer(entry).Render(manager)
+                    is RatingFeedEntry -> RatingFeedEntryRenderer(entry).Render(manager)
+                    is VisitFeedEntry -> VisitFeedEntryRenderer(entry).Render(manager)
+                    is AnnouncementFeedEntry -> AnnouncementFeedEntryRenderer(entry).Render(manager)
+                    is DiagnosticFeedEntry -> DiagnosticFeedEntryRenderer(entry).Render(manager)
+                    is EventFeedEntry -> EventFeedEntryRenderer(entry).Render(manager)
                 }
             }
         }

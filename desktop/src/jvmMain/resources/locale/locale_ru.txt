@@ -94,11 +94,11 @@ config.provider.portfolio.events.only_vos=Включать только ВсОШ
 
 config.feed=Лимиты ленты
 config.feed.max_pool_size=Максимальная длина группы записей
-config.feed.max_pool_size_hint=От 10 до 100 (записей)
+config.feed.max_pool_size_hint=От 10 до 500 (записей)
 config.feed.look_behind_days=Лимит возраста старейших записей
-config.feed.look_behind_days_hint=От 1 до 31 (дня)
+config.feed.look_behind_days_hint=От 1 до 100 (дней)
 config.feed.look_ahead_days=Лимит возраста новейших записей
-config.feed.look_ahead_days_hint=От 1 до 21 (дня)
+config.feed.look_ahead_days_hint=От 1 до 100 (дней)
 
 unlock.enter_password=Введите пароль:
 unlock.repeat_attempt=Повторите попытку
@@ -128,7 +128,9 @@ browser.pool_bar.visits=Посещаемость
 browser.misc.content=Содержание
 browser.misc.about_entry=О записи
 browser.misc.creation_time=Время создания:
+browser.misc.source_name=Название источника:
 browser.misc.attachments=Приложенные файлы:
+browser.misc.comment=Комментарий:
 
 browser.homework.full_title_formatting=|1| на |2|
 browser.homework.short_title_formatting=|1| от |2|
