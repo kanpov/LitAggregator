@@ -1,53 +1,16 @@
-## Development progress
+### Set up development environment
 
-### Engine
+1. Clone the repository
+2. Ensure you have a Java 17 JDK installed on your system and added to JAVA_PATH
+3. Run `./gradlew` to download all dependencies and configure the project (can take 10-15 minutes)
 
-- [x] Platform layer
-- [x] Engine layer
-- [x] Authorization
-  - [x] Ulyss (direct)
-  - [x] Mos.ru (direct)
-  - [x] Google (consent-based)
-- [x] Profile wrapping (AES-CBC/PBKDF2 encryption)
-- [x] General data model
-  - [x] Authorization settings
-  - [x] Feed settings
-  - [x] Identity settings
-  - [x] Provider settings
-- [x] Feed data model
-  - [x] Announcements
-  - [x] Banners
-  - [x] Diagnostics
-  - [x] Events
-  - [x] Homework
-  - [x] Marks
-  - [x] Ratings
-  - [x] Visits
-- [x] Provider API
-- [x] Providers
-  - [x] Lit.msu.ru announcements
-  - [x] Ulyss homeworks
-  - [x] Dnevnik homeworks
-  - [x] Dnevnik marks
-  - [x] Dnevnik ratings
-  - [x] Dnevnik visits
-  - [x] Portfolio diagnostics
-  - [x] Portfolio events
-  - [x] Classroom assignments
-  - [x] Gmail messages
+### Compile and build project
 
-### Apps
+- `./gradlew desktop:run` to run the desktop application
+- `./gradlew desktop:packageReleaseMsi` to package the app for Windows 10+
+- `./gradlew desktop:packageReleaseAppImage` to package the app as an AppImage for Linux
+- `./gradlew desktop:packageReleaseDmg` to package a `.dmg` for macOS that is **not notarized**
+- (_Not recommended_) `./gradlew desktop:packageReleaseRpm` to create an architecture-specific `.rpm` package for Linux
+- (_Not recommended_) `./gradlew desktop:packageReleaseDeb` to create an architecture-specific `.deb` package for Linux
 
-- ❌ - not implemented
-- 🚧 - work-in-progress
-- ✅ - implemented
-
-| Feature        | Desktop | Android |
-|----------------|---------|---------|
-| Launch screen  | ✅       | ❌       |
-| Onboarding     | ✅       | ❌       |
-| Sync and Save  | ✅       | ❌       |
-| Feed rendering | ✅       | ❌       |
-| Feed filtering | ✅       | ❌       |
-| Feed sorting   | ✅       | ❌       |
-| Feed editing   | 🚧       | ❌       |
+**Note**: to compile `.rpm` and `.deb` packages, `binutils` and `fakeroot` are required
