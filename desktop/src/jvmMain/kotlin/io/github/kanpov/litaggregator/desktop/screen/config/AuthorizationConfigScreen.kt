@@ -68,11 +68,66 @@ class AuthorizationConfigScreen(profile: Profile, index: Int) : ConfigScreen(
 
     @Composable
     private fun RowScope.UlyssesAuthorizationElement() {
-        LoginPasswordAuthorizationElement(
+        var useKeyWord: Boolean? by remember { mutableStateOf(null) }
+        var login: String by remember { mutableStateOf("") }
+        var password: String by remember { mutableStateOf("") }
+
+        AuthorizationElement(
             title = DesktopLocale["config.authorization.ulysses"],
-            alreadyAuthorized = profile.authorization.ulysses != null
-        ) { login, password ->
-            profile.setupAuthorizer(UlyssesAuthorizer(CredentialPair(login, password)))
+            alreadyAuthorized = profile.authorization.ulysses != null,
+            authorizer = {
+                profile.setupAuthorizer(UlyssesAuthorizer(CredentialPair(login, password)))
+            },
+            isReadyToAuth = { if (useKeyWord == true) password.isNotBlank() else password.isNotBlank() && login.isNotBlank() }
+        )  {
+            // choosing method
+            if (useKeyWord == null) {
+                H6Text(DesktopLocale["config.authorization.choose_method"], modifier = Modifier.padding(top = 20.dp))
+
+                Button(
+                    onClick = { useKeyWord = false },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.primary
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 15.dp)
+                ) {
+                    H6Text(DesktopLocale["config.authorization.ulysses.by_account"])
+                }
+
+                Button(
+                    onClick = { useKeyWord = true },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.primaryVariant
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp)
+                ) {
+                    H6Text(DesktopLocale["config.authorization.ulysses.by_keyword"])
+                }
+            }
+
+            // auth by keyword
+            if (useKeyWord == true) {
+                CredentialAsker(
+                    DesktopLocale["config.authorization.ulysses.keyword"],
+                    sensitive = true,
+                    limiter = 20,
+                    onValueChange = { password = it }
+                )
+            }
+
+            // auth by account
+            if (useKeyWord == false) {
+                CredentialAsker(
+                    DesktopLocale["config.authorization.login"],
+                    onValueChange = { login = it }
+                )
+                CredentialAsker(
+                    DesktopLocale["config.authorization.password"],
+                    sensitive = true,
+                    limiter = 15,
+                    onValueChange = { password = it }
+                )
+            }
         }
     }
 

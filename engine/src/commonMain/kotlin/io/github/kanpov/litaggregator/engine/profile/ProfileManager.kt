@@ -6,7 +6,6 @@ import io.github.kanpov.litaggregator.engine.util.io.jsonInstance
 import io.github.kanpov.litaggregator.engine.util.io.readFile
 import io.github.kanpov.litaggregator.engine.util.io.writeFile
 import java.io.File
-import java.time.Instant
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -27,10 +26,6 @@ class ProfileManager private constructor(private val profileFile: File, val pass
 
         if (wrapperJson == null) return result
         if (!writeFile(profileFile, wrapperJson)) return ProfileResult.FileError
-
-        // TODO: remove in prod
-        val snapshotFile = EnginePlatform.current.getCachePath("snapshot_${Instant.now().epochSecond}.json")
-        writeFile(snapshotFile, jsonInstance.encodeToString(Profile.serializer(), currentProfile!!))
 
         return ProfileResult.Success
     }
