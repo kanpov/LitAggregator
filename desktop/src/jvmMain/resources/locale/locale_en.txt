@@ -94,9 +94,9 @@ config.provider.portfolio.events.only_vos=Only include VsOH
 
 config.feed=Feed limits
 config.feed.max_pool_size=Maximum length of a pool
-config.feed.max_pool_size_hint=From 10 up to 500 (entries)
+config.feed.max_pool_size_hint=From 10 up to 10000 (entries)
 config.feed.look_behind_days=Maximum age of oldest refresh entries
-config.feed.look_behind_days_hint=From 1 up to 100 (days)
+config.feed.look_behind_days_hint=From 1 up to 250 (days)
 config.feed.look_ahead_days=Maximum age of newest refresh entries
 config.feed.look_ahead_days_hint=From 1 up to 100 (days)
 

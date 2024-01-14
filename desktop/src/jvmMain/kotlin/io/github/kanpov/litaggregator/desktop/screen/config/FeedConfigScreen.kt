@@ -12,7 +12,7 @@ class FeedConfigScreen(profile: Profile, index: Int) : ConfigScreen(DesktopLocal
             ValidatedQuestion(
                 text = DesktopLocale["config.feed.max_pool_size"],
                 onChangeAnswer = { profile.feedSettings.maxPoolSize = it.toInt() },
-                validator = { it.toIntOrNull() != null && it.toInt() >= 10 && it.toInt() <= 500 },
+                validator = { it.toIntOrNull() != null && it.toInt() >= 10 && it.toInt() <= 10000 },
                 placeholder = DesktopLocale["config.feed.max_pool_size_hint"],
                 knownValue = profile.feedSettings.maxPoolSize.toString()
             )
@@ -20,7 +20,7 @@ class FeedConfigScreen(profile: Profile, index: Int) : ConfigScreen(DesktopLocal
             ValidatedQuestion(
                 text = DesktopLocale["config.feed.look_behind_days"],
                 onChangeAnswer = { profile.feedSettings.lookBehindDays = it.toInt() },
-                validator = { it.toIntOrNull() != null && it.toInt() >= 1 && it.toInt() <= 100 },
+                validator = { it.toIntOrNull() != null && it.toInt() >= 1 && it.toInt() <= 250 },
                 placeholder = DesktopLocale["config.feed.look_behind_days_hint"],
                 knownValue = profile.feedSettings.lookBehindDays.toString()
             )

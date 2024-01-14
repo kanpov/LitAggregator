@@ -13,6 +13,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.platform.DesktopLocale
+import io.github.kanpov.litaggregator.desktop.screen.ProfileSelectScreen
 import io.github.kanpov.litaggregator.desktop.screen.SystemConfigScreen
 import io.github.kanpov.litaggregator.engine.EnginePlatform
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -22,19 +23,19 @@ lateinit var resizeAppWindow: (size: DpSize, resizable: Boolean) -> Unit
 
 val LARGE_WINDOW_SIZE = DpSize(1400.dp, 900.dp)
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
-val SMALL_WINDOW_SIZE = DpSize(400.dp, 400.dp)
+val SMALL_WINDOW_SIZE = DpSize(450.dp, 400.dp)
 
 @OptIn(ExperimentalResourceApi::class)
 fun main() {
     EnginePlatform.current = DesktopEnginePlatform
     DesktopEnginePlatform.initialize()
 
-    val bootScreen: Screen = SystemConfigScreen()
+    val bootScreen: Screen = if (DesktopEnginePlatform.firstBoot) SystemConfigScreen() else ProfileSelectScreen()
 
     application {
         val windowState = rememberWindowState(
             position = WindowPosition.Aligned(Alignment.Center),
-            size = MEDIUM_WINDOW_SIZE
+            size = if (bootScreen is SystemConfigScreen) MEDIUM_WINDOW_SIZE else SMALL_WINDOW_SIZE
         )
         var resizable by remember { mutableStateOf(false) }
         resizeAppWindow = { newSize, newResizable ->

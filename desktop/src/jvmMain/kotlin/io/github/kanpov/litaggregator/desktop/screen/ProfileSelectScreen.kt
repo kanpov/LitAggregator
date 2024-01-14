@@ -138,7 +138,7 @@ class ProfileSelectScreen : Screen {
             // profile name
             H6Text(cachedProfile.profileName, highlight = true, modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(start = 5.dp)
+                    .padding(start = 15.dp)
                     .scale(1.1f)
                     .clickable {
                         navigator.push(UnlockScreen(cachedProfile))
@@ -237,7 +237,7 @@ class ProfileSelectScreen : Screen {
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             Card(
-                modifier = Modifier.fillMaxWidth().padding(20.dp),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(size = 10.dp)
             ) {
                 SelectionContainer {

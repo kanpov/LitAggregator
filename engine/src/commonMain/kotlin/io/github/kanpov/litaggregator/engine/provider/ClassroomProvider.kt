@@ -35,6 +35,7 @@ class ClassroomProvider(authorizer: GoogleAuthorizer) : AuthorizedProvider<Googl
             for (courseWorkObj in courseWorks) {
                 val creationTime = TimeFormatters.zuluDateTime.parse(courseWorkObj.jString("creationTime"), Instant::from)
                 if (creationTime.isBefore(earliestTime)) continue
+                if (!courseWorkObj.containsKey("description")) continue
 
                 val courseWorkId = courseWorkObj.jString("id")
                 val attachments = buildList {

@@ -52,6 +52,7 @@ compose.desktop {
                 TargetFormat.Dmg, // mac os
                 TargetFormat.Exe, TargetFormat.Msi // windows 10+
             )
+            modules("java.compiler", "java.instrument" , "java.sql", "jdk.unsupported")
             packageName = "LitAggregator"
             packageVersion = "1.0.0"
             buildTypes.release.proguard {
