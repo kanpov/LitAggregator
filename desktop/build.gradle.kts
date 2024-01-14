@@ -54,7 +54,7 @@ compose.desktop {
             )
             modules("java.compiler", "java.instrument" , "java.sql", "jdk.unsupported")
             packageName = "LitAggregator"
-            packageVersion = "1.0.0"
+            packageVersion = "1.1.0"
             buildTypes.release.proguard {
                 isEnabled = false
             }
