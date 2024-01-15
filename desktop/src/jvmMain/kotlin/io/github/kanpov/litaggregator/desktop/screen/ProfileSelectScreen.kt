@@ -23,6 +23,8 @@ import io.github.kanpov.litaggregator.desktop.SMALL_WINDOW_SIZE
 import io.github.kanpov.litaggregator.desktop.components.BasicIcon
 import io.github.kanpov.litaggregator.desktop.components.H5Text
 import io.github.kanpov.litaggregator.desktop.components.H6Text
+import io.github.kanpov.litaggregator.desktop.components.HoverableIconButton
+import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.resizeAppWindow
 import io.github.kanpov.litaggregator.desktop.screen.config.ConfigIntent
 import io.github.kanpov.litaggregator.desktop.screen.config.ConfigScreen
@@ -30,13 +32,22 @@ import io.github.kanpov.litaggregator.engine.EnginePlatform
 import io.github.kanpov.litaggregator.engine.profile.CachedProfile
 import io.github.kanpov.litaggregator.engine.profile.PROFILE_EXTENSION
 import io.github.kanpov.litaggregator.engine.profile.ProfileCache
+import io.github.kanpov.litaggregator.engine.util.APP_REPOSITORY
+import io.github.kanpov.litaggregator.engine.util.APP_VERSION
+import io.github.kanpov.litaggregator.engine.util.AppUpdate
+import io.github.kanpov.litaggregator.engine.util.checkForUpdates
 import io.github.kanpov.litaggregator.engine.util.io.readFile
 import io.github.kanpov.litaggregator.engine.util.io.writeFile
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import java.io.File
+import java.net.URI
+import kotlin.system.exitProcess
 
 class ProfileSelectScreen : Screen {
+    private var bufferedUpdate: AppUpdate? = null
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -55,6 +66,8 @@ class ProfileSelectScreen : Screen {
             ) {
                 ProfileButtons(navigator)
                 RecentProfiles(navigator)
+                Spacer(modifier = Modifier.weight(1f))
+                BottomRow(navigator)
             }
         }
     }
@@ -188,6 +201,110 @@ class ProfileSelectScreen : Screen {
                 InfoDialog(cachedProfile) { infoDialogShown = false }
             }
         }
+    }
+
+    @Composable
+    private fun BottomRow(navigator: Navigator) {
+        val coroutineScope = rememberCoroutineScope()
+
+        Row {
+            // system config
+            HoverableIconButton(
+                tooltip = DesktopLocale["browser.action_bar.system_config_tooltip"],
+                iconPath = "icons/system_config.png"
+            ) {
+                navigator.push(SystemConfigScreen())
+            }
+            // check for updates
+            var updateDialogShown by remember { mutableStateOf(false) }
+            var errorDialogShown by remember { mutableStateOf(false) }
+            HoverableIconButton(
+                tooltip = DesktopLocale["profile_select.update_check_tooltip"],
+                iconPath = "icons/sync.png"
+            ) {
+                coroutineScope.launch {
+                    try {
+                        bufferedUpdate = checkForUpdates()
+                    } catch (_: Exception) {
+                        errorDialogShown = true
+                    }
+                    if (!errorDialogShown) updateDialogShown = true
+                }
+            }
+            if (errorDialogShown) {
+                ErrorWhileCheckingUpdatesDialog { errorDialogShown = false }
+            }
+            if (updateDialogShown) {
+                UpdatesDialog(bufferedUpdate) { updateDialogShown = false }
+            }
+            // GitHub repository
+            HoverableIconButton(
+                tooltip = DesktopLocale["profile_select.github_tooltip"],
+                iconPath = "icons/github.png"
+            ) {
+                DesktopEnginePlatform.openBrowser(URI.create("https://github.com/$APP_REPOSITORY"))
+            }
+            // exit
+            HoverableIconButton(
+                tooltip = DesktopLocale["profile_select.exit_tooltip"],
+                iconPath = "icons/exit.png"
+            ) {
+                exitProcess(status = 0)
+            }
+            // app version
+            Spacer(modifier = Modifier.weight(1f))
+            H6Text(DesktopLocale["profile_select.version_formatting", APP_VERSION], italicize = true)
+        }
+    }
+
+    @Composable
+    private fun ErrorWhileCheckingUpdatesDialog(onDismissRequest: () -> Unit) {
+        Dialog(
+            onDismissRequest = onDismissRequest
+        ) {
+            Card(shape = RoundedCornerShape(size = 5.dp)) {
+                H6Text(
+                    DesktopLocale["profile_select.error_occurred_while_checking_updates"],
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun UpdatesDialog(update: AppUpdate?, onDismissRequest: () -> Unit) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                H6Text(if (update == null) {
+                    DesktopLocale["profile_select.no_updates_available"]
+                } else {
+                    DesktopLocale["profile_select.updates_available"]
+                }, highlight = true)
+            },
+            text = {
+                if (update == null) {
+                    H6Text(DesktopLocale["profile_select.no_updates_formatting", APP_VERSION])
+                } else {
+                    Column {
+                        H6Text(DesktopLocale["profile_select.updates_available_1", APP_VERSION, update.version])
+                        H6Text(DesktopLocale["profile_select.updates_available_2"], highlight = true, modifier = Modifier.padding(top = 10.dp))
+                        H6Text(update.url, color = Color.Blue, modifier = Modifier.clickable {
+                            DesktopEnginePlatform.openBrowser(URI.create(update.url))
+                        }.padding(top = 5.dp))
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = onDismissRequest,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                ) {
+                    H6Text(DesktopLocale["button.ok"], highlight = true)
+                }
+            },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        )
     }
 
     @Composable

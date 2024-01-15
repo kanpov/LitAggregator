@@ -33,6 +33,16 @@ profile_select.profile_delete_dialog.text=Delete the profile "|1|"?
 profile_select.info_dialog.path_to_file=Path to the profile:
 profile_select.info_dialog.file_size=Size of the profile:
 profile_select.info_dialog.kb=|1| KB
+profile_select.exit_tooltip=Exit the app
+profile_select.github_tooltip=Go to the GitHub repository
+profile_select.update_check_tooltip=Check for updates
+profile_select.updates_available=An update is available
+profile_select.no_updates_available=No updates are available
+profile_select.no_updates_formatting=The app is already at its latest version: |1|
+profile_select.updates_available_1=You can update from |1| to |2|
+profile_select.updates_available_2=Download the update at:
+profile_select.error_occurred_while_checking_updates=An error occurred while checking for updates
+profile_select.version_formatting=Version |1|
 
 restart.please_wait=Please, wait
 
@@ -134,6 +144,8 @@ browser.misc.creation_time=Time of creation:
 browser.misc.source_name=Source name:
 browser.misc.comment=Comment:
 browser.misc.attachments=Attachments:
+browser.misc.entry_type=Entry type:
+browser.misc.heading_formatting=|1| (|2|)
 
 browser.homework.full_title_formatting=|1| for |2|
 browser.homework.short_title_formatting=|1| from |2|
@@ -190,3 +202,11 @@ browser.events.start_time=Start date:
 browser.events.end_time=End date:
 browser.events.participant_category=Participant category:
 browser.events.profession=Profession:
+
+browser.entry_type.announcement=Announcement
+browser.entry_type.diagnostic=Diagnostic
+browser.entry_type.event=Event
+browser.entry_type.homework=Assignment
+browser.entry_type.mark=Mark
+browser.entry_type.rating=Rating
+browser.entry_type.visit=Visit

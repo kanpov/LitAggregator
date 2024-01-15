@@ -23,7 +23,7 @@ lateinit var resizeAppWindow: (size: DpSize, resizable: Boolean) -> Unit
 
 val LARGE_WINDOW_SIZE = DpSize(1400.dp, 900.dp)
 val MEDIUM_WINDOW_SIZE = DpSize(700.dp, 600.dp)
-val SMALL_WINDOW_SIZE = DpSize(450.dp, 400.dp)
+val SMALL_WINDOW_SIZE = DpSize(450.dp, 450.dp)
 
 @OptIn(ExperimentalResourceApi::class)
 fun main() {

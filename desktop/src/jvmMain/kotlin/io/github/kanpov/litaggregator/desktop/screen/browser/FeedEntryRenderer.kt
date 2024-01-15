@@ -32,6 +32,7 @@ import io.github.kanpov.litaggregator.desktop.platform.DesktopEnginePlatform
 import io.github.kanpov.litaggregator.desktop.screen.restartScreen
 import io.github.kanpov.litaggregator.engine.feed.FeedEntry
 import io.github.kanpov.litaggregator.engine.feed.FeedEntryAttachment
+import io.github.kanpov.litaggregator.engine.feed.entry.*
 import io.github.kanpov.litaggregator.engine.profile.ProfileManager
 import io.github.kanpov.litaggregator.engine.util.TimeFormatters
 import org.apache.commons.text.StringEscapeUtils
@@ -93,10 +94,8 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
 
         Row(modifier = Modifier.fillMaxWidth()) {
             // source
-            Text(
-                entry.metadata.sourceName,
-                fontSize = 1.02.em
-            )
+            val heading = DesktopLocale["browser.misc.heading_formatting", localizeEntryType(), entry.metadata.sourceName]
+            Text(heading, fontSize = 1.02.em)
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -145,6 +144,10 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
             fontSize = 1.05.em,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+        // entry type
+        TextProperty(DesktopLocale["browser.misc.entry_type"], localizeEntryType())
+        // source
+        TextProperty(DesktopLocale["browser.misc.source_name"], entry.metadata.sourceName)
         // creation time
         if (entry.metadata.creationTime != null) {
             TextProperty(
@@ -152,8 +155,6 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
                 TimeFormatters.longMeshDateTime.format(entry.metadata.creationTime!!)
             )
         }
-        // source
-        TextProperty(DesktopLocale["browser.misc.source_name"], entry.metadata.sourceName)
         // comment editor
         Text(
             DesktopLocale["browser.misc.comment"],
@@ -270,5 +271,20 @@ abstract class FeedEntryRenderer<T : FeedEntry>(protected val entry: T) {
         2 -> Color.Silver
         3 -> Color.Bronze
         else -> Color.Black
+    }
+
+    private fun localizeEntryType(): String {
+        val entryTypeId = when (entry) {
+            is AnnouncementFeedEntry -> "announcement"
+            is DiagnosticFeedEntry -> "diagnostic"
+            is EventFeedEntry -> "event"
+            is HomeworkFeedEntry -> "homework"
+            is MarkFeedEntry -> "mark"
+            is RatingFeedEntry -> "rating"
+            is VisitFeedEntry -> "visit"
+            else -> throw IllegalArgumentException("Unknown entry type")
+        }
+
+        return DesktopLocale["browser.entry_type.$entryTypeId"]
     }
 }

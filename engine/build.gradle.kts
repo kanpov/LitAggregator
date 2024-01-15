@@ -21,6 +21,8 @@ kotlin {
                 implementation(libs.apache.commons.lang)
                 // kotlinx.serialization for JSON management
                 implementation(libs.kotlinx.serialization)
+                // kotlin-semver for checking updates
+                implementation(libs.semver)
             }
         }
     }

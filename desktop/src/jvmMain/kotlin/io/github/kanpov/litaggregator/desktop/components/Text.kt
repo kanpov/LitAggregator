@@ -4,6 +4,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +25,7 @@ fun H5Text(text: String, fontWeight: FontWeight = FontWeight.Bold, fontStyle: Fo
 
 @Composable
 fun H6Text(text: String? = null, annotatedString: AnnotatedString? = AnnotatedString(text!!),
-           highlight: Boolean = false, italicize: Boolean = false, modifier: Modifier = Modifier) {
+           highlight: Boolean = false, italicize: Boolean = false, modifier: Modifier = Modifier, color: Color = Color.Unspecified) {
     val weight = if (highlight) FontWeight.SemiBold else FontWeight.Normal
     val style = if (italicize) FontStyle.Italic else FontStyle.Normal
 
@@ -33,6 +34,7 @@ fun H6Text(text: String? = null, annotatedString: AnnotatedString? = AnnotatedSt
         style = MaterialTheme.typography.h6,
         fontWeight = weight,
         fontStyle = style,
+        color = color,
         modifier = modifier
     )
 }
